@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TransnationalLanka.ThreePL.Dal;
 
 namespace TransnationalLanka.ThreePL.Dal.Migrations
 {
     [DbContext(typeof(ThreePlDbContext))]
-    partial class ThreePlDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210522164936_add-product-entity")]
+    partial class addproductentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -197,20 +199,23 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("DistanceUnit")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("Height")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("Length")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int?>("MassUnit")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("ReorderLevel")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<string>("Sku")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("StorageUnits")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int?>("StoringType")
                         .HasColumnType("int");
@@ -225,6 +230,9 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<decimal?>("Weight")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("Width")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
@@ -276,10 +284,22 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                     b.Property<string>("BusinessRegistrationId")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ContactNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ContactPerson")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("InvoicePolicy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MobileNumber")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ReturnPolicy")
@@ -348,9 +368,6 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("SupplierId")
-                        .HasColumnType("bigint");
-
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
@@ -367,8 +384,6 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.HasIndex("SupplierId");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -493,13 +508,13 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                             b1.Property<decimal>("AdditionalChargePerUnitPrice")
                                 .HasColumnType("decimal(18,2)");
 
-                            b1.Property<decimal>("AllocatedUnits")
+                            b1.Property<int>("AllocatedUnits")
+                                .HasColumnType("int");
+
+                            b1.Property<decimal>("AllocatedUnitsFixedPrice")
                                 .HasColumnType("decimal(18,2)");
 
                             b1.Property<decimal>("HandlingCharge")
-                                .HasColumnType("decimal(18,2)");
-
-                            b1.Property<decimal>("StorageChargePerUnit")
                                 .HasColumnType("decimal(18,2)");
 
                             b1.HasKey("SupplierId");
@@ -517,22 +532,11 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                     b.Navigation("SupplierCharges");
                 });
 
-            modelBuilder.Entity("TransnationalLanka.ThreePL.Dal.Entities.User", b =>
-                {
-                    b.HasOne("TransnationalLanka.ThreePL.Dal.Entities.Supplier", "Supplier")
-                        .WithMany("Users")
-                        .HasForeignKey("SupplierId");
-
-                    b.Navigation("Supplier");
-                });
-
             modelBuilder.Entity("TransnationalLanka.ThreePL.Dal.Entities.Supplier", b =>
                 {
                     b.Navigation("PickupAddress");
 
                     b.Navigation("Products");
-
-                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

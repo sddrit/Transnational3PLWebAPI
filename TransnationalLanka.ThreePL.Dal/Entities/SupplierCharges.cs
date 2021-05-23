@@ -5,10 +5,10 @@ namespace TransnationalLanka.ThreePL.Dal.Entities
     [Owned]
     public class SupplierCharges
     {
-        //Pre Allocated Charge Details
-        public int AllocatedUnits { get; set; }
-        //This is a fixed price for calculate the storage price
-        public decimal AllocatedUnitsFixedPrice { get; set; }
+        //Pre Allocated Storage Units
+        public decimal AllocatedUnits { get; set; }
+        //Storage charge per unit
+        public decimal StorageChargePerUnit { get; set; }
         //Additional Charges
         public decimal AdditionalChargePerUnitPrice { get; set; }
         //Packaging Charge Per Item
@@ -18,10 +18,10 @@ namespace TransnationalLanka.ThreePL.Dal.Entities
         {
             if (AllocatedUnits <= units)
             {
-                return AllocatedUnitsFixedPrice;
+                return AllocatedUnits * StorageChargePerUnit;
             }
 
-            return AllocatedUnitsFixedPrice + (units - AllocatedUnits) * AllocatedUnitsFixedPrice;
+            return AllocatedUnits * StorageChargePerUnit + (units - AllocatedUnits) * AdditionalChargePerUnitPrice;
         }
     }
 }

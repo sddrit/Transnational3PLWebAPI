@@ -5,11 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.6" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.1.4" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\TransnationalLanka.ThreePL.Core\TransnationalLanka.ThreePL.Core.csproj" />
+    <ProjectReference Include="..\TransnationalLanka.ThreePL.Dal\TransnationalLanka.ThreePL.Dal.csproj" />
+    <ProjectReference Include="..\TransnationalLanka.ThreePL.Services\TransnationalLanka.ThreePL.Services.csproj" />
   </ItemGroup>
 
 </Project>

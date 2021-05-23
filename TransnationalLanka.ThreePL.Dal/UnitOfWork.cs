@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Storage;
 using TransnationalLanka.ThreePL.Dal.Core;
 using TransnationalLanka.ThreePL.Dal.Entities;
 
@@ -9,6 +10,8 @@ namespace TransnationalLanka.ThreePL.Dal
         IRepository<City> CityRepository { get; }
         IRepository<Address> AddressRepository { get; }
         IRepository<Supplier> SupplierRepository { get; }
+        Task<IDbContextTransaction> GetTransaction();
+        Task SaveChanges();
     }
 
     public class UnitOfWork : IUnitOfWork
@@ -52,6 +55,11 @@ namespace TransnationalLanka.ThreePL.Dal
                 _supplierRepository = new Repository<Supplier>(_context);
                 return _supplierRepository;
             }
+        }
+
+        public async Task<IDbContextTransaction> GetTransaction()
+        {
+            return await _context.Database.BeginTransactionAsync();
         }
 
         public async Task SaveChanges()

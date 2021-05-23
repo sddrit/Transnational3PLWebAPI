@@ -21,4 +21,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TransnationalLanka.ThreePL.Core\TransnationalLanka.ThreePL.Core.csproj" />
+  </ItemGroup>
+
 </Project>
