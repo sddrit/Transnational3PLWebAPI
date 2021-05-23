@@ -31,7 +31,7 @@ namespace TransnationalLanka.ThreePL.Dal
         {
             get
             {
-                if (_cityRepository == null) return _cityRepository;
+                if (_cityRepository != null) return _cityRepository;
                 _cityRepository = new Repository<City>(_context);
                 return _cityRepository;
             }
@@ -41,7 +41,7 @@ namespace TransnationalLanka.ThreePL.Dal
         {
             get
             {
-                if (_addressRepository == null) return _addressRepository;
+                if (_addressRepository != null) return _addressRepository;
                 _addressRepository = new Repository<Address>(_context);
                 return _addressRepository;
             }
@@ -51,7 +51,7 @@ namespace TransnationalLanka.ThreePL.Dal
         {
             get
             {
-                if (_supplierRepository == null) return _supplierRepository;
+                if (_supplierRepository != null) return _supplierRepository;
                 _supplierRepository = new Repository<Supplier>(_context);
                 return _supplierRepository;
             }

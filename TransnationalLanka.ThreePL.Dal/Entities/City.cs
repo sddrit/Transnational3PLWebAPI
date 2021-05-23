@@ -1,4 +1,6 @@
-﻿namespace TransnationalLanka.ThreePL.Dal.Entities
+﻿using System.Collections.Generic;
+
+namespace TransnationalLanka.ThreePL.Dal.Entities
 {
     public class City : BaseEntity
     {

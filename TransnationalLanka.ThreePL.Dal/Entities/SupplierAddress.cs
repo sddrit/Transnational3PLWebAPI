@@ -1,9 +1,10 @@
-﻿namespace TransnationalLanka.ThreePL.Dal.Entities
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace TransnationalLanka.ThreePL.Dal.Entities
 {
-    public class Address : BaseEntity
+    [Owned]
+    public class SupplierAddress
     {
-        public long? SupplierId { get; set; }
-        public virtual Supplier Supplier { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string AddressLine1 { get; set; }

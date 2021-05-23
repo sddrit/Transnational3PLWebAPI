@@ -6,10 +6,13 @@
 
   <ItemGroup>
     <Folder Include="Product\" />
-    <Folder Include="Supplier\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Collection" Version="7.0.1" />
+    <PackageReference Include="Cop" Version="1.0.1" />
+    <PackageReference Include="Dawn.Guard" Version="1.12.0" />
+    <PackageReference Include="FluentValidation" Version="10.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.6" />
   </ItemGroup>
 

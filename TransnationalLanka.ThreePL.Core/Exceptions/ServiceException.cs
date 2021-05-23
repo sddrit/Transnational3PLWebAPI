@@ -21,6 +21,7 @@ namespace TransnationalLanka.ThreePL.Core.Exceptions
     public class ErrorMessage
     {
         public string Code { get; set; }
+        public object Meta { get; set; }
         public string Message { get; set; }
     }
 }

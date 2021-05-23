@@ -14,7 +14,9 @@ using TransnationalLanka.ThreePL.Dal;
 using TransnationalLanka.ThreePL.Dal.Entities;
 using TransnationalLanka.ThreePL.Services.Account;
 using TransnationalLanka.ThreePL.Services.Application;
+using TransnationalLanka.ThreePL.Services.Supplier;
 using TransnationalLanka.ThreePL.WebApi.Util;
+using TransnationalLanka.ThreePL.WebApi.Util.Filters;
 using TransnationalLanka.ThreePL.WebApi.Util.Middlewares;
 using TransnationalLanka.ThreePL.WebApi.Util.Options;
 using TransnationalLanka.ThreePL.WebApi.Util.Swagger;
@@ -44,7 +46,8 @@ namespace TransnationalLanka.ThreePL.WebApi
             services.AddDbContextPool<ThreePlDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DbConnection")));
 
-            services.AddTransient<ThreePlDbContext>();
+            services.AddScoped<ModelValidationAttribute>();
+            services.AddScoped<ThreePlDbContext>();
 
             services.AddIdentity<User, Role>(options =>
                 {
@@ -73,6 +76,7 @@ namespace TransnationalLanka.ThreePL.WebApi
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IApplicationService, ApplicationService>();
+            services.AddScoped<ISupplierService, SupplierService>();
 
             services.AddControllers();
 
