@@ -15,6 +15,7 @@ using TransnationalLanka.ThreePL.Dal.Entities;
 using TransnationalLanka.ThreePL.Services.Account;
 using TransnationalLanka.ThreePL.Services.Application;
 using TransnationalLanka.ThreePL.Services.Supplier;
+using TransnationalLanka.ThreePL.Services.Util;
 using TransnationalLanka.ThreePL.WebApi.Util;
 using TransnationalLanka.ThreePL.WebApi.Util.Filters;
 using TransnationalLanka.ThreePL.WebApi.Util.Middlewares;
@@ -74,11 +75,12 @@ namespace TransnationalLanka.ThreePL.WebApi
                 });
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<ICityService, CityService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IApplicationService, ApplicationService>();
             services.AddScoped<ISupplierService, SupplierService>();
 
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
 
             services.AddSwaggerGen(c =>
             {

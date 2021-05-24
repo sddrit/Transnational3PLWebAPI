@@ -32,6 +32,9 @@ namespace TransnationalLanka.ThreePL.Services.Supplier
 
             _unitOfWork.SupplierRepository.Insert(supplier);
             await _unitOfWork.SaveChanges();
+
+            //Todo send the create new supplier to tracking application
+
             return supplier;
         }
 
@@ -47,6 +50,8 @@ namespace TransnationalLanka.ThreePL.Services.Supplier
             mapper.Map(supplier, currentSupplier);
 
             await _unitOfWork.SaveChanges();
+
+            //Todo send the update supplier details to tracking application
 
             return currentSupplier;
         }
@@ -71,6 +76,15 @@ namespace TransnationalLanka.ThreePL.Services.Supplier
             }
 
             return supplier;
+        }
+
+        public async Task SetSupplierStatus(long id, bool status)
+        {
+            var currentSupplier = await GetSupplierById(id);
+            currentSupplier.Acitve = status;
+            await _unitOfWork.SaveChanges();
+
+            //Todo send the status change to tracking application
         }
 
         private async Task ValidateSupplier(Dal.Entities.Supplier supplier)

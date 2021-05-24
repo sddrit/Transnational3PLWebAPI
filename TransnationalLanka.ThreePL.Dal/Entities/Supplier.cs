@@ -7,6 +7,7 @@ namespace TransnationalLanka.ThreePL.Dal.Entities
         public string SupplierName { get; set; }
         public string BusinessRegistrationId { get; set; }
         public string VatNumber { get; set; }
+        public bool Acitve { get; set; }
         public SupplierAddress Address { get; set; }
         public Contact Contact { get; set; }
         public string InvoicePolicy { get; set; }

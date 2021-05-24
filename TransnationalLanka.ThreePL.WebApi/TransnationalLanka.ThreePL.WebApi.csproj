@@ -1,21 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+    <PackageReference Include="DevExpress.Data" Version="20.2.6" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.6" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.1.4" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\TransnationalLanka.ThreePL.Core\TransnationalLanka.ThreePL.Core.csproj" />
     <ProjectReference Include="..\TransnationalLanka.ThreePL.Dal\TransnationalLanka.ThreePL.Dal.csproj" />
     <ProjectReference Include="..\TransnationalLanka.ThreePL.Services\TransnationalLanka.ThreePL.Services.csproj" />
+    <PackageReference Include="DevExtreme.AspNet.Core" Version="20.2.6" />
+    <PackageReference Include="DevExtreme.AspNet.Data" Version="2.7.1" />
   </ItemGroup>
-
 </Project>

@@ -270,6 +270,9 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("Acitve")
+                        .HasColumnType("bit");
+
                     b.Property<string>("BusinessRegistrationId")
                         .HasColumnType("nvarchar(max)");
 
