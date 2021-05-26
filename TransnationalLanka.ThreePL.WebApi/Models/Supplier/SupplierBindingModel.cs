@@ -33,7 +33,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Models.Supplier
         public string BusinessRegistrationId { get; set; }
         public string VatNumber { get; set; }
         [Required]
-        public bool Status { get; set; }
+        public bool Active { get; set; }
         [Required]
         public SupplierAddressBindingModel Address { get; set; }
         [Required]
