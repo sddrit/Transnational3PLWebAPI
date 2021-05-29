@@ -21,6 +21,10 @@ namespace TransnationalLanka.ThreePL.Services.Common.Mapper
                     .ForMember(d => d.Products, o => o.Ignore())
                     .ForMember(d => d.Users, o => o.Ignore())
                     .EqualityComparison((s, d) => s.Id == d.Id);
+
+                configuration.CreateMap<Dal.Entities.WareHouse, Dal.Entities.WareHouse>();
+              
+
             });
 
             _mapperConfiguration.CompileMappings();

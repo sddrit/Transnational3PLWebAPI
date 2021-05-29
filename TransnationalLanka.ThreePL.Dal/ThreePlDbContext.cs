@@ -14,6 +14,7 @@ namespace TransnationalLanka.ThreePL.Dal
         public DbSet<City> Cities { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<WareHouse> WareHouses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
