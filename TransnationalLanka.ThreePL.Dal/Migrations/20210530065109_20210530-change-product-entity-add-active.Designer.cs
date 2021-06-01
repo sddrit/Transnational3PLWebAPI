@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TransnationalLanka.ThreePL.Dal;
 
 namespace TransnationalLanka.ThreePL.Dal.Migrations
 {
     [DbContext(typeof(ThreePlDbContext))]
-    partial class ThreePlDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210530065109_20210530-change-product-entity-add-active")]
+    partial class _20210530changeproductentityaddactive
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -374,30 +376,6 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("TransnationalLanka.ThreePL.Dal.Entities.WareHouse", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset>("Updated")
-                        .HasColumnType("datetimeoffset");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("WareHouses");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<long>", b =>
                 {
                     b.HasOne("TransnationalLanka.ThreePL.Dal.Entities.Role", null)
@@ -591,48 +569,6 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                         .HasForeignKey("SupplierId");
 
                     b.Navigation("Supplier");
-                });
-
-            modelBuilder.Entity("TransnationalLanka.ThreePL.Dal.Entities.WareHouse", b =>
-                {
-                    b.OwnsOne("TransnationalLanka.ThreePL.Dal.Entities.WareHouseAddress", "Address", b1 =>
-                        {
-                            b1.Property<long>("WareHouseId")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("bigint")
-                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                            b1.Property<string>("AddressLine1")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<string>("AddressLine2")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<long>("CityId")
-                                .HasColumnType("bigint");
-
-                            b1.Property<string>("PostalCode")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.HasKey("WareHouseId");
-
-                            b1.HasIndex("CityId");
-
-                            b1.ToTable("WareHouses");
-
-                            b1.HasOne("TransnationalLanka.ThreePL.Dal.Entities.City", "City")
-                                .WithMany()
-                                .HasForeignKey("CityId")
-                                .OnDelete(DeleteBehavior.Cascade)
-                                .IsRequired();
-
-                            b1.WithOwner()
-                                .HasForeignKey("WareHouseId");
-
-                            b1.Navigation("City");
-                        });
-
-                    b.Navigation("Address");
                 });
 
             modelBuilder.Entity("TransnationalLanka.ThreePL.Dal.Entities.Supplier", b =>

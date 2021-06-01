@@ -59,8 +59,7 @@ namespace TransnationalLanka.ThreePL.Services.Supplier
         public async Task<Dal.Entities.Supplier> GetSupplierById(long id)
         {
             var supplier = await _unitOfWork.SupplierRepository.GetAll()
-                .Where(s => s.Id == id)
-                .Include(s => s.PickupAddress)
+                .Where(s => s.Id == id)              
                 .FirstOrDefaultAsync();
 
             if (supplier == null)

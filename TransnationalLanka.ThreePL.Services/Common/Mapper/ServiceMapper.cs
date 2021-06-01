@@ -23,8 +23,7 @@ namespace TransnationalLanka.ThreePL.Services.Common.Mapper
                     .EqualityComparison((s, d) => s.Id == d.Id);
 
                 configuration.CreateMap<Dal.Entities.WareHouse, Dal.Entities.WareHouse>();
-              
-
+                configuration.CreateMap<Dal.Entities.Product, Dal.Entities.Product>();
             });
 
             _mapperConfiguration.CompileMappings();

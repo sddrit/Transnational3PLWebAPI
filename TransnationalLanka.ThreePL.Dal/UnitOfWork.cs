@@ -10,6 +10,7 @@ namespace TransnationalLanka.ThreePL.Dal
         IRepository<City> CityRepository { get; }
         IRepository<Address> AddressRepository { get; }
         IRepository<Supplier> SupplierRepository { get; }
+        IRepository<Product> ProductRepository { get; }
         IRepository<WareHouse> WareHouseRepository { get; }
         Task<IDbContextTransaction> GetTransaction();
         Task SaveChanges();
@@ -23,6 +24,7 @@ namespace TransnationalLanka.ThreePL.Dal
         private IRepository<Address> _addressRepository;
         private IRepository<Supplier> _supplierRepository;
         private IRepository<WareHouse> _warehouseRepository;
+        private IRepository<Product> _productRepository;
 
         public UnitOfWork(ThreePlDbContext context)
         {
@@ -58,6 +60,16 @@ namespace TransnationalLanka.ThreePL.Dal
                 return _supplierRepository;
             }
         }
+        public IRepository<Product> ProductRepository
+        {
+            get
+            {
+                if (_supplierRepository != null) return _productRepository;
+                _productRepository = new Repository<Product>(_context);
+                return _productRepository;
+            }
+        }
+
         public IRepository<WareHouse> WareHouseRepository
         {
             get

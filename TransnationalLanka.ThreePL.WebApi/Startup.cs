@@ -14,6 +14,7 @@ using TransnationalLanka.ThreePL.Dal;
 using TransnationalLanka.ThreePL.Dal.Entities;
 using TransnationalLanka.ThreePL.Services.Account;
 using TransnationalLanka.ThreePL.Services.Application;
+using TransnationalLanka.ThreePL.Services.Product;
 using TransnationalLanka.ThreePL.Services.Supplier;
 using TransnationalLanka.ThreePL.Services.Util;
 using TransnationalLanka.ThreePL.Services.WareHouse;
@@ -81,6 +82,8 @@ namespace TransnationalLanka.ThreePL.WebApi
             services.AddScoped<IApplicationService, ApplicationService>();
             services.AddScoped<ISupplierService, SupplierService>();
             services.AddScoped<IWareHouseService, WareHouseService>();
+            services.AddScoped<IProductService, ProductService>();
+
             services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
 
             services.AddSwaggerGen(c =>
