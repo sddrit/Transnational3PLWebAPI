@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using TransnationalLanka.ThreePL.Core.Enums;
-using TransnationalLanka.ThreePL.WebApi.Models.Common;
 
 namespace TransnationalLanka.ThreePL.WebApi.Models.Product
 {

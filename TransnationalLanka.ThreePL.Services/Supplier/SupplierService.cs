@@ -85,7 +85,7 @@ namespace TransnationalLanka.ThreePL.Services.Supplier
         public async Task SetSupplierStatus(long id, bool status)
         {
             var currentSupplier = await GetSupplierById(id);
-            currentSupplier.Acitve = status;
+            currentSupplier.Active = status;
             await _unitOfWork.SaveChanges();
 
             //Todo send the status change to tracking application
