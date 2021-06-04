@@ -26,5 +26,11 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
         {
             return await DataSourceLoader.LoadAsync(_cityService.GetCities(), loadOptions);
         }
+
+        [HttpGet("get/{id}")]
+        public async Task<IActionResult> GetById(long id)
+        {
+            return Ok(await _cityService.GetCityById(id));
+        }
     }
 }

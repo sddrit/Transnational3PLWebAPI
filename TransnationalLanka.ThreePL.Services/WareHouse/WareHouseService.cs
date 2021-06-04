@@ -21,7 +21,8 @@ namespace TransnationalLanka.ThreePL.Services.WareHouse
 
         public IQueryable<Dal.Entities.WareHouse> GetWareHouses()
         {
-            return _unitOfWork.WareHouseRepository.GetAll();
+            return _unitOfWork.WareHouseRepository.GetAll()
+                .Include(w => w.Address.City);
         }
 
         public async Task<Dal.Entities.WareHouse> AddWareHouse(Dal.Entities.WareHouse warehouse)
@@ -59,6 +60,7 @@ namespace TransnationalLanka.ThreePL.Services.WareHouse
         public async Task<Dal.Entities.WareHouse> GetWareHouseById(long id)
         {
             var warehouse = await _unitOfWork.WareHouseRepository.GetAll()
+                .Include(w => w.Address.City)
                 .Where(w => w.Id == id)                
                 .FirstOrDefaultAsync();
 

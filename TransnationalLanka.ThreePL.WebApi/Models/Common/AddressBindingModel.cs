@@ -12,6 +12,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Models.Common
         public string AddressLine2 { get; set; }
         [Required]
         public long CityId { get; set; }
+        public CityBindingModel City { get; set; }
         [Required]
         public string PostalCode { get; set; }
     }

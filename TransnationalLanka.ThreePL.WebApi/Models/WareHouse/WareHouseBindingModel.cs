@@ -8,7 +8,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Models.WareHouse
     {
         public long Id { get; set; }
         [Required]
-        public string WareHouseName { get; set; }
+        public string Name { get; set; }
         [Required]
         public WareHouseAddressBindingModel Address { get; set; }
         [Required]
@@ -21,6 +21,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Models.WareHouse
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }
         public long CityId { get; set; }
+        public CityBindingModel City { get; set; }
         public string PostalCode { get; set; }
     }
 

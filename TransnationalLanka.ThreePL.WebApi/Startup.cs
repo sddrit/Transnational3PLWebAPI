@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -84,7 +85,7 @@ namespace TransnationalLanka.ThreePL.WebApi
             services.AddScoped<IWareHouseService, WareHouseService>();
             services.AddScoped<IProductService, ProductService>();
 
-            services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
+            services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase);
 
             services.AddSwaggerGen(c =>
             {

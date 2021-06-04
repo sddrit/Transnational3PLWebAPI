@@ -8,7 +8,7 @@ namespace TransnationalLanka.ThreePL.Dal
         public ThreePlDbContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<ThreePlDbContext>();
-            optionsBuilder.UseSqlServer("Data Source=192.168.1.103;Initial Catalog=threepl;Integrated Security=True;User ID=sa;Password=Tirdds@123");
+            optionsBuilder.UseSqlServer("Data Source=DESKTOP-UHEQ6FB;Initial Catalog=threepl-db-local;Integrated Security=True;User ID=sa;Password=1234Qwer@");
             return new ThreePlDbContext(optionsBuilder.Options);
         }
     }

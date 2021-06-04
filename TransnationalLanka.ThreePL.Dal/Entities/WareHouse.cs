@@ -1,15 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TransnationalLanka.ThreePL.Dal.Entities
 {
     public class WareHouse : BaseEntity
     {
-        public string WareHouseName { get; set; }        
+        public string Name { get; set; }        
         public WareHouseAddress Address { get; set; }
         public bool Active { get; set; }
 

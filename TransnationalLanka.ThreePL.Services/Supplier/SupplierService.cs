@@ -21,7 +21,8 @@ namespace TransnationalLanka.ThreePL.Services.Supplier
 
         public IQueryable<Dal.Entities.Supplier> GetSuppliers()
         {
-            return _unitOfWork.SupplierRepository.GetAll();
+            return _unitOfWork.SupplierRepository.GetAll()
+                .Include(s => s.Address.City);
         }
 
         public async Task<Dal.Entities.Supplier> AddSupplier(Dal.Entities.Supplier supplier)
@@ -35,7 +36,7 @@ namespace TransnationalLanka.ThreePL.Services.Supplier
 
             //Todo send the create new supplier to tracking application
 
-            return supplier;
+            return await GetSupplierById(supplier.Id);
         }
 
         public async Task<Dal.Entities.Supplier> UpdateSupplier(Dal.Entities.Supplier supplier)
@@ -53,12 +54,16 @@ namespace TransnationalLanka.ThreePL.Services.Supplier
 
             //Todo send the update supplier details to tracking application
 
-            return currentSupplier;
+            return await GetSupplierById(supplier.Id);
         }
 
         public async Task<Dal.Entities.Supplier> GetSupplierById(long id)
         {
             var supplier = await _unitOfWork.SupplierRepository.GetAll()
+                .Include(s => s.Address)
+                .ThenInclude(a => a.City)
+                .Include(s => s.PickupAddress)
+                .ThenInclude(pa => pa.City)
                 .Where(s => s.Id == id)              
                 .FirstOrDefaultAsync();
 

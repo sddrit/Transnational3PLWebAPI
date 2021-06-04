@@ -19,10 +19,15 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.AutoMapper
             //Supplier
             CreateMap<City, CityBindingModel>()
                 .ReverseMap();
-            CreateMap<Address, AddressBindingModel>()
-                .ReverseMap();
-            CreateMap<SupplierAddress, SupplierAddressBindingModel>()
-                .ReverseMap();
+
+            CreateMap<Address, AddressBindingModel>();
+            CreateMap<AddressBindingModel, Address>()
+                .ForMember(d => d.City, a => a.Ignore());
+
+            CreateMap<SupplierAddress, SupplierAddressBindingModel>();
+            CreateMap<SupplierAddressBindingModel, SupplierAddress>()
+                .ForMember(d => d.City, a => a.Ignore());
+
             CreateMap<Contact, ContactBindingModel>()
                 .ReverseMap();
             CreateMap<SupplierCharges, SupplierChargeBindingModel>()
@@ -35,6 +40,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.AutoMapper
             .ReverseMap();
             CreateMap<WareHouse, WareHouseBindingModel>()
              .ReverseMap();
+            CreateMap<City, CityBindingModel>();
         }
     }
 }

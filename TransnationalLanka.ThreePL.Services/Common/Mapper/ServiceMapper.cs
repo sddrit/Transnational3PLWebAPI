@@ -16,12 +16,17 @@ namespace TransnationalLanka.ThreePL.Services.Common.Mapper
                 configuration.CreateMap<Address, Address>()
                     .ForMember(d => d.SupplierId, o => o.Ignore())
                     .ForMember(d => d.Supplier, o => o.Ignore())
+                    .ForMember(d => d.City, o => o.Ignore())
                     .EqualityComparison(((s, d) => s.Id == d.Id));
+                configuration.CreateMap<Dal.Entities.SupplierAddress, Dal.Entities.SupplierAddress>()
+                    .ForMember(d => d.City, o => o.Ignore());
                 configuration.CreateMap<Dal.Entities.Supplier, Dal.Entities.Supplier>()
                     .ForMember(d => d.Products, o => o.Ignore())
                     .ForMember(d => d.Users, o => o.Ignore())
                     .EqualityComparison((s, d) => s.Id == d.Id);
 
+                configuration.CreateMap<WareHouseAddress, WareHouseAddress>()
+                    .ForMember(d => d.City, o => o.Ignore());
                 configuration.CreateMap<Dal.Entities.WareHouse, Dal.Entities.WareHouse>();
                 configuration.CreateMap<Dal.Entities.Product, Dal.Entities.Product>();
             });
