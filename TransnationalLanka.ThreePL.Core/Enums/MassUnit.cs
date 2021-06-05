@@ -1,10 +1,16 @@
-﻿namespace TransnationalLanka.ThreePL.Core.Enums
+﻿using System.ComponentModel;
+
+namespace TransnationalLanka.ThreePL.Core.Enums
 {
     public enum MassUnit
     {
-        G,
-        Oz,
-        Lb,
-        Kg
+        [Description("g")]
+        G = 1,
+        [Description("oz")]
+        Oz = 2,
+        [Description("lb")]
+        Lb = 3,
+        [Description("kg")]
+        Kg = 4
     }
 }

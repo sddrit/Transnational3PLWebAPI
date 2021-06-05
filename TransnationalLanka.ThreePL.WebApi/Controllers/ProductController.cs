@@ -29,7 +29,8 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
         [HttpGet]
         public async Task<LoadResult> Get(DataSourceLoadOptions loadOptions)
         {
-            return await DataSourceLoader.LoadAsync(_productService.GetProducts(), loadOptions);
+            var query = _mapper.ProjectTo<ProductDetailsBindingModel>(_productService.GetProducts());
+            return await DataSourceLoader.LoadAsync(query, loadOptions);
         }
 
         [HttpGet("{id}")]

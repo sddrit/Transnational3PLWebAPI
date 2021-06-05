@@ -28,7 +28,8 @@ namespace TransnationalLanka.ThreePL.Services.Common.Mapper
                 configuration.CreateMap<WareHouseAddress, WareHouseAddress>()
                     .ForMember(d => d.City, o => o.Ignore());
                 configuration.CreateMap<Dal.Entities.WareHouse, Dal.Entities.WareHouse>();
-                configuration.CreateMap<Dal.Entities.Product, Dal.Entities.Product>();
+                configuration.CreateMap<Dal.Entities.Product, Dal.Entities.Product>()
+                    .ForMember(d => d.Supplier, o => o.Ignore());
             });
 
             _mapperConfiguration.CompileMappings();

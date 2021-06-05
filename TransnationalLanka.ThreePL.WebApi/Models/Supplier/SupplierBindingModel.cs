@@ -46,4 +46,15 @@ namespace TransnationalLanka.ThreePL.WebApi.Models.Supplier
         public virtual ICollection<AddressBindingModel> PickupAddress { get; set; }
     }
 
+    public class SupplierDetailsBindingModel
+    {
+        public long Id { get; set; }
+        public string SupplierName { get; set; }
+        public string BusinessRegistrationId { get; set; }
+        public string VatNumber { get; set; }
+        public bool Active { get; set; }
+        public SupplierAddressBindingModel Address { get; set; }
+        public ContactBindingModel Contact { get; set; }
+    }
+
 }

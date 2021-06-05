@@ -15,6 +15,8 @@ namespace TransnationalLanka.ThreePL.Dal.Entities
         public SupplierCharges SupplierCharges { get; set; }
         public virtual ICollection<Address> PickupAddress { get; set; }
         public virtual ICollection<Product> Products { get; set; }
-        public ICollection<User> Users { get; set; }
+        public virtual ICollection<User> Users { get; set; }
+        public virtual ICollection<PurchaseOrder> PurchaseOrders { get; set; }
+        public virtual ICollection<GoodReceivedNote> GoodReceivedNotes { get; set; }
     }
 }

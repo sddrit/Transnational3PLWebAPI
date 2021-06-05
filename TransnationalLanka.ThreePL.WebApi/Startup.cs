@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -15,6 +16,7 @@ using TransnationalLanka.ThreePL.Dal;
 using TransnationalLanka.ThreePL.Dal.Entities;
 using TransnationalLanka.ThreePL.Services.Account;
 using TransnationalLanka.ThreePL.Services.Application;
+using TransnationalLanka.ThreePL.Services.Metadata;
 using TransnationalLanka.ThreePL.Services.Product;
 using TransnationalLanka.ThreePL.Services.Supplier;
 using TransnationalLanka.ThreePL.Services.Util;
@@ -79,13 +81,17 @@ namespace TransnationalLanka.ThreePL.WebApi
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ICityService, CityService>();
+            services.AddScoped<IMetadataService, MetadataService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IApplicationService, ApplicationService>();
             services.AddScoped<ISupplierService, SupplierService>();
             services.AddScoped<IWareHouseService, WareHouseService>();
             services.AddScoped<IProductService, ProductService>();
 
-            services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase);
+            services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            });
 
             services.AddSwaggerGen(c =>
             {

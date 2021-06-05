@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace TransnationalLanka.ThreePL.Dal.Entities
 {
@@ -7,6 +8,9 @@ namespace TransnationalLanka.ThreePL.Dal.Entities
         public string Name { get; set; }        
         public WareHouseAddress Address { get; set; }
         public bool Active { get; set; }
+        public ICollection<ProductStock> ProductStocks { get; set; }
+        public ICollection<PurchaseOrder> PurchaseOrders { get; set; }
+        public ICollection<GoodReceivedNote> GoodReceivedNotes { get; set; }
 
     }
 

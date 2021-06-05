@@ -21,49 +21,46 @@ namespace TransnationalLanka.ThreePL.Services.Product
 
         public IQueryable<Dal.Entities.Product> GetProducts()
         {
-            return _unitOfWork.ProductRepository.GetAll();
+            return _unitOfWork.ProductRepository.GetAll()
+                .Include(p => p.Supplier);
         }
 
-        public async Task<Dal.Entities.Product> AddProduct(Dal.Entities.Product Product)
+        public async Task<Dal.Entities.Product> AddProduct(Dal.Entities.Product product)
         {
-            Guard.Argument(Product, nameof(Product)).NotNull();
+            Guard.Argument(product, nameof(product)).NotNull();
 
-            await ValidateProduct(Product);
+            await ValidateProduct(product);
 
-            _unitOfWork.ProductRepository.Insert(Product);
+            _unitOfWork.ProductRepository.Insert(product);
             await _unitOfWork.SaveChanges();
 
-            //Todo send the create new Product to tracking application
-
-            return Product;
+            return product;
         }
 
-        public async Task<Dal.Entities.Product> UpdateProduct(Dal.Entities.Product Product)
+        public async Task<Dal.Entities.Product> UpdateProduct(Dal.Entities.Product product)
         {
-            Guard.Argument(Product, nameof(Product)).NotNull();
+            Guard.Argument(product, nameof(Product)).NotNull();
 
-            await ValidateProduct(Product);
+            await ValidateProduct(product);
 
-            var currentProduct = await GetProductById(Product.Id);
+            var currentProduct = await GetProductById(product.Id);
 
             var mapper = ServiceMapper.GetMapper();
-            mapper.Map(Product, currentProduct);
+            mapper.Map(product, currentProduct);
 
             await _unitOfWork.SaveChanges();
-
-            //Todo send the update Product details to tracking application
 
             return currentProduct;
         }
 
         public async Task<Dal.Entities.Product> GetProductById(long id)
         {
-            var Product = await _unitOfWork.ProductRepository.GetAll()
-                .Where(s => s.Id == id)     
-               
+            var product = await _unitOfWork.ProductRepository.GetAll()
+                .Include(p => p.Supplier)
+                .Where(p => p.Id == id)
                 .FirstOrDefaultAsync();
 
-            if (Product == null)
+            if (product == null)
             {
                 throw new ServiceException(new ErrorMessage[]
                 {
@@ -74,8 +71,7 @@ namespace TransnationalLanka.ThreePL.Services.Product
                     }
                 });
             }
-
-            return Product;
+            return product;
         }
 
         public async Task SetProductStatus(long id, bool status)
@@ -87,10 +83,10 @@ namespace TransnationalLanka.ThreePL.Services.Product
             //Todo send the status change to tracking application
         }
 
-        private async Task ValidateProduct(Dal.Entities.Product Product)
+        private async Task ValidateProduct(Dal.Entities.Product product)
         {
-            var ProductValidator = new ProductValidator();
-            var validateResult = await ProductValidator.ValidateAsync(Product);
+            var productValidator = new ProductValidator();
+            var validateResult = await productValidator.ValidateAsync(product);
 
             if (validateResult.IsValid)
             {

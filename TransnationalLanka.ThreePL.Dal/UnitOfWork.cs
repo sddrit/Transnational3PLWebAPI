@@ -12,6 +12,10 @@ namespace TransnationalLanka.ThreePL.Dal
         IRepository<Supplier> SupplierRepository { get; }
         IRepository<Product> ProductRepository { get; }
         IRepository<WareHouse> WareHouseRepository { get; }
+        IRepository<PurchaseOrder> PurchaseOrdeRepository { get; }
+        IRepository<GoodReceivedNote> GoodReceiveNoteRepository { get; }
+        IRepository<ProductStock> ProductStockRepository { get; }
+        IRepository<ProductStockAdjustment> ProductStockAdjustmentRepository { get; }
         Task<IDbContextTransaction> GetTransaction();
         Task SaveChanges();
     }
@@ -25,6 +29,10 @@ namespace TransnationalLanka.ThreePL.Dal
         private IRepository<Supplier> _supplierRepository;
         private IRepository<WareHouse> _warehouseRepository;
         private IRepository<Product> _productRepository;
+        private IRepository<PurchaseOrder> _purchaseOrdeRepository;
+        private IRepository<GoodReceivedNote> _goodReceivedNoteRepository;
+        private IRepository<ProductStock> _productStockRepository;
+        private IRepository<ProductStockAdjustment> _productStockAdjustmentRepository;
 
         public UnitOfWork(ThreePlDbContext context)
         {
@@ -77,6 +85,46 @@ namespace TransnationalLanka.ThreePL.Dal
                 if (_warehouseRepository != null) return _warehouseRepository;
                 _warehouseRepository = new Repository<WareHouse>(_context);
                 return _warehouseRepository;
+            }
+        }
+
+        public IRepository<PurchaseOrder> PurchaseOrdeRepository
+        {
+            get
+            {
+                if (_purchaseOrdeRepository != null) return _purchaseOrdeRepository;
+                _purchaseOrdeRepository = new Repository<PurchaseOrder>(_context);
+                return _purchaseOrdeRepository;
+            }
+        }
+
+        public IRepository<GoodReceivedNote> GoodReceiveNoteRepository
+        {
+            get
+            {
+                if (_goodReceivedNoteRepository != null) return _goodReceivedNoteRepository;
+                _goodReceivedNoteRepository = new Repository<GoodReceivedNote>(_context);
+                return _goodReceivedNoteRepository;
+            }
+        }
+
+        public IRepository<ProductStock> ProductStockRepository
+        {
+            get
+            {
+                if (_productStockRepository != null) return _productStockRepository;
+                _productStockRepository = new Repository<ProductStock>(_context);
+                return _productStockRepository;
+            }
+        }
+
+        public IRepository<ProductStockAdjustment> ProductStockAdjustmentRepository
+        {
+            get
+            {
+                if (_productStockAdjustmentRepository != null) return _productStockAdjustmentRepository;
+                _productStockAdjustmentRepository = new Repository<ProductStockAdjustment>(_context);
+                return _productStockAdjustmentRepository;
             }
         }
 

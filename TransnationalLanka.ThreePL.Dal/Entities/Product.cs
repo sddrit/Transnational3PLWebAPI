@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using TransnationalLanka.ThreePL.Core.Enums;
 
 namespace TransnationalLanka.ThreePL.Dal.Entities
@@ -17,5 +18,9 @@ namespace TransnationalLanka.ThreePL.Dal.Entities
         public decimal? Weight { get; set; }
         public MassUnit? MassUnit { get; set; }
         public bool Active { get; set; }
+        public virtual ICollection<ProductStock> Stocks { get; set; }
+        public virtual ICollection<ProductStockAdjustment> StockAdjustments { get; set; }
+        public virtual ICollection<PurchaseOrderItem> PurchaseOrderItems { get; set; }
+        public virtual ICollection<GoodReceivedNoteItems> GoodReceivedNoteItems { get; set; }
     }
 }
