@@ -36,8 +36,8 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(long id)
         {
-            var Product = await _productService.GetProductById(id);
-            return Ok(_mapper.Map<ProductBindingModel>(Product));
+            var product = await _productService.GetProductById(id);
+            return Ok(_mapper.Map<ProductBindingModel>(product));
         }
 
         [HttpPost("set-status")]
@@ -50,15 +50,15 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]ProductBindingModel model)
         {
-            var Product = await _productService.AddProduct(_mapper.Map<Product>(model));
-            return Ok(_mapper.Map<ProductBindingModel>(Product));
+            var product = await _productService.AddProduct(_mapper.Map<Product>(model));
+            return Ok(_mapper.Map<ProductBindingModel>(product));
         }
 
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] ProductBindingModel model)
         {
-            var Product = await _productService.UpdateProduct(_mapper.Map<Product>(model));
-            return Ok(_mapper.Map<ProductBindingModel>(Product));
+            var product = await _productService.UpdateProduct(_mapper.Map<Product>(model));
+            return Ok(_mapper.Map<ProductBindingModel>(product));
         }
     }
 }

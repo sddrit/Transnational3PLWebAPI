@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using TransnationalLanka.ThreePL.WebApi.Models.Common;
 
 namespace TransnationalLanka.ThreePL.WebApi.Models.WareHouse
@@ -7,6 +6,8 @@ namespace TransnationalLanka.ThreePL.WebApi.Models.WareHouse
     public class WareHouseBindingModel
     {
         public long Id { get; set; }
+        [Required]
+        public string Code { get; set; }
         [Required]
         public string Name { get; set; }
         [Required]

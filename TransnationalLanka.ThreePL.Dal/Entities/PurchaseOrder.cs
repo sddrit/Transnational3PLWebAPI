@@ -6,6 +6,7 @@ namespace TransnationalLanka.ThreePL.Dal.Entities
 {
     public class PurchaseOrder : BaseEntity
     {
+        public string PoNumber { get; set; }
         public string Note { get; set; }
         public long SupplierId { get; set; }
         public virtual Supplier Supplier { get; set; }
@@ -21,8 +22,8 @@ namespace TransnationalLanka.ThreePL.Dal.Entities
         public long ProductId { get; set; }
         public virtual Product Product { get; set; }
         public decimal Quantity { get; set; }
-        public decimal Cost { get; set; }
+        public decimal UnitCost { get; set; }
         [NotMapped]
-        public decimal Value => Quantity * Cost;
+        public decimal Value => Quantity * UnitCost;
     }
 }

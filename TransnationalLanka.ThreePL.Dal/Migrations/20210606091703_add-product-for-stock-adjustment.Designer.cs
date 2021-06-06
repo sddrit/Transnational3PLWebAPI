@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TransnationalLanka.ThreePL.Dal;
 
 namespace TransnationalLanka.ThreePL.Dal.Migrations
 {
     [DbContext(typeof(ThreePlDbContext))]
-    partial class ThreePlDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210606091703_add-product-for-stock-adjustment")]
+    partial class addproductforstockadjustment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -194,12 +196,6 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("GrnNo")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(max)")
-                        .HasComputedColumnSql("('GRN'+right(replicate('0',(8))+CONVERT([varchar],[Id]),(8)))");
-
                     b.Property<long?>("PurchaseOrderId")
                         .HasColumnType("bigint");
 
@@ -230,6 +226,9 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<decimal>("Cost")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("datetimeoffset");
 
@@ -243,9 +242,6 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("Quantity")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("UnitCost")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTimeOffset>("Updated")
@@ -269,9 +265,6 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
 
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
-
-                    b.Property<string>("Code")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("datetimeoffset");
@@ -310,10 +303,6 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Code")
-                        .IsUnique()
-                        .HasFilter("[Code] IS NOT NULL");
 
                     b.HasIndex("SupplierId");
 
@@ -376,20 +365,15 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("UnitCost")
+                    b.Property<decimal>("UnitPrice")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTimeOffset>("Updated")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<long>("WareHouseId")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
-
-                    b.HasIndex("WareHouseId");
 
                     b.ToTable("ProductStockAdjustments");
                 });
@@ -406,12 +390,6 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
 
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PoNumber")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(max)")
-                        .HasComputedColumnSql("('PO'+right(replicate('0',(8))+CONVERT([varchar],[Id]),(8)))");
 
                     b.Property<long>("SupplierId")
                         .HasColumnType("bigint");
@@ -438,6 +416,9 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<decimal>("Cost")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("datetimeoffset");
 
@@ -448,9 +429,6 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("Quantity")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("UnitCost")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTimeOffset>("Updated")
@@ -507,9 +485,6 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                     b.Property<string>("BusinessRegistrationId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Code")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("datetimeoffset");
 
@@ -529,10 +504,6 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Code")
-                        .IsUnique()
-                        .HasFilter("[Code] IS NOT NULL");
 
                     b.ToTable("Suppliers");
                 });
@@ -619,9 +590,6 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Code")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("datetimeoffset");
 
@@ -632,10 +600,6 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Code")
-                        .IsUnique()
-                        .HasFilter("[Code] IS NOT NULL");
 
                     b.ToTable("WareHouses");
                 });
@@ -791,15 +755,7 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TransnationalLanka.ThreePL.Dal.Entities.WareHouse", "WareHouse")
-                        .WithMany("ProductStockAdjustments")
-                        .HasForeignKey("WareHouseId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.Navigation("Product");
-
-                    b.Navigation("WareHouse");
                 });
 
             modelBuilder.Entity("TransnationalLanka.ThreePL.Dal.Entities.PurchaseOrder", b =>
@@ -1032,8 +988,6 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
             modelBuilder.Entity("TransnationalLanka.ThreePL.Dal.Entities.WareHouse", b =>
                 {
                     b.Navigation("GoodReceivedNotes");
-
-                    b.Navigation("ProductStockAdjustments");
 
                     b.Navigation("ProductStocks");
 

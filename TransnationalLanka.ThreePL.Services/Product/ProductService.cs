@@ -83,6 +83,11 @@ namespace TransnationalLanka.ThreePL.Services.Product
             //Todo send the status change to tracking application
         }
 
+        public bool IsActiveProduct(Dal.Entities.Product product)
+        {
+            return product.Active;
+        }
+
         private async Task ValidateProduct(Dal.Entities.Product product)
         {
             var productValidator = new ProductValidator();

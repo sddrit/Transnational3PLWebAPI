@@ -10,6 +10,8 @@ namespace TransnationalLanka.ThreePL.WebApi.Models.Product
     {
         public long Id { get; set; }
         [Required]
+        public string Code { get; set; }
+        [Required]
         public long SupplierId { get; set; }
         public SupplierBindingModel Supplier { get; set; }
         [Required]
@@ -34,6 +36,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Models.Product
     public class ProductDetailsBindingModel
     {
         public long Id { get; set; }
+        public string Code { get; set; }
         public long SupplierId { get; set; }
         public SupplierDetailsBindingModel Supplier { get; set; }
         public string Name { get; set; }

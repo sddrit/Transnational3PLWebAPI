@@ -17,4 +17,8 @@
     <ProjectReference Include="..\TransnationalLanka.ThreePL.Dal\TransnationalLanka.ThreePL.Dal.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Grn\Core\" />
+  </ItemGroup>
+
 </Project>

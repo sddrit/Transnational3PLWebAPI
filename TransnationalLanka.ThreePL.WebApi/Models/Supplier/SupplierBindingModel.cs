@@ -29,6 +29,8 @@ namespace TransnationalLanka.ThreePL.WebApi.Models.Supplier
     {
         public long Id { get; set; }
         [Required]
+        public string Code { get; set; }
+        [Required]
         public string SupplierName { get; set; }
         public string BusinessRegistrationId { get; set; }
         public string VatNumber { get; set; }
@@ -49,6 +51,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Models.Supplier
     public class SupplierDetailsBindingModel
     {
         public long Id { get; set; }
+        public string Code { get; set; }
         public string SupplierName { get; set; }
         public string BusinessRegistrationId { get; set; }
         public string VatNumber { get; set; }

@@ -91,6 +91,11 @@ namespace TransnationalLanka.ThreePL.Services.Supplier
             //Todo send the status change to tracking application
         }
 
+        public bool IsActiveSupplier(Dal.Entities.Supplier supplier)
+        {
+            return supplier.Active;
+        }
+
         private async Task ValidateSupplier(Dal.Entities.Supplier supplier)
         {
             var supplierValidator = new SupplierValidator();

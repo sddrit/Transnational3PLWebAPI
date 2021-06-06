@@ -4,6 +4,7 @@ namespace TransnationalLanka.ThreePL.Dal.Entities
 {
     public class Supplier : BaseEntity
     {
+        public string Code { get; set; }
         public string SupplierName { get; set; }
         public string BusinessRegistrationId { get; set; }
         public string VatNumber { get; set; }

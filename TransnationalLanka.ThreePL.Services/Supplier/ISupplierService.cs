@@ -10,5 +10,6 @@ namespace TransnationalLanka.ThreePL.Services.Supplier
         Task<Dal.Entities.Supplier> UpdateSupplier(Dal.Entities.Supplier supplier);
         Task<Dal.Entities.Supplier> GetSupplierById(long id);
         Task SetSupplierStatus(long id, bool status);
+        bool IsActiveSupplier(Dal.Entities.Supplier supplier);
     }
 }

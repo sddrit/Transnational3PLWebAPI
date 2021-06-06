@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TransnationalLanka.ThreePL.Dal;
 
 namespace TransnationalLanka.ThreePL.Dal.Migrations
 {
     [DbContext(typeof(ThreePlDbContext))]
-    partial class ThreePlDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210606093110_change-property-names-for-cost")]
+    partial class changepropertynamesforcost
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -194,12 +196,6 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("GrnNo")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(max)")
-                        .HasComputedColumnSql("('GRN'+right(replicate('0',(8))+CONVERT([varchar],[Id]),(8)))");
-
                     b.Property<long?>("PurchaseOrderId")
                         .HasColumnType("bigint");
 
@@ -270,9 +266,6 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Code")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("datetimeoffset");
 
@@ -310,10 +303,6 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Code")
-                        .IsUnique()
-                        .HasFilter("[Code] IS NOT NULL");
 
                     b.HasIndex("SupplierId");
 
@@ -406,12 +395,6 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
 
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PoNumber")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(max)")
-                        .HasComputedColumnSql("('PO'+right(replicate('0',(8))+CONVERT([varchar],[Id]),(8)))");
 
                     b.Property<long>("SupplierId")
                         .HasColumnType("bigint");
@@ -507,9 +490,6 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                     b.Property<string>("BusinessRegistrationId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Code")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("datetimeoffset");
 
@@ -529,10 +509,6 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Code")
-                        .IsUnique()
-                        .HasFilter("[Code] IS NOT NULL");
 
                     b.ToTable("Suppliers");
                 });
@@ -619,9 +595,6 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Code")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("datetimeoffset");
 
@@ -632,10 +605,6 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Code")
-                        .IsUnique()
-                        .HasFilter("[Code] IS NOT NULL");
 
                     b.ToTable("WareHouses");
                 });

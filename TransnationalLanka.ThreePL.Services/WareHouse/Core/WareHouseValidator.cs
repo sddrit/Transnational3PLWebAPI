@@ -8,6 +8,7 @@ namespace TransnationalLanka.ThreePL.Services.WareHouse.Core
         public WareHouseValidator()
         {
             RuleFor(p => p.Name).NotEmpty();
+            RuleFor(p => p.Code).NotEmpty();
             RuleFor(p => p.Address).NotNull();
             RuleFor(p => p.Address).SetValidator(new WareHouseAddressValidator());
                       

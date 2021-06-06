@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -16,8 +15,10 @@ using TransnationalLanka.ThreePL.Dal;
 using TransnationalLanka.ThreePL.Dal.Entities;
 using TransnationalLanka.ThreePL.Services.Account;
 using TransnationalLanka.ThreePL.Services.Application;
+using TransnationalLanka.ThreePL.Services.Grn;
 using TransnationalLanka.ThreePL.Services.Metadata;
 using TransnationalLanka.ThreePL.Services.Product;
+using TransnationalLanka.ThreePL.Services.PurchaseOrder;
 using TransnationalLanka.ThreePL.Services.Supplier;
 using TransnationalLanka.ThreePL.Services.Util;
 using TransnationalLanka.ThreePL.Services.WareHouse;
@@ -87,6 +88,9 @@ namespace TransnationalLanka.ThreePL.WebApi
             services.AddScoped<ISupplierService, SupplierService>();
             services.AddScoped<IWareHouseService, WareHouseService>();
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
+            services.AddScoped<IStockService, StockService>();
+            services.AddScoped<IGrnService, GrnService>();
 
             services.AddControllers().AddJsonOptions(options =>
             {

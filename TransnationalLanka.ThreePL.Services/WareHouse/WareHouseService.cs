@@ -88,6 +88,11 @@ namespace TransnationalLanka.ThreePL.Services.WareHouse
             //Todo send the status change to tracking application
         }
 
+        public bool IsActiveWareHouse(Dal.Entities.WareHouse wareHouse)
+        {
+            return wareHouse.Active;
+        }
+
         private async Task ValidateWareHouse(Dal.Entities.WareHouse warehouse)
         {
             var warehouseValidator = new WareHouseValidator();

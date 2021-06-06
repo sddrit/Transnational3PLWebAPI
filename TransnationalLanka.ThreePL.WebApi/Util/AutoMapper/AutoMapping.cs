@@ -2,7 +2,9 @@
 using TransnationalLanka.ThreePL.Dal.Entities;
 using TransnationalLanka.ThreePL.WebApi.Models.Account;
 using TransnationalLanka.ThreePL.WebApi.Models.Common;
+using TransnationalLanka.ThreePL.WebApi.Models.Grn;
 using TransnationalLanka.ThreePL.WebApi.Models.Product;
+using TransnationalLanka.ThreePL.WebApi.Models.PurchaseOrder;
 using TransnationalLanka.ThreePL.WebApi.Models.Supplier;
 using TransnationalLanka.ThreePL.WebApi.Models.WareHouse;
 using SupplierAddress = TransnationalLanka.ThreePL.Dal.Entities.SupplierAddress;
@@ -43,6 +45,18 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.AutoMapper
             CreateMap<WareHouse, WareHouseBindingModel>()
              .ReverseMap();
             CreateMap<City, CityBindingModel>();
+
+            CreateMap<PurchaseOrderItem, PurchaseOrderDetailsItemBindingModel>();
+            CreateMap<PurchaseOrder, PurchaseOrderDetailsBindingModel>();
+            CreateMap<PurchaseOrderItem, PurchaseOrderItemBindingModel>()
+                .ReverseMap();
+            CreateMap<PurchaseOrder, PurchaseOrderBindingModel>()
+                .ReverseMap();
+
+            CreateMap<GoodReceivedNoteItems, GoodReceivedNoteItemsBindingModel>()
+                .ReverseMap();
+            CreateMap<GoodReceivedNote, GoodReceivedNoteBindingModel>()
+                .ReverseMap();
         }
     }
 }

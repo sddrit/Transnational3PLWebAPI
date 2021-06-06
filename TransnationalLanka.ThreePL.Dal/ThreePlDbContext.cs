@@ -24,6 +24,28 @@ namespace TransnationalLanka.ThreePL.Dal
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<Supplier>()
+                .HasIndex(s => s.Code)
+                .IsUnique();
+
+            builder.Entity<WareHouse>()
+                .HasIndex(w => w.Code)
+                .IsUnique();
+
+            builder.Entity<Product>()
+                .HasIndex(p => p.Code)
+                .IsUnique();
+
+            builder.Entity<PurchaseOrder>()
+                .Property(p => p.PoNumber)
+                .IsUnicode(false)
+                .HasComputedColumnSql("('PO'+right(replicate('0',(8))+CONVERT([varchar],[Id]),(8)))");
+
+            builder.Entity<GoodReceivedNote>()
+                .Property(p => p.GrnNo)
+                .IsUnicode(false)
+                .HasComputedColumnSql("('GRN'+right(replicate('0',(8))+CONVERT([varchar],[Id]),(8)))");
+
             builder.Entity<Address>()
                 .HasOne(e => e.City)
                 .WithMany()
@@ -57,6 +79,11 @@ namespace TransnationalLanka.ThreePL.Dal
             builder.Entity<PurchaseOrderItem>()
                 .HasOne(p => p.Product)
                 .WithMany(p => p.PurchaseOrderItems)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<ProductStockAdjustment>()
+                .HasOne(ps => ps.WareHouse)
+                .WithMany(w => w.ProductStockAdjustments)
                 .OnDelete(DeleteBehavior.NoAction);
 
             base.OnModelCreating(builder);

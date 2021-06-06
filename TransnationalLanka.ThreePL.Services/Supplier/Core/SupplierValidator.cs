@@ -8,6 +8,7 @@ namespace TransnationalLanka.ThreePL.Services.Supplier.Core
         public SupplierValidator()
         {
             RuleFor(p => p.SupplierName).NotEmpty();
+            RuleFor(p => p.Code).NotEmpty();
             RuleFor(p => p.Address).NotNull();
             RuleFor(p => p.Address).SetValidator(new SupplierAddressValidator());
 
