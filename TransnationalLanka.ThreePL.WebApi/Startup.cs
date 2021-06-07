@@ -163,9 +163,11 @@ namespace TransnationalLanka.ThreePL.WebApi
             app.UseCors(builder =>
                 builder.WithOrigins(Configuration["Origins"].Split(","))
                     .AllowAnyHeader()
-                    .AllowAnyMethod()
+                    .AllowAnyMethod()                 
+                    
             );
 
+            app.MaintainCorsHeadersOnError();
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));
 
             app.UseHttpsRedirection();
