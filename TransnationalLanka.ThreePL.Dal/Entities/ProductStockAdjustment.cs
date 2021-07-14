@@ -1,13 +1,8 @@
 ﻿using System;
+using TransnationalLanka.ThreePL.Core.Enums;
 
 namespace TransnationalLanka.ThreePL.Dal.Entities
 {
-    public enum StockAdjustmentType
-    {
-        In = 1,
-        Out = 2
-    }
-
     public class ProductStockAdjustment : BaseEntity
     {
         public long ProductId  { get; set; }

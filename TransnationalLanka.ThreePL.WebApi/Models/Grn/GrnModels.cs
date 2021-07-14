@@ -22,4 +22,5 @@ namespace TransnationalLanka.ThreePL.WebApi.Models.Grn
         public decimal UnitCost { get; set; }
         public DateTime? ExpiredDate { get; set; }
     }
+
 }

@@ -14,6 +14,7 @@ namespace TransnationalLanka.ThreePL.Dal
         IRepository<WareHouse> WareHouseRepository { get; }
         IRepository<PurchaseOrder> PurchaseOrdeRepository { get; }
         IRepository<GoodReceivedNote> GoodReceiveNoteRepository { get; }
+        IRepository<GoodReceivedNoteItems> GoodReceivedNoteItemsRepository { get; }
         IRepository<ProductStock> ProductStockRepository { get; }
         IRepository<ProductStockAdjustment> ProductStockAdjustmentRepository { get; }
         Task<IDbContextTransaction> GetTransaction();
@@ -31,6 +32,7 @@ namespace TransnationalLanka.ThreePL.Dal
         private IRepository<Product> _productRepository;
         private IRepository<PurchaseOrder> _purchaseOrdeRepository;
         private IRepository<GoodReceivedNote> _goodReceivedNoteRepository;
+        private IRepository<GoodReceivedNoteItems> _goodReceivedNoteItemsRepository;
         private IRepository<ProductStock> _productStockRepository;
         private IRepository<ProductStockAdjustment> _productStockAdjustmentRepository;
 
@@ -105,6 +107,16 @@ namespace TransnationalLanka.ThreePL.Dal
                 if (_goodReceivedNoteRepository != null) return _goodReceivedNoteRepository;
                 _goodReceivedNoteRepository = new Repository<GoodReceivedNote>(_context);
                 return _goodReceivedNoteRepository;
+            }
+        }
+
+        public IRepository<GoodReceivedNoteItems> GoodReceivedNoteItemsRepository
+        {
+            get
+            {
+                if (_goodReceivedNoteItemsRepository != null) return _goodReceivedNoteItemsRepository;
+                _goodReceivedNoteItemsRepository = new Repository<GoodReceivedNoteItems>(_context);
+                return _goodReceivedNoteItemsRepository;
             }
         }
 

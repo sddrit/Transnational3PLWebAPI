@@ -21,11 +21,13 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
             var storeTypes = _metadataService.GetStoreTypes();
             var massUnits = _metadataService.GetMassUnit();
             var distanceUnits = _metadataService.GetDistanceUnits();
+            var stockAdjustmentTypes = _metadataService.GetStockAdjustmentTypes();
             return Ok(new
             {
                 StoreTypes = storeTypes,
                 MassUnits = massUnits,
-                DistanceUnits = distanceUnits
+                DistanceUnits = distanceUnits,
+                StockAdjustmentTypes = stockAdjustmentTypes
             });
         }
     }

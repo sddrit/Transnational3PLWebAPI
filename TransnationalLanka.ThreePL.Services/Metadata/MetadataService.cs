@@ -13,6 +13,7 @@ namespace TransnationalLanka.ThreePL.Services.Metadata
         List<StoreTypeMetadataItem> GetStoreTypes();
         List<DistanceUnitMetadataItem> GetDistanceUnits();
         List<MassUnitMetadataItem> GetMassUnit();
+        List<StockAdjustmentTypeMetadataItem> GetStockAdjustmentTypes();
     }
 
     public class MetadataService : IMetadataService
@@ -45,6 +46,15 @@ namespace TransnationalLanka.ThreePL.Services.Metadata
         public List<MassUnitMetadataItem> GetMassUnit()
         {
             return Enum.GetValues(typeof(MassUnit)).Cast<MassUnit>().Select(e => new MassUnitMetadataItem()
+            {
+                Id = (int)e,
+                Name = e.GetDescription()
+            }).ToList();
+        }
+
+        public List<StockAdjustmentTypeMetadataItem> GetStockAdjustmentTypes()
+        {
+            return Enum.GetValues(typeof(StockAdjustmentType)).Cast<StockAdjustmentType>().Select(e => new StockAdjustmentTypeMetadataItem()
             {
                 Id = (int)e,
                 Name = e.GetDescription()

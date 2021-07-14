@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using TransnationalLanka.ThreePL.Core.Enums;
 using TransnationalLanka.ThreePL.Core.Exceptions;
 using TransnationalLanka.ThreePL.Dal;
 using TransnationalLanka.ThreePL.Dal.Entities;
@@ -20,6 +22,18 @@ namespace TransnationalLanka.ThreePL.Services.Product
             _unitOfWork = unitOfWork;
             _productService = productService;
             _wareHouseService = wareHouseService;
+        }
+
+        public IQueryable<ProductStockAdjustment> GetStockAdjustmentsByProductId(long id)
+        {
+            return _unitOfWork.ProductStockAdjustmentRepository.GetAll()
+                 .Where(g => g.ProductId == id);
+        }
+
+        public IQueryable<ProductStock> GetStocksByProductId(long id)
+        {
+            return _unitOfWork.ProductStockRepository.GetAll()
+                 .Where(g => g.ProductId == id);
         }
 
         public async Task AdjustStock(long warehouseId, long productId, decimal unitCost, decimal quantity, DateTime? expiredDate, string note)

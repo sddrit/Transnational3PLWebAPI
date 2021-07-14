@@ -64,7 +64,7 @@ namespace TransnationalLanka.ThreePL.Services.Grn
 
                 await transaction.CommitAsync();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 await transaction.RollbackAsync();
                 throw;

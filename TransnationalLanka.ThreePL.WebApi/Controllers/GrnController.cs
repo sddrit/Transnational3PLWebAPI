@@ -43,5 +43,6 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
             var response = await _grnService.AddGoodReceivedNote(_mapper.Map<GoodReceivedNote>(model));
             return Ok(_mapper.Map<GoodReceivedNoteBindingModel>(response));
         }
+
     }
 }
