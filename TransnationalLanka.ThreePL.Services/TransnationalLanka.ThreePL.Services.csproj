@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\TransnationalLanka.ThreePL.Core\TransnationalLanka.ThreePL.Core.csproj" />
     <ProjectReference Include="..\TransnationalLanka.ThreePL.Dal\TransnationalLanka.ThreePL.Dal.csproj" />
+    <ProjectReference Include="..\TransnationalLanka.ThreePL.Integration.Tracker\TransnationalLanka.ThreePL.Integration.Tracker.csproj" />
   </ItemGroup>
 
   <ItemGroup>

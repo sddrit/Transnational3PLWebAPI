@@ -28,8 +28,8 @@ namespace TransnationalLanka.ThreePL.Integration.Tracker.Model
         [JsonPropertyName("ContactPerson")]
         public string ContactPerson { get; set; }
 
-        [JsonPropertyName("InvoicingHub")]
-        public string InvoicingHub { get; set; }
+        [JsonPropertyName("InvoicingHub")] 
+        public string InvoicingHub { get; set; } = "0001";
 
         [JsonPropertyName("TAXRegNo")]
         public string TaxRegNo { get; set; }

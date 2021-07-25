@@ -8,6 +8,7 @@ namespace TransnationalLanka.ThreePL.Dal.Entities
 {
     public class Delivery : BaseEntity
     {
+        public DeliveryType Type { get; set; }
         public string DeliveryNo { get; set; }
         public long SupplierId { get; set; }
         public virtual Supplier Supplier { get; set; }

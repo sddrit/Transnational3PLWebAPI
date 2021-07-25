@@ -10,6 +10,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Models.Delivery
     public class DeliveryBindingModel
     {
         public long Id { get; set; }
+        public DeliveryType Type { get; set; }
         public string DeliveryNo { get; set; }
         public long SupplierId { get; set; }
         public long? WareHouseId { get; set; }

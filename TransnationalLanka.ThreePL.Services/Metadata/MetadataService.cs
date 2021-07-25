@@ -16,6 +16,7 @@ namespace TransnationalLanka.ThreePL.Services.Metadata
         List<StockAdjustmentTypeMetadataItem> GetStockAdjustmentTypes();
         List<GrnTypeMetadataItem> GetGrnTypes();
         List<DeliveryStatusMetadataItem> GetDeliveryStatus();
+        List<DeliveryTypeMetadata> GetDeliveryTypes();
     }
 
     public class MetadataService : IMetadataService
@@ -79,7 +80,16 @@ namespace TransnationalLanka.ThreePL.Services.Metadata
                 Id = (int)e,
                 Name = e.GetDescription()
             }).ToList();
-        } 
+        }
+
+        public List<DeliveryTypeMetadata> GetDeliveryTypes()
+        {
+            return Enum.GetValues(typeof(DeliveryType)).Cast<DeliveryType>().Select(e => new DeliveryTypeMetadata()
+            {
+                Id = (int)e,
+                Name = e.GetDescription()
+            }).ToList();
+        }
 
     }
 }

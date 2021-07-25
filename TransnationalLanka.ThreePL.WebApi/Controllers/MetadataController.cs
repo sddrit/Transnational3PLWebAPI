@@ -24,6 +24,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
             var stockAdjustmentTypes = _metadataService.GetStockAdjustmentTypes();
             var grnTypes = _metadataService.GetGrnTypes();
             var deliveryStatus = _metadataService.GetDeliveryStatus();
+            var deliveryTypes = _metadataService.GetDeliveryTypes();
             return Ok(new
             {
                 StoreTypes = storeTypes,
@@ -31,7 +32,8 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
                 DistanceUnits = distanceUnits,
                 StockAdjustmentTypes = stockAdjustmentTypes,
                 GrnTypes = grnTypes,
-                DeliveryStatus = deliveryStatus 
+                DeliveryStatus = deliveryStatus,
+                DeliveryTypes = deliveryTypes
             });
         }
     }

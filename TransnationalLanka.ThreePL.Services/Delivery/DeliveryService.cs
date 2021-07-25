@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TransnationalLanka.ThreePL.Core.Enums;
 using TransnationalLanka.ThreePL.Core.Exceptions;
 using TransnationalLanka.ThreePL.Dal;
+using TransnationalLanka.ThreePL.Integration.Tracker;
+using TransnationalLanka.ThreePL.Integration.Tracker.Model;
 using TransnationalLanka.ThreePL.Services.Product;
+using TransnationalLanka.ThreePL.Services.Supplier;
 
 namespace TransnationalLanka.ThreePL.Services.Delivery
 {
@@ -25,11 +29,16 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IStockService _stockService;
+        private readonly ISupplierService _supplierService;
+        private readonly TrackerApiService _trackerApiService;
 
-        public DeliveryService(IUnitOfWork unitOfWork, IStockService stockService)
+        public DeliveryService(IUnitOfWork unitOfWork, IStockService stockService,
+            ISupplierService supplierService, TrackerApiService trackerApiService)
         {
             _unitOfWork = unitOfWork;
             _stockService = stockService;
+            _trackerApiService = trackerApiService;
+            _supplierService = supplierService;
         }
 
         public IQueryable<Dal.Entities.Delivery> GetDeliveries()
@@ -86,9 +95,26 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
                 });
             }
 
-            //Todo call to tracking api and get the tracking number and store in our entity
+            var supplier = await _supplierService.GetSupplierById(delivery.SupplierId);
 
-            delivery.TrackingNumbers = new[] {"ABC0001", "ABC0002", "ABC003"};
+            var trackingNumbers = new List<string>();
+
+            do
+            {
+                var response = await _trackerApiService.GetTrackingNoRange(new GetTrackingNoRangeRequest()
+                {
+                    CustomerCode = supplier.TrackerCode,
+                    Type = delivery.Type == DeliveryType.Cod ? "1" : "2"
+                });
+
+                if (response.IsSuccess == "1")
+                {
+                    trackingNumbers.Add(response.Result.TrackingNumber);
+                }
+
+            } while (trackingNumbers.Count < requiredTrackingNumberCount);
+
+            delivery.TrackingNumbers = trackingNumbers.ToArray();
 
             delivery.DeliveryStatus = DeliveryStatus.Processing;
             await _unitOfWork.SaveChanges();

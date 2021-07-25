@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\TransnationalLanka.ThreePL.Core\TransnationalLanka.ThreePL.Core.csproj" />
     <ProjectReference Include="..\TransnationalLanka.ThreePL.Dal\TransnationalLanka.ThreePL.Dal.csproj" />
+    <ProjectReference Include="..\TransnationalLanka.ThreePL.Integration.Tracker\TransnationalLanka.ThreePL.Integration.Tracker.csproj" />
     <ProjectReference Include="..\TransnationalLanka.ThreePL.Services\TransnationalLanka.ThreePL.Services.csproj" />
     <PackageReference Include="DevExtreme.AspNet.Core" Version="20.2.6" />
     <PackageReference Include="DevExtreme.AspNet.Data" Version="2.7.1" />

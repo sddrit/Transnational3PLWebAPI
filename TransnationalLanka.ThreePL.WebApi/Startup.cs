@@ -13,6 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using TransnationalLanka.ThreePL.Dal;
 using TransnationalLanka.ThreePL.Dal.Entities;
+using TransnationalLanka.ThreePL.Integration.Tracker;
 using TransnationalLanka.ThreePL.Services.Account;
 using TransnationalLanka.ThreePL.Services.Application;
 using TransnationalLanka.ThreePL.Services.Delivery;
@@ -95,6 +96,7 @@ namespace TransnationalLanka.ThreePL.WebApi
             services.AddScoped<IGrnService, GrnService>();
             services.AddScoped<IStockTransferService, StockTransferService>();
             services.AddScoped<IDeliveryService, DeliveryService>();
+            services.AddScoped<TrackerApiService>(provider => new TrackerApiService(true));
 
             services.AddControllers().AddJsonOptions(options =>
             {

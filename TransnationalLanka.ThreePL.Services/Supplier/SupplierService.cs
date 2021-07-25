@@ -1,10 +1,13 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Dawn;
 using Microsoft.EntityFrameworkCore;
 using TransnationalLanka.ThreePL.Core.Constants;
 using TransnationalLanka.ThreePL.Core.Exceptions;
 using TransnationalLanka.ThreePL.Dal;
+using TransnationalLanka.ThreePL.Integration.Tracker;
+using TransnationalLanka.ThreePL.Integration.Tracker.Model;
 using TransnationalLanka.ThreePL.Services.Common.Mapper;
 using TransnationalLanka.ThreePL.Services.Supplier.Core;
 
@@ -13,10 +16,12 @@ namespace TransnationalLanka.ThreePL.Services.Supplier
     public class SupplierService : ISupplierService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly TrackerApiService _trackerApiService;
 
-        public SupplierService(IUnitOfWork unitOfWork)
+        public SupplierService(IUnitOfWork unitOfWork, TrackerApiService trackerApiService)
         {
             _unitOfWork = unitOfWork;
+            _trackerApiService = trackerApiService;
         }
 
         public IQueryable<Dal.Entities.Supplier> GetSuppliers()
@@ -34,9 +39,39 @@ namespace TransnationalLanka.ThreePL.Services.Supplier
             _unitOfWork.SupplierRepository.Insert(supplier);
             await _unitOfWork.SaveChanges();
 
-            //Todo send the create new supplier to tracking application
+            var savedSupplier = await GetSupplierById(supplier.Id);
 
-            return await GetSupplierById(supplier.Id);
+            var response = await _trackerApiService.CreateCustomer(new CreateCustomerRequest()
+            {
+                CustomerName = savedSupplier.SupplierName,
+                CustomerAddress = $"{savedSupplier.Address.AddressLine1} {savedSupplier.Address.AddressLine2} {savedSupplier.Address.City.CityName} {savedSupplier.Address.PostalCode}",
+                ContactNumber = savedSupplier.Contact.Phone,
+                EmailAddress = savedSupplier.Contact.Email,
+                NicNo = string.Empty,
+                ContactPerson = savedSupplier.Contact.ContactPerson,
+                TaxRegNo = savedSupplier.VatNumber,
+                Vat = string.IsNullOrEmpty(savedSupplier.VatNumber)? "0": "1",
+                Remarks = string.Empty,
+                CreatedDate = System.DateTime.Now,
+                TplSupplierCode = savedSupplier.Code
+            });
+
+            if (response.IsSuccess != "1")
+            {
+                throw new ServiceException(new ErrorMessage[]
+                {
+                    new ErrorMessage()
+                    {
+                        Code = string.Empty,
+                        Message = $"Unable to create a supplier in tracker side"
+                    }
+                });
+            }
+
+            savedSupplier.TrackerCode = response.Result.CustomerCode;
+            await _unitOfWork.SaveChanges();
+
+            return savedSupplier;
         }
 
         public async Task<Dal.Entities.Supplier> UpdateSupplier(Dal.Entities.Supplier supplier)
@@ -46,15 +81,24 @@ namespace TransnationalLanka.ThreePL.Services.Supplier
             await ValidateSupplier(supplier);
 
             var currentSupplier = await GetSupplierById(supplier.Id);
+            supplier.TrackerCode = currentSupplier.TrackerCode;
 
             var mapper = ServiceMapper.GetMapper();
             mapper.Map(supplier, currentSupplier);
 
             await _unitOfWork.SaveChanges();
 
-            //Todo send the update supplier details to tracking application
+            var savedSupplier = await GetSupplierById(supplier.Id);
 
-            return await GetSupplierById(supplier.Id);
+            await _trackerApiService.UpdateCustomerStatus(new UpdateCustomerRequest()
+            {
+               Active = supplier.Active? "1": "0",
+               CustomerCode = savedSupplier.TrackerCode,
+               StatusDate = DateTime.Now,
+               StatusReason = "Update the supplier"
+            });
+
+            return savedSupplier;
         }
 
         public async Task<Dal.Entities.Supplier> GetSupplierById(long id)
