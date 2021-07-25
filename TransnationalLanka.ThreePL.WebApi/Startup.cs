@@ -15,6 +15,7 @@ using TransnationalLanka.ThreePL.Dal;
 using TransnationalLanka.ThreePL.Dal.Entities;
 using TransnationalLanka.ThreePL.Services.Account;
 using TransnationalLanka.ThreePL.Services.Application;
+using TransnationalLanka.ThreePL.Services.Delivery;
 using TransnationalLanka.ThreePL.Services.Grn;
 using TransnationalLanka.ThreePL.Services.Metadata;
 using TransnationalLanka.ThreePL.Services.Product;
@@ -93,6 +94,7 @@ namespace TransnationalLanka.ThreePL.WebApi
             services.AddScoped<IStockService, StockService>();
             services.AddScoped<IGrnService, GrnService>();
             services.AddScoped<IStockTransferService, StockTransferService>();
+            services.AddScoped<IDeliveryService, DeliveryService>();
 
             services.AddControllers().AddJsonOptions(options =>
             {

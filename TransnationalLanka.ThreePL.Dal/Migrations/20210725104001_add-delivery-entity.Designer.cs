@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TransnationalLanka.ThreePL.Dal;
 
 namespace TransnationalLanka.ThreePL.Dal.Migrations
 {
     [DbContext(typeof(ThreePlDbContext))]
-    partial class ThreePlDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210725104001_add-delivery-entity")]
+    partial class adddeliveryentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -197,32 +199,18 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                     b.Property<DateTime>("DeliveryDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("DeliveryNo")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(max)")
-                        .HasComputedColumnSql("('DL'+right(replicate('0',(8))+CONVERT([varchar],[Id]),(8)))");
-
                     b.Property<int>("DeliveryStatus")
                         .HasColumnType("int");
 
                     b.Property<long>("SupplierId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("TrackingNumbers")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTimeOffset>("Updated")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<long?>("WareHouseId")
-                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
                     b.HasIndex("SupplierId");
-
-                    b.HasIndex("WareHouseId");
 
                     b.ToTable("Deliveries");
                 });
@@ -590,12 +578,6 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                     b.Property<string>("Reason")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("StockTransferNumber")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(max)")
-                        .HasComputedColumnSql("('ST'+right(replicate('0',(8))+CONVERT([varchar],[Id]),(8)))");
-
                     b.Property<long>("ToWareHouseId")
                         .HasColumnType("bigint");
 
@@ -871,10 +853,6 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("TransnationalLanka.ThreePL.Dal.Entities.WareHouse", "WareHouse")
-                        .WithMany()
-                        .HasForeignKey("WareHouseId");
-
                     b.OwnsOne("TransnationalLanka.ThreePL.Dal.Entities.DeliveryCustomer", "DeliveryCustomer", b1 =>
                         {
                             b1.Property<long>("DeliveryId")
@@ -927,8 +905,6 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                     b.Navigation("DeliveryCustomer");
 
                     b.Navigation("Supplier");
-
-                    b.Navigation("WareHouse");
                 });
 
             modelBuilder.Entity("TransnationalLanka.ThreePL.Dal.Entities.DeliveryItem", b =>

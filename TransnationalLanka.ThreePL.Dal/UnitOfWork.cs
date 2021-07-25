@@ -18,6 +18,7 @@ namespace TransnationalLanka.ThreePL.Dal
         IRepository<ProductStock> ProductStockRepository { get; }
         IRepository<ProductStockAdjustment> ProductStockAdjustmentRepository { get; }
         IRepository<StockTransfer> StockTransferRepository { get; }
+        IRepository<Delivery> DeliveryRepository { get; }
         Task<IDbContextTransaction> GetTransaction();
         Task SaveChanges();
     }
@@ -36,18 +37,27 @@ namespace TransnationalLanka.ThreePL.Dal
         private IRepository<GoodReceivedNoteItems> _goodReceivedNoteItemsRepository;
         private IRepository<ProductStock> _productStockRepository;
         private IRepository<ProductStockAdjustment> _productStockAdjustmentRepository;
-        private IRepository<StockTransfer> _stockTranferRepository;
+        private IRepository<StockTransfer> _stockTransferRepository;
+        private IRepository<Delivery> _deliveryRepository;
 
         public UnitOfWork(ThreePlDbContext context)
         {
             _context = context;
         }
 
+        public IRepository<Delivery> DeliveryRepository
+        {
+            get
+            {
+                return _deliveryRepository ??= new Repository<Delivery>(_context);
+            }
+        }
+
         public IRepository<StockTransfer> StockTransferRepository
         {
             get
             {
-                return _stockTranferRepository ??= new Repository<StockTransfer>(_context);
+                return _stockTransferRepository ??= new Repository<StockTransfer>(_context);
             }
         }
 

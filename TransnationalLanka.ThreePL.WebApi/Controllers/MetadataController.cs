@@ -23,13 +23,15 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
             var distanceUnits = _metadataService.GetDistanceUnits();
             var stockAdjustmentTypes = _metadataService.GetStockAdjustmentTypes();
             var grnTypes = _metadataService.GetGrnTypes();
+            var deliveryStatus = _metadataService.GetDeliveryStatus();
             return Ok(new
             {
                 StoreTypes = storeTypes,
                 MassUnits = massUnits,
                 DistanceUnits = distanceUnits,
                 StockAdjustmentTypes = stockAdjustmentTypes,
-                GrnTypes = grnTypes
+                GrnTypes = grnTypes,
+                DeliveryStatus = deliveryStatus 
             });
         }
     }

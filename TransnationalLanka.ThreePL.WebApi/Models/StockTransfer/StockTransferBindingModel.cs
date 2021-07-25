@@ -8,6 +8,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Models.StockTransfer
     public class StockTransferBindingModel
     {
         public long Id { get; set; }
+        public string StockTransferNumber { get; set; }
         public DateTimeOffset Created { get; set; }
         public DateTimeOffset Updated { get; set; }
         public long ToWareHouseId { get; set; }

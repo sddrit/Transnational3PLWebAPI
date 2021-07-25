@@ -6,6 +6,7 @@ namespace TransnationalLanka.ThreePL.Dal.Entities
 {
     public class StockTransfer : BaseEntity
     {
+        public string StockTransferNumber { get; set; }
         public long ToWareHouseId { get; set; }
         public WareHouse ToWareHouse { get; set; }
         public long FromWareHouseId { get; set; }

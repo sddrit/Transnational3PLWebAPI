@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using System;
+using System.Linq;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TransnationalLanka.ThreePL.Dal.Entities;
 
 namespace TransnationalLanka.ThreePL.Dal
@@ -23,6 +26,8 @@ namespace TransnationalLanka.ThreePL.Dal
         public DbSet<GoodReceivedNoteItems> GoodReceivedNoteItems { get; set; }
         public DbSet<StockTransfer> StockTransfers { get; set; }
         public DbSet<StockTransferItem> StockTransferItems { get; set; }
+        public DbSet<Delivery> Deliveries { get; set; }
+        public DbSet<DeliveryItem> DeliveryItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -47,6 +52,16 @@ namespace TransnationalLanka.ThreePL.Dal
                 .Property(p => p.GrnNo)
                 .IsUnicode(false)
                 .HasComputedColumnSql("('GRN'+right(replicate('0',(8))+CONVERT([varchar],[Id]),(8)))");
+
+            builder.Entity<StockTransfer>()
+                .Property(p => p.StockTransferNumber)
+                .IsUnicode(false)
+                .HasComputedColumnSql("('ST'+right(replicate('0',(8))+CONVERT([varchar],[Id]),(8)))");
+
+            builder.Entity<Delivery>()
+                .Property(p => p.DeliveryNo)
+                .IsUnicode(false)
+                .HasComputedColumnSql("('DL'+right(replicate('0',(8))+CONVERT([varchar],[Id]),(8)))");
 
             builder.Entity<Address>()
                 .HasOne(e => e.City)
@@ -101,6 +116,24 @@ namespace TransnationalLanka.ThreePL.Dal
             builder.Entity<StockTransferItem>()
                 .HasOne(t => t.Product)
                 .WithMany(p => p.StockTransferItems)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<Delivery>()
+                .HasOne(d => d.Supplier)
+                .WithMany(s => s.Deliveries)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            var stringArrayConverter = new ValueConverter<string[], string>(
+                v => string.Join(";", v),
+                v => v.Split(";", StringSplitOptions.RemoveEmptyEntries).ToArray());
+
+            builder.Entity<Delivery>()
+                .Property(d => d.TrackingNumbers)
+                .HasConversion(stringArrayConverter);
+
+            builder.Entity<DeliveryItem>()
+                .HasOne(d => d.Product)
+                .WithMany(p => p.DeliveryItems)
                 .OnDelete(DeleteBehavior.NoAction);
 
             base.OnModelCreating(builder);
