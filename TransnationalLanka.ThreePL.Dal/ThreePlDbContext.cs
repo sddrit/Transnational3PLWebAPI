@@ -21,6 +21,8 @@ namespace TransnationalLanka.ThreePL.Dal
         public DbSet<PurchaseOrderItem> PurchaseOrderItems { get; set; }
         public DbSet<GoodReceivedNote> GoodReceivedNotes { get; set; }
         public DbSet<GoodReceivedNoteItems> GoodReceivedNoteItems { get; set; }
+        public DbSet<StockTransfer> StockTransfers { get; set; }
+        public DbSet<StockTransferItem> StockTransferItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -84,6 +86,21 @@ namespace TransnationalLanka.ThreePL.Dal
             builder.Entity<ProductStockAdjustment>()
                 .HasOne(ps => ps.WareHouse)
                 .WithMany(w => w.ProductStockAdjustments)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<StockTransfer>()
+                .HasOne(s => s.ToWareHouse)
+                .WithMany()
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<StockTransfer>()
+                .HasOne(s => s.FromWareHouse)
+                .WithMany()
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<StockTransferItem>()
+                .HasOne(t => t.Product)
+                .WithMany(p => p.StockTransferItems)
                 .OnDelete(DeleteBehavior.NoAction);
 
             base.OnModelCreating(builder);

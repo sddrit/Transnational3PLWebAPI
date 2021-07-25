@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using TransnationalLanka.ThreePL.Core.Enums;
 using TransnationalLanka.ThreePL.Core.Exceptions;
 using TransnationalLanka.ThreePL.Dal;
 using TransnationalLanka.ThreePL.Dal.Entities;
@@ -57,9 +58,20 @@ namespace TransnationalLanka.ThreePL.Services.Grn
 
                 foreach (var item in goodReceivedNote.GoodReceivedNoteItems)
                 {
-                    await _stockService.AdjustStock(goodReceivedNote.WareHouseId, item.ProductId, item.UnitCost, item.Quantity,
-                        item.ExpiredDate,
-                        $"Good Received - GRN #{goodReceivedNote.Id}");
+                    if (goodReceivedNote.Type == GrnType.Received)
+                    {
+                        await _stockService.AdjustStock(goodReceivedNote.WareHouseId, item.ProductId, item.UnitCost,
+                            item.Quantity,
+                            item.ExpiredDate,
+                            $"Good Received - GRN #{goodReceivedNote.Id}");
+                    }
+                    else
+                    {
+                        await _stockService.AdjustStock(goodReceivedNote.WareHouseId, item.ProductId, item.UnitCost,
+                            -item.Quantity,
+                            item.ExpiredDate,
+                            $"Good Return - GRN #{goodReceivedNote.Id}");
+                    }
                 }
 
                 await transaction.CommitAsync();
@@ -73,5 +85,7 @@ namespace TransnationalLanka.ThreePL.Services.Grn
             return goodReceivedNote;
 
         }
+
+
     }
 }

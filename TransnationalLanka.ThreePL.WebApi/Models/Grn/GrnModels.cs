@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using TransnationalLanka.ThreePL.Core.Enums;
+using TransnationalLanka.ThreePL.Dal.Entities;
 
 namespace TransnationalLanka.ThreePL.WebApi.Models.Grn
 {
@@ -7,6 +9,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Models.Grn
     {
         public long Id { get; set; }
         public string GrnNo { get; set; }
+        public GrnType Type { get; set; }
         public DateTimeOffset Created { get; set; }
         public long? PurchaseOrderId { get; set; }
         public long SupplierId { get; set; }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using TransnationalLanka.ThreePL.Core.Enums;
 
 namespace TransnationalLanka.ThreePL.Dal.Entities
 {
@@ -8,6 +9,7 @@ namespace TransnationalLanka.ThreePL.Dal.Entities
     {
         public string GrnNo { get; set; }
         public long? PurchaseOrderId { get; set; }
+        public GrnType Type { get; set; }
         public virtual PurchaseOrder PurchaseOrder { get; set; }
         public long SupplierId { get; set; }
         public virtual Supplier Supplier { get; set; }

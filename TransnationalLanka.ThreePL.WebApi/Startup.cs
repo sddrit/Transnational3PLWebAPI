@@ -19,6 +19,7 @@ using TransnationalLanka.ThreePL.Services.Grn;
 using TransnationalLanka.ThreePL.Services.Metadata;
 using TransnationalLanka.ThreePL.Services.Product;
 using TransnationalLanka.ThreePL.Services.PurchaseOrder;
+using TransnationalLanka.ThreePL.Services.Stock;
 using TransnationalLanka.ThreePL.Services.Supplier;
 using TransnationalLanka.ThreePL.Services.Util;
 using TransnationalLanka.ThreePL.Services.WareHouse;
@@ -91,6 +92,7 @@ namespace TransnationalLanka.ThreePL.WebApi
             services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
             services.AddScoped<IStockService, StockService>();
             services.AddScoped<IGrnService, GrnService>();
+            services.AddScoped<IStockTransferService, StockTransferService>();
 
             services.AddControllers().AddJsonOptions(options =>
             {

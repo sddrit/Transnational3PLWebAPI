@@ -22,12 +22,14 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
             var massUnits = _metadataService.GetMassUnit();
             var distanceUnits = _metadataService.GetDistanceUnits();
             var stockAdjustmentTypes = _metadataService.GetStockAdjustmentTypes();
+            var grnTypes = _metadataService.GetGrnTypes();
             return Ok(new
             {
                 StoreTypes = storeTypes,
                 MassUnits = massUnits,
                 DistanceUnits = distanceUnits,
-                StockAdjustmentTypes = stockAdjustmentTypes
+                StockAdjustmentTypes = stockAdjustmentTypes,
+                GrnTypes = grnTypes
             });
         }
     }

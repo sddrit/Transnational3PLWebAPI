@@ -23,5 +23,6 @@ namespace TransnationalLanka.ThreePL.Dal.Entities
         public virtual ICollection<ProductStockAdjustment> StockAdjustments { get; set; }
         public virtual ICollection<PurchaseOrderItem> PurchaseOrderItems { get; set; }
         public virtual ICollection<GoodReceivedNoteItems> GoodReceivedNoteItems { get; set; }
+        public virtual ICollection<StockTransferItem> StockTransferItems { get; set; }
     }
 }
