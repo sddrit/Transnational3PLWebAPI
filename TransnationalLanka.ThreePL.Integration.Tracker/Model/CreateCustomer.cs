@@ -40,19 +40,19 @@ namespace TransnationalLanka.ThreePL.Integration.Tracker.Model
         [JsonPropertyName("Remarks")]
         public string Remarks { get; set; }
 
-        [JsonPropertyName("Active")] 
+        [JsonPropertyName("Active")]
         public string Active { get; set; } = "1";
 
-        [JsonPropertyName("Corporate")] 
+        [JsonPropertyName("Corporate")]
         public string Corporate { get; set; } = "1";
 
-        [JsonPropertyName("CreatedBy")] 
+        [JsonPropertyName("CreatedBy")]
         public string CreatedBy { get; set; } = "PL_3PLWS";
 
         [JsonPropertyName("CreatedDate")]
         public DateTime CreatedDate { get; set; }
 
-        [JsonPropertyName("IsTPLSupplier")] 
+        [JsonPropertyName("IsTPLSupplier")]
         public string IsTplSupplier { get; set; } = "1";
 
         [JsonPropertyName("TPLSupplierCode")]
@@ -78,5 +78,5 @@ namespace TransnationalLanka.ThreePL.Integration.Tracker.Model
         public CreateCustomerResponseResult Result { get; set; }
     }
 
-  
+
 }
