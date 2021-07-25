@@ -77,4 +77,6 @@ namespace TransnationalLanka.ThreePL.Integration.Tracker.Model
         [JsonPropertyName("result")]
         public CreateCustomerResponseResult Result { get; set; }
     }
+
+  
 }
