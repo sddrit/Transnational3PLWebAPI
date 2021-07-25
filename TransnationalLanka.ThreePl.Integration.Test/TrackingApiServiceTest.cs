@@ -51,7 +51,7 @@ namespace TransnationalLanka.ThreePl.Integration.Test
             var response = await trackingApiService.UpdateDeliveryStatus(new UpdateDeliveryStatusRequest()
             {
                 Hub="0051",
-	            TrackingNumber="19940801",
+	            TrackingNumber="19940802",
 	            StatusDate= System.DateTime.Now,
 	            Status="Reject",
 	            Reason="REFUSED BY THE RECIPIENT",	         
@@ -66,7 +66,7 @@ namespace TransnationalLanka.ThreePl.Integration.Test
             var trackingApiService = new TrackerApiService(true);
             var response = await trackingApiService.UpdateTrackingNoDetails(new UpdateTrackingNoDetailRequest()
             {
-                TrackingNo= "COD2649008",
+                TrackingNo= "COD2649009",
 	            CodAmount= "1999.00",
 	            ConsignorName= "T001",
 	            ConsigneeName="SDDR",
