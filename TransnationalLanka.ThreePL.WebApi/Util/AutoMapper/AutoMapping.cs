@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using TransnationalLanka.ThreePL.Dal.Entities;
 using TransnationalLanka.ThreePL.WebApi.Models.Account;
+using TransnationalLanka.ThreePL.WebApi.Models.ApiCredentail;
 using TransnationalLanka.ThreePL.WebApi.Models.Common;
 using TransnationalLanka.ThreePL.WebApi.Models.Delivery;
 using TransnationalLanka.ThreePL.WebApi.Models.Grn;
@@ -79,6 +80,8 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.AutoMapper
                 .ReverseMap();
             CreateMap<Delivery, DeliveryBindingModel>()
                 .ReverseMap();
+            CreateMap<ApiCredential, ApiCredentailBindingModel>()
+              .ReverseMap();
         }
     }
 }
