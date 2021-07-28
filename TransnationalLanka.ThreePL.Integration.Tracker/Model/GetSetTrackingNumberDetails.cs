@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace TransnationalLanka.ThreePL.Integration.Tracker.Model
 {
@@ -36,8 +32,8 @@ namespace TransnationalLanka.ThreePL.Integration.Tracker.Model
         [JsonPropertyName("ConsigneePhone")]
         public string ConsigneePhone { get; set; }
 
-        [JsonPropertyName("InsertBy")]
-        public string InsertBy { get; set; }
+        [JsonPropertyName("InsertBy")] 
+        public string InsertBy { get; set; } = "PL_3PLWS";
 
         [JsonPropertyName("InsertedDate")]
         public DateTime InsertedDate { get; set; }
@@ -50,8 +46,10 @@ namespace TransnationalLanka.ThreePL.Integration.Tracker.Model
     {
         [JsonPropertyName("isSuccess")]
         public string IsSuccess { get; set; }
+
         [JsonPropertyName("message")]
         public string Message { get; set; }
+
         [JsonPropertyName("result")]
         public GetSetTrackingNumberDetailsResponseResult Result { get; set; }
 

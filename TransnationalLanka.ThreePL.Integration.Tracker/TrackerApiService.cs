@@ -83,6 +83,8 @@ namespace TransnationalLanka.ThreePL.Integration.Tracker
 
             var contentBody = JsonSerializer.Serialize(request, options: jsonSerializeOption);
 
+            //Todo log the details of the request
+
             if (!response.IsSuccessStatusCode)
             {
                 throw new TrackingApiException("Unable to process tracking api request");

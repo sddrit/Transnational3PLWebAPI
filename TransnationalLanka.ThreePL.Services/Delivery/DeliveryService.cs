@@ -99,20 +99,35 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
 
             var trackingNumbers = new List<string>();
 
-            do
+            var response = await _trackerApiService.GetSetTrackingNoRange(new GetSetTrackingNumberDetailsRequest()
             {
-                var response = await _trackerApiService.GetTrackingNoRange(new GetTrackingNoRangeRequest()
+                CustomerCode = supplier.TrackerCode,
+                ConsignorName = supplier.SupplierName,
+                TPLWSBatchID = delivery.DeliveryNo,
+                Type = delivery.Type == DeliveryType.Cod ? "1" : "2",
+                TrackingNoCount = requiredTrackingNumberCount.ToString(),
+                ConsigneeName = delivery.DeliveryCustomer.FullName,
+                ConsigneeAddress = delivery.DeliveryCustomer.Address,
+                ConsigneePhone = string.IsNullOrEmpty(delivery.DeliveryCustomer.Phone) ? "" : delivery.DeliveryCustomer.Phone,
+                ConsigneeCity = delivery.DeliveryCustomer.City.CityName,
+                InsertedDate = DateTime.Now,
+                CODAmount = delivery.SubTotal.ToString("0.00"),
+            });
+
+            if (response.IsSuccess == "1")
+            {
+                trackingNumbers.AddRange(response.Result.TrackingNumber.Split(','));
+            }
+            else
+            {
+                throw new ServiceException(new ErrorMessage[]
                 {
-                    CustomerCode = supplier.TrackerCode,
-                    Type = delivery.Type == DeliveryType.Cod ? "1" : "2"
+                    new()
+                    {
+                        Message = response.Message
+                    }
                 });
-
-                if (response.IsSuccess == "1")
-                {
-                    trackingNumbers.Add(response.Result.TrackingNumber);
-                }
-
-            } while (trackingNumbers.Count < requiredTrackingNumberCount);
+            }
 
             delivery.TrackingNumbers = trackingNumbers.ToArray();
 

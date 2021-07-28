@@ -19,6 +19,8 @@ namespace TransnationalLanka.ThreePL.Dal.Entities
         public DateTime DeliveryDate { get; set; }
         public ICollection<DeliveryItem> DeliveryItems { get; set; }
         public string[] TrackingNumbers { get; set; }
+        [NotMapped]
+        public decimal SubTotal { get; set; }
     }
 
     public class DeliveryItem : BaseEntity
@@ -29,8 +31,7 @@ namespace TransnationalLanka.ThreePL.Dal.Entities
         public virtual Product Product { get; set; }
         public decimal Quantity { get; set; }
         public decimal UnitCost { get; set; }
-        [NotMapped]
-        public decimal Value => Quantity * UnitCost;
+        [NotMapped] public decimal Value => Quantity * UnitCost;
     }
 
     [Owned]
@@ -45,5 +46,38 @@ namespace TransnationalLanka.ThreePL.Dal.Entities
         public string PostalCode { get; set; }
         public string Mobile { get; set; }
         public string Phone { get; set; }
+
+        [NotMapped] public string FullName => $"{FirstName} {LastName}".Trim();
+
+        [NotMapped]
+        public string Address
+        {
+            get
+            {
+                var addressLines = new List<string>();
+
+                if (!string.IsNullOrEmpty(AddressLine1))
+                {
+                    addressLines.Add(AddressLine1);
+                }
+
+                if (!string.IsNullOrEmpty(AddressLine2))
+                {
+                    addressLines.Add(AddressLine2);
+                }
+
+                if (string.IsNullOrEmpty(City.CityName))
+                {
+                    addressLines.Add(City.CityName);
+                }
+
+                if (string.IsNullOrEmpty(PostalCode))
+                {
+                    addressLines.Add(PostalCode);
+                }
+
+                return string.Join(", ", addressLines);
+            }
+        }
     }
 }
