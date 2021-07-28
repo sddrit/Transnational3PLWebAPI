@@ -61,6 +61,11 @@ namespace TransnationalLanka.ThreePL.Integration.Tracker
             return await PostRequest<GetInwardRequest, GetInwardResponse>("GetInward", request);
         }
 
+        public async Task<GetSetTrackingNumberDetailsResponse> GetSetTrackingNoRange(GetSetTrackingNumberDetailsRequest request)
+        {
+            return await PostRequest<GetSetTrackingNumberDetailsRequest, GetSetTrackingNumberDetailsResponse>("GetSetTrackingNumberDetails", request);
+        }
+
         #region Private Methods
 
         private async Task<TResponse> PostRequest<TRequest, TResponse>(string url, TRequest request)

@@ -124,6 +124,52 @@ namespace TransnationalLanka.ThreePl.Integration.Test
             });
             Assert.IsTrue(!response.Result.Equals(null));
         }
+
+        [TestMethod]
+        public async Task Test_GetSet_TrackingNumber_Details()
+        {
+            var trackingApiService = new TrackerApiService(true);
+            var response = await trackingApiService.GetSetTrackingNoRange(new GetSetTrackingNumberDetailsRequest()
+            {
+                Type= "1",
+	            CustomerCode= "T001",
+	            TrackingNoCount="10",
+	            CODAmount="0.00",
+	            ConsignorName= "T281'",
+	            ConsigneeName="SDDR",
+	            ConsigneeAddress= "NO. 55/60, VAUXHALL LANE,",
+                ConsigneeCity = "COLOMBO - 02.",
+	            ConsigneePhone= "0773956018",
+	            InsertBy="3PL",
+	            InsertedDate=System.DateTime.Now,
+	            TPLWSBatchID= "000001"
+
+            });
+            Assert.IsTrue(response.IsSuccess.Equals("1"));
+        }
+
+        [TestMethod]
+        public async Task Test_GetSet_TrackingNumber_Details_TrackingNo_Not_Assigned()
+        {
+            var trackingApiService = new TrackerApiService(true);
+            var response = await trackingApiService.GetSetTrackingNoRange(new GetSetTrackingNumberDetailsRequest()
+            {
+                Type = "1",
+                CustomerCode = "G001",
+                TrackingNoCount = "10",
+                CODAmount = "0.00",
+                ConsignorName = "T281'",
+                ConsigneeName = "SDDR",
+                ConsigneeAddress = "NO. 55/60, VAUXHALL LANE,",
+                ConsigneeCity = "COLOMBO - 02.",
+                ConsigneePhone = "0773956018",
+                InsertBy = "3PL",
+                InsertedDate = System.DateTime.Now,
+                TPLWSBatchID = "000001"
+
+            });
+            Assert.IsTrue(response.IsSuccess.Equals("0"));
+        }
     }
 
 }
