@@ -94,7 +94,7 @@ namespace TransnationalLanka.ThreePL.Dal
         {
             get
             {
-                if (_supplierRepository != null) return _productRepository;
+                if (_productRepository != null) return _productRepository;
                 _productRepository = new Repository<Product>(_context);
                 return _productRepository;
             }

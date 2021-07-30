@@ -1,7 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
+using DevExpress.AspNetCore;
+using DevExpress.XtraReports.Services;
+using DevExpress.XtraReports.Web.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -21,6 +25,7 @@ using TransnationalLanka.ThreePL.Services.Grn;
 using TransnationalLanka.ThreePL.Services.Metadata;
 using TransnationalLanka.ThreePL.Services.Product;
 using TransnationalLanka.ThreePL.Services.PurchaseOrder;
+using TransnationalLanka.ThreePL.Services.Report;
 using TransnationalLanka.ThreePL.Services.Stock;
 using TransnationalLanka.ThreePL.Services.Supplier;
 using TransnationalLanka.ThreePL.Services.Util;
@@ -29,6 +34,7 @@ using TransnationalLanka.ThreePL.WebApi.Util;
 using TransnationalLanka.ThreePL.WebApi.Util.Filters;
 using TransnationalLanka.ThreePL.WebApi.Util.Middlewares;
 using TransnationalLanka.ThreePL.WebApi.Util.Options;
+using TransnationalLanka.ThreePL.WebApi.Util.Report;
 using TransnationalLanka.ThreePL.WebApi.Util.Swagger;
 
 namespace TransnationalLanka.ThreePL.WebApi
@@ -83,6 +89,8 @@ namespace TransnationalLanka.ThreePL.WebApi
                     };
                 });
 
+            services.AddDevExpressControls();
+
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ICityService, CityService>();
             services.AddScoped<IMetadataService, MetadataService>();
@@ -96,12 +104,25 @@ namespace TransnationalLanka.ThreePL.WebApi
             services.AddScoped<IGrnService, GrnService>();
             services.AddScoped<IStockTransferService, StockTransferService>();
             services.AddScoped<IDeliveryService, DeliveryService>();
-            services.AddScoped<TrackerApiService>(provider => new TrackerApiService(true));
+            services.AddScoped(_ => new TrackerApiService(true));
+            services.AddScoped<IReportService, ReportService>();
+            services.AddScoped<IReportProvider, ThreePlReportProvider>();
 
-            services.AddControllers().AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-            });
+            services.AddControllers()
+                .ConfigureApplicationPartManager(appPart => {
+                    var parts = appPart.ApplicationParts;
+                    var aspNetCoreReportingAssemblyName = 
+                        typeof(DevExpress.AspNetCore.Reporting.WebDocumentViewer.WebDocumentViewerController).Assembly.GetName().Name;
+                    var reportingPart = parts.FirstOrDefault(part => part.Name == aspNetCoreReportingAssemblyName);
+                    if (reportingPart != null)
+                    {
+                        parts.Remove(reportingPart);
+                    }
+                })
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                });
 
             services.AddSwaggerGen(c =>
             {
@@ -171,6 +192,8 @@ namespace TransnationalLanka.ThreePL.WebApi
                     .AllowAnyHeader()
                     .AllowAnyMethod()
             );
+
+            app.UseDevExpressControls();
 
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));
 
