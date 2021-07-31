@@ -29,6 +29,8 @@ namespace TransnationalLanka.ThreePL.Dal
         public DbSet<Delivery> Deliveries { get; set; }
         public DbSet<DeliveryItem> DeliveryItems { get; set; }
         public DbSet<DeliveryHistory> DeliveryHistories { get; set; }
+        public DbSet<Invoice> Invoices { get; set; }
+        public DbSet<InvoiceItem> InvoiceItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -63,6 +65,11 @@ namespace TransnationalLanka.ThreePL.Dal
                 .Property(p => p.DeliveryNo)
                 .IsUnicode(false)
                 .HasComputedColumnSql("('DL'+right(replicate('0',(8))+CONVERT([varchar],[Id]),(8)))");
+
+            builder.Entity<Invoice>()
+                .Property(p => p.InvoiceNo)
+                .IsUnicode(false)
+                .HasComputedColumnSql("('IN'+right(replicate('0',(8))+CONVERT([varchar],[Id]),(8)))");
 
             builder.Entity<Address>()
                 .HasOne(e => e.City)
