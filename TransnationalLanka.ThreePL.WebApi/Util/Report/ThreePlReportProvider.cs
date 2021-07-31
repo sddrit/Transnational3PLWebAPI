@@ -32,8 +32,9 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.Report
             switch (reportName)
             {
                 case "StockBalanceReport":
-                    var stockBalanceReport = new StockBalanceReport();
-                    var inventoryReportData = AsyncContext.Run(() => _reportService.GetInventoryReport(null, null));
+                    var stockBalanceReport = new StockBalanceReport();                
+
+                    var inventoryReportData = AsyncContext.Run(() => _reportService.GetInventoryReport( null,null));
                     var objectDataSource = new ObjectDataSource
                     {
                         DataSource = inventoryReportData,
@@ -66,9 +67,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.Report
                     report.DataSource = wayBillObjectDataSource;
                     report.Parameters["trackingNo"].Value = wayBillData.TrackingNo[0];                  
                     report.CreateDocument(true);
-                    report.PrintingSystem.ContinuousPageNumbering = false;
-
-                   
+                    report.PrintingSystem.ContinuousPageNumbering = false;                   
 
                     for (int i= 1; i<wayBillData.TrackingNo.Length;i++)
                     {
@@ -93,8 +92,14 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.Report
                     return report;
 
                 case "StockMovementReport":
-                    var stockMovementReport = new StockBalanceReport();
+                    var stockMovementReport = new StockMovementReport();
                     var stockMovementReportData = AsyncContext.Run(() => _reportService.GetInventoryMovementReport(null,Convert.ToDateTime("01-06-2021"),Convert.ToDateTime( "06-30-2021"),1));
+
+                    stockMovementReport.Parameters["fromDate"].Value = "06-01-2021";
+                    stockMovementReport.Parameters["toDate"].Value = "06-30-2021";
+                    stockMovementReport.Parameters["itemCode"].Value = "P001";
+
+
                     var stockMovementObjectDataSource = new ObjectDataSource
                     {
                         DataSource = stockMovementReportData,
@@ -102,6 +107,18 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.Report
                     };
                     stockMovementReport.DataSource = stockMovementObjectDataSource;
                     return stockMovementReport;
+
+                case "Invoice":
+                    var invoiceReport = new InvoiceSvat();
+                    var invoiceReportData = AsyncContext.Run(() => _reportService.GetInvoice(2));
+                    var invoiceObjectDataSource = new ObjectDataSource
+                    {
+                        DataSource = invoiceReportData,
+                        Name = "invoiceDataSource"
+                    };
+                    invoiceReport.DataSource = invoiceObjectDataSource;
+                    return invoiceReport;
+
             }
 
             return null;

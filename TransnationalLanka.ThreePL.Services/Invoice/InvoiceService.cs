@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 using TransnationalLanka.ThreePL.Core.Exceptions;
 using TransnationalLanka.ThreePL.Dal;
 using TransnationalLanka.ThreePL.Services.Product;
@@ -6,7 +8,7 @@ using TransnationalLanka.ThreePL.Services.Supplier;
 
 namespace TransnationalLanka.ThreePL.Services.Invoice
 {
-    public class InvoiceService
+    public class InvoiceService:IInvoiceService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ISupplierService _supplierService;
@@ -33,6 +35,33 @@ namespace TransnationalLanka.ThreePL.Services.Invoice
                     }
                 });
             }
+        }
+
+        public async Task<Dal.Entities.Invoice> GetInvoiceById(long id)
+        {
+            var invoice = await _unitOfWork.InvoiceRepository.GetAll()
+                .Include(i => i.InvoiceItems)               
+                .Where(i => i.Id == id)
+                .FirstOrDefaultAsync();
+
+            if (invoice == null)
+            {
+                throw new ServiceException(new ErrorMessage[]
+                {
+                    new ErrorMessage()
+                    {
+                        Code = string.Empty,
+                        Message = $"Unable to find invoice by id {id}"
+                    }
+                });
+            }
+
+            return invoice;
+        }
+
+        Task IInvoiceService.GenerateInvoice(long supplierId)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using TransnationalLanka.ThreePL.Dal;
 using TransnationalLanka.ThreePL.Services.Delivery;
 using TransnationalLanka.ThreePL.Services.Grn;
+using TransnationalLanka.ThreePL.Services.Invoice;
 using TransnationalLanka.ThreePL.Services.PurchaseOrder;
 using TransnationalLanka.ThreePL.Services.Report.Core;
 using TransnationalLanka.ThreePL.Services.Supplier;
@@ -18,6 +19,8 @@ namespace TransnationalLanka.ThreePL.Services.Report
         Task<GrnReport> GetGrnReport(long id);
         Task<WayBill> GetWayBill(int id);
         Task<InventoryMovementReport> GetInventoryMovementReport(long? wareHouseId, DateTime fromDate, DateTime toDate, int? productId);
+
+        Task<InvoiceReport> GetInvoice(long id);
     }
 
     public class ReportService : IReportService
@@ -28,8 +31,10 @@ namespace TransnationalLanka.ThreePL.Services.Report
         private readonly IGrnService _grnService;
         private readonly IPurchaseOrderService _purchaseOrderService;
         private readonly IDeliveryService _deliveryService;
+        private readonly IInvoiceService _invoiceService;
 
-        public ReportService(IUnitOfWork unitOfWork, ISupplierService supplierService, IWareHouseService wareHouseService, IGrnService grnService, IPurchaseOrderService purchaseOrderService, IDeliveryService deliveryService)
+
+        public ReportService(IUnitOfWork unitOfWork, ISupplierService supplierService, IWareHouseService wareHouseService, IGrnService grnService, IPurchaseOrderService purchaseOrderService, IDeliveryService deliveryService, IInvoiceService invoiceService)
         {
             _unitOfWork = unitOfWork;
             _supplierService = supplierService;
@@ -37,6 +42,7 @@ namespace TransnationalLanka.ThreePL.Services.Report
             _grnService = grnService;
             _purchaseOrderService = purchaseOrderService;
             _deliveryService = deliveryService;
+            _invoiceService = invoiceService;
         }
 
         public async Task<InventoryReport> GetInventoryReport(long? wareHouseId, long? supplierId)
@@ -138,7 +144,7 @@ namespace TransnationalLanka.ThreePL.Services.Report
                 DeliveryName = delivery.DeliveryCustomer.FullName,
                 DeliveryAddress = delivery.DeliveryCustomer.Address,
                 DeliveryNumber = delivery.DeliveryNo,
-                DeliveryPrice = delivery.SubTotal,//?
+                DeliveryPrice = delivery.SubTotal,
                 SupplierCode = delivery.Supplier.Code,
                 SupplierName = delivery.Supplier.SupplierName,
                 WareHouseAddress = delivery.WareHouse.Address.AddressLine1 + delivery.WareHouse.Address.AddressLine2,
@@ -204,10 +210,37 @@ namespace TransnationalLanka.ThreePL.Services.Report
                     UnitPrice = p.Product.UnitPrice,
                     Quantity = p.Quantity,
                     Description = p.Product.Description,
-                    UnitOfMeasure = p.Product.MassUnit.ToString()
+                    UnitOfMeasure = p.Product.MassUnit.ToString(),
+                    Note=p.Note
                 }).ToListAsync()
             };
         }
 
+
+        public async Task<InvoiceReport> GetInvoice(long id)
+        {
+            var invoice = await _invoiceService.GetInvoiceById(id);
+            var supplier = await _supplierService.GetSupplierById(invoice.SupplierId);         
+
+            return new InvoiceReport()
+            {
+               From=invoice.From,
+               To=invoice.To,
+               InvoiceNo=invoice.InvoiceNo,
+               SubTotal=invoice.SubTotal,
+               TaxAmount=invoice.Tax,
+               NetTotal=invoice.Total,
+               TaxPercentage=invoice.TaxPercentage*100,
+               SupplierCode=supplier.Code,
+               SupplierName=supplier.SupplierName,
+               SupplierAddressLine1=supplier.Address.AddressLine1,
+               SupplierAddressLine2=supplier.Address.AddressLine2,
+               InvoiceReportItems = invoice.InvoiceItems.Select(item => new InvoiceReportItem()
+                {
+                   Description=item.Description,
+                   Amount=item.Amount
+                }).ToList()
+            };
+        }
     }
 }

@@ -22,6 +22,7 @@ using TransnationalLanka.ThreePL.Services.Account;
 using TransnationalLanka.ThreePL.Services.Application;
 using TransnationalLanka.ThreePL.Services.Delivery;
 using TransnationalLanka.ThreePL.Services.Grn;
+using TransnationalLanka.ThreePL.Services.Invoice;
 using TransnationalLanka.ThreePL.Services.Metadata;
 using TransnationalLanka.ThreePL.Services.Product;
 using TransnationalLanka.ThreePL.Services.PurchaseOrder;
@@ -109,6 +110,7 @@ namespace TransnationalLanka.ThreePL.WebApi
             services.AddScoped(_ => new TrackerApiService(true));
             services.AddScoped<IReportService, ReportService>();
             services.AddScoped<IReportProvider, ThreePlReportProvider>();
+            services.AddScoped<IInvoiceService, InvoiceService>();
 
             services.AddControllers()
                 .ConfigureApplicationPartManager(appPart => {
