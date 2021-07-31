@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Web;
 using DevExpress.DataAccess.ObjectBinding;
 using DevExpress.XtraReports.Services;
@@ -32,7 +33,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.Report
             {
                 case "StockBalanceReport":
                     var stockBalanceReport = new StockBalanceReport();
-                    var inventoryReportData = AsyncContext.Run(() => _reportService.GetInventoryReport(null, 3));
+                    var inventoryReportData = AsyncContext.Run(() => _reportService.GetInventoryReport(null, null));
                     var objectDataSource = new ObjectDataSource
                     {
                         DataSource = inventoryReportData,
@@ -40,6 +41,67 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.Report
                     };
                     stockBalanceReport.DataSource = objectDataSource;
                     return stockBalanceReport;
+
+                case "GrnReport":
+                    var grnReport = new Grn();
+                    var grnReportData = AsyncContext.Run(() => _reportService.GetGrnReport(11));
+                    var grnObjectDataSource = new ObjectDataSource
+                    {
+                        DataSource = grnReportData,
+                        Name = "GrnDataSource"
+                    };
+                    grnReport.DataSource = grnObjectDataSource;
+                    return grnReport;
+
+                case "WayBill":
+                    var wayBillData = AsyncContext.Run(() => _reportService.GetWayBill(1));
+
+                    var report = new WayBill();
+                    var wayBillObjectDataSource = new ObjectDataSource
+                    {
+                        DataSource = wayBillData,
+                        Name = "wayBillDataSource"
+                    };
+
+                    report.DataSource = wayBillObjectDataSource;
+                    report.Parameters["trackingNo"].Value = wayBillData.TrackingNo[0];                  
+                    report.CreateDocument(true);
+                    report.PrintingSystem.ContinuousPageNumbering = false;
+
+                   
+
+                    for (int i= 1; i<wayBillData.TrackingNo.Length;i++)
+                    {
+                        var wayBillReport = new WayBill() ;
+
+                        wayBillObjectDataSource = new ObjectDataSource
+                        {
+                            DataSource = wayBillData,
+                            Name = "wayBillDataSource"
+                        };
+                        wayBillReport.DataSource = wayBillObjectDataSource;
+                        wayBillReport.Parameters["trackingNo"].Value = wayBillData.TrackingNo[i];
+                        wayBillReport.CreateDocument(true);
+                        wayBillReport.PrintingSystem.ContinuousPageNumbering = false;
+
+                        report.ModifyDocument(x =>
+                        {
+                            x.AddPages(wayBillReport.Pages);
+
+                        });
+                    }
+                    return report;
+
+                case "StockMovementReport":
+                    var stockMovementReport = new StockBalanceReport();
+                    var stockMovementReportData = AsyncContext.Run(() => _reportService.GetInventoryMovementReport(null,Convert.ToDateTime("01-06-2021"),Convert.ToDateTime( "06-30-2021"),1));
+                    var stockMovementObjectDataSource = new ObjectDataSource
+                    {
+                        DataSource = stockMovementReportData,
+                        Name = "stockMovementDataSource"
+                    };
+                    stockMovementReport.DataSource = stockMovementObjectDataSource;
+                    return stockMovementReport;
             }
 
             return null;

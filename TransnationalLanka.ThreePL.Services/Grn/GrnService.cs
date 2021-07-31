@@ -46,6 +46,27 @@ namespace TransnationalLanka.ThreePL.Services.Grn
             return grn;
         }
 
+        public async Task<GoodReceivedNote> GetByIdIncludeWithProduct(long id)
+        {
+            var grn = await _unitOfWork.GoodReceiveNoteRepository.GetAll()
+                .Include(g => g.GoodReceivedNoteItems)
+                .ThenInclude(n => n.Product)
+                .FirstOrDefaultAsync(g => g.Id == id);
+
+            if (grn == null)
+            {
+                throw new ServiceException(new ErrorMessage[]
+                {
+                    new()
+                    {
+                        Message = "Unable to find grn"
+                    }
+                });
+            }
+
+            return grn;
+        }
+
         public async Task<GoodReceivedNote> AddGoodReceivedNote(GoodReceivedNote goodReceivedNote)
         {
             await using var transaction = await _unitOfWork.GetTransaction();
