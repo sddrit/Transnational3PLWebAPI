@@ -28,6 +28,7 @@ namespace TransnationalLanka.ThreePL.Dal
         public DbSet<StockTransferItem> StockTransferItems { get; set; }
         public DbSet<Delivery> Deliveries { get; set; }
         public DbSet<DeliveryItem> DeliveryItems { get; set; }
+        public DbSet<DeliveryHistory> DeliveryHistories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

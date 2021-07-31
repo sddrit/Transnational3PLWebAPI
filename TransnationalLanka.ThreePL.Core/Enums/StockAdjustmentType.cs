@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 
 namespace TransnationalLanka.ThreePL.Core.Enums
 {
@@ -12,7 +7,11 @@ namespace TransnationalLanka.ThreePL.Core.Enums
         [Description("In")]
         In = 1,
         [Description("Out")]
-        Out = 2
+        Out = 2,
+        [Description("ReturnIn")]
+        ReturnIn = 3,
+        [Description("ReturnOut")]
+        ReturnOut = 4
     }
 
 }

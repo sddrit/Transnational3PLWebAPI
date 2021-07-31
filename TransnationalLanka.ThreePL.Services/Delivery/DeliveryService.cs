@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TransnationalLanka.ThreePL.Core.Enums;
+using TransnationalLanka.ThreePL.Core.Environment;
 using TransnationalLanka.ThreePL.Core.Exceptions;
 using TransnationalLanka.ThreePL.Dal;
+using TransnationalLanka.ThreePL.Dal.Entities;
 using TransnationalLanka.ThreePL.Integration.Tracker;
 using TransnationalLanka.ThreePL.Integration.Tracker.Model;
 using TransnationalLanka.ThreePL.Services.Product;
@@ -21,8 +23,8 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
         Task<Dal.Entities.Delivery> MarkAsProcessing(long id, int requiredTrackingNumberCount);
         Task<Dal.Entities.Delivery> MarkAsDispatch(long id, long warehouseId);
         Task<Dal.Entities.Delivery> MarkAsComplete(long id);
-        Task<Dal.Entities.Delivery> MarkAsReturn(long id);
-        Task<Dal.Entities.Delivery> MarkAsCustomerReturn(long id);
+        Task<Dal.Entities.Delivery> MarkAsReturn(long id, string note);
+        Task<Dal.Entities.Delivery> MarkAsCustomerReturn(long id, string note);
     }
 
     public class DeliveryService : IDeliveryService
@@ -30,15 +32,18 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
         private readonly IUnitOfWork _unitOfWork;
         private readonly IStockService _stockService;
         private readonly ISupplierService _supplierService;
+        private readonly IEnvironment _environment;
         private readonly TrackerApiService _trackerApiService;
 
         public DeliveryService(IUnitOfWork unitOfWork, IStockService stockService,
-            ISupplierService supplierService, TrackerApiService trackerApiService)
+            ISupplierService supplierService, TrackerApiService trackerApiService,
+            IEnvironment environment)
         {
             _unitOfWork = unitOfWork;
             _stockService = stockService;
             _trackerApiService = trackerApiService;
             _supplierService = supplierService;
+            _environment = environment;
         }
 
         public IQueryable<Dal.Entities.Delivery> GetDeliveries()
@@ -64,6 +69,7 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
                 .Include(d => d.WareHouse)
                 .Include(d => d.DeliveryItems)
                 .ThenInclude(i => i.Product)
+                .Include(d => d.DeliveryHistories)
                 .FirstOrDefaultAsync();
 
             if (delivery == null)
@@ -130,9 +136,11 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
             }
 
             delivery.TrackingNumbers = trackingNumbers.ToArray();
-
             delivery.DeliveryStatus = DeliveryStatus.Processing;
+
             await _unitOfWork.SaveChanges();
+
+            await AddDeliveryNote(delivery.Id, "Mark as processing");
 
             return delivery;
         }
@@ -168,6 +176,9 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
 
                 await _unitOfWork.SaveChanges();
 
+                await AddDeliveryNote(delivery.Id, "Mark as dispatched");
+
+
                 await transaction.CommitAsync();
                 return delivery;
 
@@ -197,10 +208,12 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
             delivery.DeliveryStatus = DeliveryStatus.Completed;
             await _unitOfWork.SaveChanges();
 
+            await AddDeliveryNote(delivery.Id, "Mark as complete");
+
             return delivery;
         }
 
-        public async Task<Dal.Entities.Delivery> MarkAsReturn(long id)
+        public async Task<Dal.Entities.Delivery> MarkAsReturn(long id, string note)
         {
             await using var transaction = await _unitOfWork.GetTransaction();
 
@@ -221,13 +234,17 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
 
                 foreach (var deliveryItem in delivery.DeliveryItems)
                 {
-                    await _stockService.AdjustStock(delivery.WareHouseId.Value, deliveryItem.ProductId,
+                    await _stockService.AdjustReturnStock(delivery.WareHouseId.Value, deliveryItem.ProductId,
                         deliveryItem.UnitCost,
                         deliveryItem.Quantity, null, $"Delivery Return - {delivery.DeliveryNo}");
                 }
 
                 delivery.DeliveryStatus = DeliveryStatus.Return;
                 await _unitOfWork.SaveChanges();
+
+                await AddDeliveryNote(delivery.Id, $"Mark as return - Reason : {note}");
+
+                await transaction.CommitAsync();
 
                 return delivery;
             }
@@ -238,7 +255,7 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
             }
         }
 
-        public async Task<Dal.Entities.Delivery> MarkAsCustomerReturn(long id)
+        public async Task<Dal.Entities.Delivery> MarkAsCustomerReturn(long id, string note)
         {
             await using var transaction = await _unitOfWork.GetTransaction();
 
@@ -259,13 +276,17 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
 
                 foreach (var deliveryItem in delivery.DeliveryItems)
                 {
-                    await _stockService.AdjustStock(delivery.WareHouseId.Value, deliveryItem.ProductId,
+                    await _stockService.AdjustReturnStock(delivery.WareHouseId.Value, deliveryItem.ProductId,
                         deliveryItem.UnitCost,
                         deliveryItem.Quantity, null, $"Delivery Customer Return - {delivery.DeliveryNo}");
                 }
 
                 delivery.DeliveryStatus = DeliveryStatus.CustomerReturn;
                 await _unitOfWork.SaveChanges();
+
+                await AddDeliveryNote(delivery.Id, $"Mark as customer return - Reason : {note}");
+
+                await transaction.CommitAsync();
 
                 return delivery;
             }
@@ -293,12 +314,25 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
 
         private bool CanMarkAsReturn(Dal.Entities.Delivery delivery)
         {
-            return delivery.DeliveryStatus == DeliveryStatus.Dispatched;
+            return delivery.DeliveryStatus == DeliveryStatus.Completed;
         }
 
         private bool CanMarkAsCustomerReturn(Dal.Entities.Delivery delivery)
         {
             return delivery.DeliveryStatus == DeliveryStatus.Completed;
+        }
+
+        private async Task AddDeliveryNote(long deliveryId, string note)
+        {
+            var delivery = await GetDeliveryById(deliveryId);
+            var currentEnvironment = _environment.GetCurrentEnvironment();
+            delivery.DeliveryHistories.Add(new DeliveryHistory()
+            {
+                Note = note,
+                UserName = currentEnvironment.UserName
+            });
+            await _unitOfWork.SaveChanges();
+
         }
     }
 }

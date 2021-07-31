@@ -36,7 +36,84 @@ namespace TransnationalLanka.ThreePL.Services.Product
                  .Where(g => g.ProductId == id);
         }
 
-        public async Task AdjustStock(long warehouseId, long productId, decimal unitCost, decimal quantity, DateTime? expiredDate, string note)
+        public async Task AdjustReturnStock(long warehouseId, long productId, decimal unitCost, decimal quantity, DateTime? expiredDate,
+            string note)
+        {
+            var wareHouse = await _wareHouseService.GetWareHouseById(warehouseId);
+
+            if (!_wareHouseService.IsActiveWareHouse(wareHouse))
+            {
+                throw new ServiceException(new ErrorMessage[]
+                {
+                    new()
+                    {
+                        Message = "Warehouse is not active"
+                    }
+                });
+            }
+
+            var product = await _productService.GetProductById(productId);
+
+            if (!_productService.IsActiveProduct(product))
+            {
+                throw new ServiceException(new ErrorMessage[]
+                {
+                    new()
+                    {
+                        Message = "Product is not active"
+                    }
+                });
+            }
+
+            //Check if already exists product stock
+
+            var productStock = await _unitOfWork.ProductStockRepository.GetAll()
+                .FirstOrDefaultAsync(s => s.WareHouseId == warehouseId && s.ProductId == productId);
+
+            if (productStock == null)
+            {
+                productStock = new ProductStock()
+                {
+                    ProductId = productId,
+                    Quantity = quantity,
+                    WareHouseId = warehouseId
+                };
+
+                _unitOfWork.ProductStockRepository.Insert(productStock);
+            }
+            else
+            {
+                if (quantity < 0 && (productStock.ReturnQuantity + quantity) < 0)
+                {
+                    throw new ServiceException(new ErrorMessage[]
+                    {
+                        new()
+                        {
+                            Message = "Insufficient return quantity to adjust"
+                        }
+                    });
+                }
+
+                productStock.ReturnQuantity += quantity;
+            }
+
+            var productStockAdjustment = new ProductStockAdjustment()
+            {
+                WareHouseId = warehouseId,
+                Quantity = quantity,
+                ExpiredDate = expiredDate,
+                ProductId = productId,
+                UnitCost = unitCost,
+                Type = quantity < 0 ? StockAdjustmentType.ReturnOut : StockAdjustmentType.ReturnIn,
+                Note = note
+            };
+
+            _unitOfWork.ProductStockAdjustmentRepository.Insert(productStockAdjustment);
+            await _unitOfWork.SaveChanges();
+        }
+
+        public async Task AdjustStock(long warehouseId, long productId, decimal unitCost, decimal quantity, DateTime? expiredDate, 
+            string note)
         {
             var wareHouse = await _wareHouseService.GetWareHouseById(warehouseId);
 

@@ -77,6 +77,8 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.AutoMapper
                 .ReverseMap();
             CreateMap<DeliveryItem, DeliveryItemBindingModel>()
                 .ReverseMap();
+            CreateMap<DeliveryHistory, DeliveryHistoryBindingModel>()
+                .ReverseMap();
             CreateMap<Delivery, DeliveryBindingModel>()
                 .ReverseMap();
         }

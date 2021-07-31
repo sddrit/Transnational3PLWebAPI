@@ -21,6 +21,7 @@ namespace TransnationalLanka.ThreePL.Dal.Entities
         public string[] TrackingNumbers { get; set; }
         [NotMapped]
         public decimal SubTotal { get; set; }
+        public ICollection<DeliveryHistory> DeliveryHistories { get; set; }
     }
 
     public class DeliveryItem : BaseEntity
@@ -79,5 +80,13 @@ namespace TransnationalLanka.ThreePL.Dal.Entities
                 return string.Join(", ", addressLines);
             }
         }
+    }
+
+    public class DeliveryHistory : BaseEntity
+    {
+        public long DeliveryId { get; set; }
+        public virtual Delivery Delivery { get; set; }
+        public string UserName { get; set; }
+        public string Note { get; set; }
     }
 }
