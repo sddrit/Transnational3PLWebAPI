@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using TransnationalLanka.ThreePL.Core.Enums;
 
@@ -20,7 +21,17 @@ namespace TransnationalLanka.ThreePL.Dal.Entities
         public ICollection<DeliveryItem> DeliveryItems { get; set; }
         public string[] TrackingNumbers { get; set; }
         [NotMapped]
-        public decimal SubTotal { get; set; }
+        public decimal SubTotal
+        {
+            get
+            {
+                if (DeliveryItems != null && DeliveryItems.Any())
+                {
+                    return DeliveryItems.Sum(i => i.Value);
+                }
+                return 0;
+            }
+        }
     }
 
     public class DeliveryItem : BaseEntity

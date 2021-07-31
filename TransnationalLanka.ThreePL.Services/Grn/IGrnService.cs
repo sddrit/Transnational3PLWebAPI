@@ -9,5 +9,6 @@ namespace TransnationalLanka.ThreePL.Services.Grn
         Task<GoodReceivedNote> AddGoodReceivedNote(GoodReceivedNote goodReceivedNote);
         IQueryable<GoodReceivedNote> GetAll();
         Task<GoodReceivedNote> GetById(long id);
+        Task<GoodReceivedNote> GetByIdIncludeWithProduct(long id);
     }
 }
