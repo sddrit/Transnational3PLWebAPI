@@ -1,0 +1,282 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<XtraReportsLayoutSerializer SerializerVersion="20.2.6.0" Ref="1" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v20.2, Version=20.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="InvoiceSvat" Margins="36, 38, 26, 0" PaperKind="A4" PageWidth="827" PageHeight="1169" Version="20.2" DataSource="#Ref-0" Font="Arial, 9.75pt">
+  <Extensions>
+    <Item1 Ref="2" Key="VSReportExtInfo" Value=".vsrepx" />
+  </Extensions>
+  <Bands>
+    <Item1 Ref="3" ControlType="TopMarginBand" Name="TopMargin" HeightF="26" />
+    <Item2 Ref="4" ControlType="BottomMarginBand" Name="BottomMargin" HeightF="0" />
+    <Item3 Ref="5" ControlType="ReportHeaderBand" Name="ReportHeader" HeightF="91.16665">
+      <Controls>
+        <Item1 Ref="6" ControlType="XRLabel" Name="label2" Text="Pronto Lanka Private Limited" SizeF="753,24.194334" LocationFloat="2.54313145E-05,36.66668" StyleName="Title" />
+        <Item2 Ref="7" ControlType="XRLabel" Name="label1" Text="SVAT Invoice" SizeF="753,24.194334" LocationFloat="0,0" StyleName="Title" />
+      </Controls>
+    </Item3>
+    <Item4 Ref="8" ControlType="DetailBand" Name="Detail" HeightF="0" KeepTogether="true" />
+    <Item5 Ref="9" ControlType="DetailReportBand" Name="DetailReport" Level="0" DataMember="InvoiceReportItems" DataSource="#Ref-0">
+      <Bands>
+        <Item1 Ref="10" ControlType="GroupHeaderBand" Name="GroupHeader1" GroupUnion="WithFirstDetail" HeightF="28">
+          <Controls>
+            <Item1 Ref="11" ControlType="XRTable" Name="table2" SizeF="743,27.9999981" LocationFloat="0,0">
+              <Rows>
+                <Item1 Ref="12" ControlType="XRTableRow" Name="tableRow3" Weight="1">
+                  <Cells>
+                    <Item1 Ref="13" ControlType="XRTableCell" Name="tableCell27" Weight="0.7936376010387638" Text="Description" StyleName="DetailCaption2" ForeColor="Black" BackColor="Transparent" BorderColor="Black" Borders="All" BorderWidth="1">
+                      <StylePriority Ref="14" UseForeColor="false" UseBackColor="false" UseBorderColor="false" UseBorders="false" UseBorderWidth="false" />
+                    </Item1>
+                    <Item2 Ref="15" ControlType="XRTableCell" Name="tableCell28" Weight="0.20636239896123626" Text="Amount (Rs)" TextAlignment="MiddleRight" StyleName="DetailCaption2" ForeColor="Black" BackColor="Transparent" BorderColor="Black" Borders="All" BorderWidth="1">
+                      <StylePriority Ref="16" UseForeColor="false" UseBackColor="false" UseBorderColor="false" UseBorders="false" UseBorderWidth="false" UseTextAlignment="false" />
+                    </Item2>
+                  </Cells>
+                </Item1>
+              </Rows>
+            </Item1>
+          </Controls>
+        </Item1>
+        <Item2 Ref="17" ControlType="DetailBand" Name="Detail1" HeightF="25">
+          <Controls>
+            <Item1 Ref="18" ControlType="XRTable" Name="table3" SizeF="743,25" LocationFloat="0,0">
+              <Rows>
+                <Item1 Ref="19" ControlType="XRTableRow" Name="tableRow4" Weight="11.5">
+                  <Cells>
+                    <Item1 Ref="20" ControlType="XRTableCell" Name="tableCell29" Weight="0.94046688826775648" StyleName="DetailData2" BorderColor="Black" Borders="Left, Right, Bottom" BorderWidth="1">
+                      <ExpressionBindings>
+                        <Item1 Ref="21" EventName="BeforePrint" PropertyName="Text" Expression="[Description]" />
+                      </ExpressionBindings>
+                      <StylePriority Ref="22" UseBorderColor="false" UseBorders="false" UseBorderWidth="false" />
+                    </Item1>
+                    <Item2 Ref="23" ControlType="XRTableCell" Name="tableCell30" Weight="0.24454113488627574" TextFormatString="{0:#,##0.00;(#,##0.00);'-' }" TextAlignment="MiddleRight" StyleName="DetailData2" BorderColor="Black" Borders="Left, Right, Bottom" BorderWidth="1">
+                      <ExpressionBindings>
+                        <Item1 Ref="24" EventName="BeforePrint" PropertyName="Text" Expression="[Amount]" />
+                      </ExpressionBindings>
+                      <StylePriority Ref="25" UseBorderColor="false" UseBorders="false" UseBorderWidth="false" UseTextAlignment="false" />
+                    </Item2>
+                  </Cells>
+                </Item1>
+              </Rows>
+            </Item1>
+          </Controls>
+        </Item2>
+      </Bands>
+    </Item5>
+    <Item6 Ref="26" ControlType="PageHeaderBand" Name="PageHeader" HeightF="214.833328">
+      <Controls>
+        <Item1 Ref="27" ControlType="XRTable" Name="table4" SizeF="365.833282,200" LocationFloat="377.166656,0" Padding="2,2,0,0,96">
+          <Rows>
+            <Item1 Ref="28" ControlType="XRTableRow" Name="tableRow7" Weight="1">
+              <Cells>
+                <Item1 Ref="29" ControlType="XRTableCell" Name="tableCell5" Weight="1.9749996948242186" Multiline="true" Text="OUR VAT REGISTRATION No" Padding="6,6,6,6,100" Borders="All">
+                  <StylePriority Ref="30" UsePadding="false" UseBorders="false" />
+                </Item1>
+                <Item2 Ref="31" ControlType="XRTableCell" Name="tableCell6" Weight="1.4250003051757814" Multiline="true" Padding="6,6,6,6,100" Borders="All">
+                  <StylePriority Ref="32" UsePadding="false" UseBorders="false" />
+                </Item2>
+              </Cells>
+            </Item1>
+            <Item2 Ref="33" ControlType="XRTableRow" Name="tableRow8" Weight="1">
+              <Cells>
+                <Item1 Ref="34" ControlType="XRTableCell" Name="tableCell7" Weight="1.9749996948242186" Multiline="true" Text="YOUR VAT REGISTRATION No" Padding="6,6,6,6,100" Borders="Left, Right, Bottom">
+                  <StylePriority Ref="35" UsePadding="false" UseBorders="false" />
+                </Item1>
+                <Item2 Ref="36" ControlType="XRTableCell" Name="tableCell8" Weight="1.4250003051757814" Multiline="true" Padding="6,6,6,6,100" Borders="Left, Right, Bottom">
+                  <StylePriority Ref="37" UsePadding="false" UseBorders="false" />
+                </Item2>
+              </Cells>
+            </Item2>
+            <Item3 Ref="38" ControlType="XRTableRow" Name="tableRow9" Weight="1">
+              <Cells>
+                <Item1 Ref="39" ControlType="XRTableCell" Name="tableCell9" Weight="1.9749996948242186" Multiline="true" Padding="6,6,0,0,100">
+                  <StylePriority Ref="40" UsePadding="false" />
+                </Item1>
+                <Item2 Ref="41" ControlType="XRTableCell" Name="tableCell10" Weight="1.4250003051757814" Multiline="true" Padding="6,6,0,0,100">
+                  <StylePriority Ref="42" UsePadding="false" />
+                </Item2>
+              </Cells>
+            </Item3>
+            <Item4 Ref="43" ControlType="XRTableRow" Name="tableRow10" Weight="1">
+              <Cells>
+                <Item1 Ref="44" ControlType="XRTableCell" Name="tableCell11" Weight="1.9749996948242186" Multiline="true" Text="Invoice Number" Padding="6,6,6,6,100" Borders="All">
+                  <StylePriority Ref="45" UsePadding="false" UseBorders="false" />
+                </Item1>
+                <Item2 Ref="46" ControlType="XRTableCell" Name="tableCell12" Weight="1.4250003051757814" Multiline="true" Text="tableCell12" Padding="6,6,6,6,100" Borders="All">
+                  <ExpressionBindings>
+                    <Item1 Ref="47" EventName="BeforePrint" PropertyName="Text" Expression="[InvoiceNo]" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="48" UsePadding="false" UseBorders="false" />
+                </Item2>
+              </Cells>
+            </Item4>
+            <Item5 Ref="49" ControlType="XRTableRow" Name="tableRow11" Weight="1">
+              <Cells>
+                <Item1 Ref="50" ControlType="XRTableCell" Name="tableCell13" Weight="1.9749996948242186" Multiline="true" Text="Date" Padding="6,6,6,6,100" Borders="Left, Right, Bottom">
+                  <StylePriority Ref="51" UsePadding="false" UseBorders="false" />
+                </Item1>
+                <Item2 Ref="52" ControlType="XRTableCell" Name="tableCell14" Weight="1.4250003051757814" TextFormatString="{0:dd/MM/yyyy}" Multiline="true" Text="tableCell14" Padding="6,6,6,6,100" Borders="Left, Right, Bottom">
+                  <ExpressionBindings>
+                    <Item1 Ref="53" EventName="BeforePrint" PropertyName="Text" Expression="[To]" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="54" UsePadding="false" UseBorders="false" />
+                </Item2>
+              </Cells>
+            </Item5>
+            <Item6 Ref="55" ControlType="XRTableRow" Name="tableRow12" Weight="1">
+              <Cells>
+                <Item1 Ref="56" ControlType="XRTableCell" Name="tableCell15" Weight="1.9749996948242186" Multiline="true" Padding="6,6,0,0,100">
+                  <StylePriority Ref="57" UsePadding="false" />
+                </Item1>
+                <Item2 Ref="58" ControlType="XRTableCell" Name="tableCell16" Weight="1.4250003051757814" Multiline="true" Padding="6,6,0,0,100">
+                  <StylePriority Ref="59" UsePadding="false" />
+                </Item2>
+              </Cells>
+            </Item6>
+            <Item7 Ref="60" ControlType="XRTableRow" Name="tableRow13" Weight="1">
+              <Cells>
+                <Item1 Ref="61" ControlType="XRTableCell" Name="tableCell17" Weight="1.9749996948242186" Multiline="true" Text="OUR SVAT No&#x9;&#xD;&#xA;" Padding="6,6,6,6,100" Borders="All">
+                  <StylePriority Ref="62" UsePadding="false" UseBorders="false" />
+                </Item1>
+                <Item2 Ref="63" ControlType="XRTableCell" Name="tableCell18" Weight="1.4250003051757814" Multiline="true" Padding="6,6,6,6,100" Borders="All">
+                  <StylePriority Ref="64" UsePadding="false" UseBorders="false" />
+                </Item2>
+              </Cells>
+            </Item7>
+            <Item8 Ref="65" ControlType="XRTableRow" Name="tableRow14" Weight="1">
+              <Cells>
+                <Item1 Ref="66" ControlType="XRTableCell" Name="tableCell19" Weight="1.9749996948242186" Multiline="true" Text="YOUR SVAT No&#x9;&#xD;&#xA;" Padding="6,6,6,6,100" Borders="Left, Right, Bottom">
+                  <StylePriority Ref="67" UsePadding="false" UseBorders="false" />
+                </Item1>
+                <Item2 Ref="68" ControlType="XRTableCell" Name="tableCell20" Weight="1.4250003051757814" Multiline="true" Padding="6,6,6,6,100" Borders="Left, Right, Bottom">
+                  <StylePriority Ref="69" UsePadding="false" UseBorders="false" />
+                </Item2>
+              </Cells>
+            </Item8>
+          </Rows>
+        </Item1>
+        <Item2 Ref="70" ControlType="XRTable" Name="table1" SizeF="300,200" LocationFloat="2.57492065E-05,4.83332825" Padding="2,2,0,0,96" Borders="All">
+          <Rows>
+            <Item1 Ref="71" ControlType="XRTableRow" Name="tableRow1" Weight="1">
+              <Cells>
+                <Item1 Ref="72" ControlType="XRTableCell" Name="tableCell1" Weight="3" Multiline="true" Text="tableCell1" Padding="6,6,6,6,100" Borders="Left, Top, Right">
+                  <ExpressionBindings>
+                    <Item1 Ref="73" EventName="BeforePrint" PropertyName="Text" Expression="[SupplierCode]" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="74" UsePadding="false" UseBorders="false" />
+                </Item1>
+              </Cells>
+            </Item1>
+            <Item2 Ref="75" ControlType="XRTableRow" Name="tableRow2" Weight="1">
+              <Cells>
+                <Item1 Ref="76" ControlType="XRTableCell" Name="tableCell2" Weight="3" Multiline="true" Text="tableCell2" Padding="6,6,6,6,100" Borders="Left, Right">
+                  <ExpressionBindings>
+                    <Item1 Ref="77" EventName="BeforePrint" PropertyName="Text" Expression="[SupplierName]" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="78" UsePadding="false" UseBorders="false" />
+                </Item1>
+              </Cells>
+            </Item2>
+            <Item3 Ref="79" ControlType="XRTableRow" Name="tableRow5" Weight="1">
+              <Cells>
+                <Item1 Ref="80" ControlType="XRTableCell" Name="tableCell3" Weight="3" Multiline="true" Text="tableCell3" Padding="6,6,6,6,100" Borders="Left, Right">
+                  <ExpressionBindings>
+                    <Item1 Ref="81" EventName="BeforePrint" PropertyName="Text" Expression="[SupplierAddressLine1]" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="82" UsePadding="false" UseBorders="false" />
+                </Item1>
+              </Cells>
+            </Item3>
+            <Item4 Ref="83" ControlType="XRTableRow" Name="tableRow6" Weight="1">
+              <Cells>
+                <Item1 Ref="84" ControlType="XRTableCell" Name="tableCell4" Weight="3" Multiline="true" Text="tableCell4" Padding="6,6,6,6,100" Borders="Left, Right">
+                  <ExpressionBindings>
+                    <Item1 Ref="85" EventName="BeforePrint" PropertyName="Text" Expression="[SupplierAddressLine2]" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="86" UsePadding="false" UseBorders="false" />
+                </Item1>
+              </Cells>
+            </Item4>
+            <Item5 Ref="87" ControlType="XRTableRow" Name="tableRow15" Weight="1">
+              <Cells>
+                <Item1 Ref="88" ControlType="XRTableCell" Name="tableCell21" Weight="3" Multiline="true" Padding="6,6,0,0,100" Borders="Left, Right">
+                  <StylePriority Ref="89" UsePadding="false" UseBorders="false" />
+                </Item1>
+              </Cells>
+            </Item5>
+            <Item6 Ref="90" ControlType="XRTableRow" Name="tableRow18" Weight="1">
+              <Cells>
+                <Item1 Ref="91" ControlType="XRTableCell" Name="tableCell22" Weight="3" Multiline="true" Padding="6,6,0,0,100" Borders="Left, Right">
+                  <StylePriority Ref="92" UsePadding="false" UseBorders="false" />
+                </Item1>
+              </Cells>
+            </Item6>
+            <Item7 Ref="93" ControlType="XRTableRow" Name="tableRow19" Weight="1">
+              <Cells>
+                <Item1 Ref="94" ControlType="XRTableCell" Name="tableCell31" Weight="3" Multiline="true" Padding="6,6,0,0,100" Borders="Left, Right">
+                  <StylePriority Ref="95" UsePadding="false" UseBorders="false" />
+                </Item1>
+              </Cells>
+            </Item7>
+            <Item8 Ref="96" ControlType="XRTableRow" Name="tableRow20" Weight="1">
+              <Cells>
+                <Item1 Ref="97" ControlType="XRTableCell" Name="tableCell32" Weight="3" Multiline="true" Padding="6,6,0,0,100" Borders="Left, Right, Bottom">
+                  <StylePriority Ref="98" UsePadding="false" UseBorders="false" />
+                </Item1>
+              </Cells>
+            </Item8>
+          </Rows>
+          <StylePriority Ref="99" UseBorders="false" />
+        </Item2>
+      </Controls>
+    </Item6>
+    <Item7 Ref="100" ControlType="GroupFooterBand" Name="GroupFooter1" HeightF="89.33329">
+      <Controls>
+        <Item1 Ref="101" ControlType="XRTable" Name="table5" SizeF="273.3333,50" LocationFloat="469.666748,0" Padding="2,2,0,0,96">
+          <Rows>
+            <Item1 Ref="102" ControlType="XRTableRow" Name="tableRow17" Weight="1">
+              <Cells>
+                <Item1 Ref="103" ControlType="XRTableCell" Name="tableCell25" Weight="1.2000604248046876" Multiline="true" Text="Net Amount" TextAlignment="TopRight" Font="Arial, 8.25pt, style=Bold">
+                  <StylePriority Ref="104" UseFont="false" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="105" ControlType="XRTableCell" Name="tableCell26" Weight="1.533272705078125" TextFormatString="{0:#,##0.00;(#,##0.00);'-' }" Multiline="true" Text="tableCell26" TextAlignment="TopRight" Font="Arial, 8.25pt, style=Bold" Borders="Bottom" BorderDashStyle="Double">
+                  <ExpressionBindings>
+                    <Item1 Ref="106" EventName="BeforePrint" PropertyName="Text" Expression="[SubTotal]" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="107" UseFont="false" UseBorders="false" UseBorderDashStyle="false" UseTextAlignment="false" />
+                </Item2>
+              </Cells>
+            </Item1>
+            <Item2 Ref="108" ControlType="XRTableRow" Name="tableRow16" Weight="1">
+              <Cells>
+                <Item1 Ref="109" ControlType="XRTableCell" Name="tableCell23" Weight="1.2000604248046876" Multiline="true" Text="SVAT [TaxPercentage] %" TextAlignment="TopRight" Font="Arial, 8.25pt">
+                  <StylePriority Ref="110" UseFont="false" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="111" ControlType="XRTableCell" Name="tableCell24" Weight="1.533272705078125" TextFormatString="{0:#,##0.00;(#,##0.00);'-' }" Multiline="true" Text="tableCell24" TextAlignment="TopRight" Font="Arial, 8.25pt">
+                  <ExpressionBindings>
+                    <Item1 Ref="112" EventName="BeforePrint" PropertyName="Text" Expression="[TaxAmount]" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="113" UseFont="false" UseTextAlignment="false" />
+                </Item2>
+              </Cells>
+            </Item2>
+          </Rows>
+        </Item1>
+      </Controls>
+    </Item7>
+    <Item8 Ref="114" ControlType="PageFooterBand" Name="PageFooter" HeightF="39.3332939">
+      <Controls>
+        <Item1 Ref="115" ControlType="XRPageInfo" Name="pageInfo1" PageInfo="DateTime" TextFormatString="{0:dd/MM/yyyy HH:mm:ss}" SizeF="257.6667,23" LocationFloat="10,0" StyleName="PageInfo" />
+        <Item2 Ref="116" ControlType="XRPageInfo" Name="pageInfo2" TextFormatString="Page {0} of {1}" TextAlignment="TopRight" SizeF="313.5,23" LocationFloat="429.500061,0" StyleName="PageInfo" />
+      </Controls>
+    </Item8>
+  </Bands>
+  <StyleSheet>
+    <Item1 Ref="117" Name="Title" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Arial, 14.25pt" ForeColor="255,75,75,75" BackColor="Transparent" BorderColor="Black" Sides="None" StringFormat="Near;Near;0;None;Character;Default" BorderWidthSerializable="1" />
+    <Item2 Ref="118" Name="DetailCaption1" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Arial, 8.25pt, style=Bold" ForeColor="White" BackColor="255,75,75,75" BorderColor="White" Sides="Left" StringFormat="Near;Center;0;None;Character;Default" TextAlignment="MiddleLeft" BorderWidthSerializable="2" />
+    <Item3 Ref="119" Name="DetailData1" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Arial, 8.25pt" ForeColor="Black" BorderColor="Transparent" Sides="Left" StringFormat="Near;Center;0;None;Character;Default" TextAlignment="MiddleLeft" BorderWidthSerializable="2" />
+    <Item4 Ref="120" Name="DetailCaption2" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Arial, 8.25pt, style=Bold" ForeColor="White" BackColor="255,111,111,111" BorderColor="White" Sides="Left" StringFormat="Near;Center;0;None;Character;Default" TextAlignment="MiddleLeft" BorderWidthSerializable="2" />
+    <Item5 Ref="121" Name="DetailData2" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Arial, 8.25pt" ForeColor="Black" BorderColor="Transparent" Sides="Left" StringFormat="Near;Center;0;None;Character;Default" TextAlignment="MiddleLeft" BorderWidthSerializable="2" />
+    <Item6 Ref="122" Name="DetailData3_Odd" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Arial, 8.25pt" ForeColor="Black" BackColor="255,231,231,231" BorderColor="Transparent" Sides="None" StringFormat="Near;Center;0;None;Character;Default" TextAlignment="MiddleLeft" BorderWidthSerializable="1" />
+    <Item7 Ref="123" Name="PageInfo" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Arial, 8.25pt, style=Bold" ForeColor="255,75,75,75" StringFormat="Near;Near;0;None;Character;Default" />
+  </StyleSheet>
+  <ComponentStorage>
+    <Item1 Ref="0" ObjectType="DevExpress.DataAccess.ObjectBinding.ObjectDataSource,DevExpress.DataAccess.v20.2" Name="invoiceDataSource" Base64="PE9iamVjdERhdGFTb3VyY2UgTmFtZT0iaW52b2ljZURhdGFTb3VyY2UiIC8+" />
+  </ComponentStorage>
+</XtraReportsLayoutSerializer>

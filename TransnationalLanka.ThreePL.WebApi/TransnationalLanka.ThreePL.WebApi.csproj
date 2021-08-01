@@ -4,12 +4,14 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Reports\Grn.vsrepx" />
+    <None Remove="Reports\InvoiceSvat.vsrepx" />
     <None Remove="Reports\StockBalanceReport.vsrepx" />
     <None Remove="Reports\StockMovementReport.vsrepx" />
     <None Remove="Reports\WayBill.vsrepx" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Reports\Grn.vsrepx" />
+    <EmbeddedResource Include="Reports\InvoiceSvat.vsrepx" />
     <EmbeddedResource Include="Reports\StockBalanceReport.vsrepx" />
     <EmbeddedResource Include="Reports\StockMovementReport.vsrepx" />
     <EmbeddedResource Include="Reports\WayBill.vsrepx" />
@@ -41,6 +43,12 @@
     </Compile>
     <Compile Update="Reports\Grn.Designer.cs">
       <DependentUpon>Grn.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\InvoiceSvat.cs">
+      <DependentUpon>InvoiceSvat.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\InvoiceSvat.Designer.cs">
+      <DependentUpon>InvoiceSvat.vsrepx</DependentUpon>
     </Compile>
     <Compile Update="Reports\StockBalanceReport.cs">
       <DependentUpon>StockBalanceReport.vsrepx</DependentUpon>

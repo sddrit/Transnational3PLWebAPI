@@ -102,6 +102,17 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.Report
                     };
                     stockMovementReport.DataSource = stockMovementObjectDataSource;
                     return stockMovementReport;
+
+                case "Invoice":
+                    var invoiceReport = new InvoiceSvat();
+                    var invoiceReportData = AsyncContext.Run(() => _reportService.GetInvoice(10));
+                    var invoiceObjectDataSource = new ObjectDataSource
+                    {
+                        DataSource = invoiceReportData,
+                        Name = "invoiceDataSource"
+                    };
+                    invoiceReport.DataSource = invoiceObjectDataSource;
+                    return invoiceReport;
             }
 
             return null;
