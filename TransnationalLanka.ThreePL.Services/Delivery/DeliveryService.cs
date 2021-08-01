@@ -25,6 +25,7 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
         Task<Dal.Entities.Delivery> MarkAsComplete(long id);
         Task<Dal.Entities.Delivery> MarkAsReturn(long id, string note);
         Task<Dal.Entities.Delivery> MarkAsCustomerReturn(long id, string note);
+        Task<long> GetDeliveryCount(long supplierId, DateTime from, DateTime to);
     }
 
     public class DeliveryService : IDeliveryService
@@ -295,6 +296,14 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
                 await transaction.RollbackAsync();
                 throw;
             }
+        }
+
+        public async Task<long> GetDeliveryCount(long supplierId, DateTime from, DateTime to)
+        {
+            return await _unitOfWork.DeliveryRepository.GetAll()
+                .Where(d => d.SupplierId == supplierId && d.DeliveryStatus > DeliveryStatus.Completed &&
+                            d.DeliveryDate <= to && d.DeliveryDate >= from)
+                .LongCountAsync();
         }
 
         private bool CanMarkAsProcessing(Dal.Entities.Delivery delivery)

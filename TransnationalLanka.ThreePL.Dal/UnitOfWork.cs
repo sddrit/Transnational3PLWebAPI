@@ -20,6 +20,7 @@ namespace TransnationalLanka.ThreePL.Dal
         IRepository<StockTransfer> StockTransferRepository { get; }
         IRepository<Delivery> DeliveryRepository { get; }
         IRepository<Invoice> InvoiceRepository { get; }
+        ThreePlDbContext Context { get; }
         Task<IDbContextTransaction> GetTransaction();
         Task SaveChanges();
     }
@@ -171,6 +172,8 @@ namespace TransnationalLanka.ThreePL.Dal
                 return _invoiceRepository;
             }
         }
+
+        public ThreePlDbContext Context => _context;
 
         public async Task<IDbContextTransaction> GetTransaction()
         {

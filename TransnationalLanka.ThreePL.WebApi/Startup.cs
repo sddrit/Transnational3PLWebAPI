@@ -5,6 +5,8 @@ using System.Text;
 using System.Text.Json;
 using DevExpress.AspNetCore;
 using DevExpress.XtraReports.Services;
+using Hangfire;
+using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -22,6 +24,7 @@ using TransnationalLanka.ThreePL.Services.Account;
 using TransnationalLanka.ThreePL.Services.Application;
 using TransnationalLanka.ThreePL.Services.Delivery;
 using TransnationalLanka.ThreePL.Services.Grn;
+using TransnationalLanka.ThreePL.Services.Invoice;
 using TransnationalLanka.ThreePL.Services.Metadata;
 using TransnationalLanka.ThreePL.Services.Product;
 using TransnationalLanka.ThreePL.Services.PurchaseOrder;
@@ -108,7 +111,25 @@ namespace TransnationalLanka.ThreePL.WebApi
             services.AddScoped<IDeliveryService, DeliveryService>();
             services.AddScoped(_ => new TrackerApiService(true));
             services.AddScoped<IReportService, ReportService>();
+            services.AddScoped<IInvoiceService, InvoiceService>();
             services.AddScoped<IReportProvider, ThreePlReportProvider>();
+
+            // Add Hangfire services.
+            services.AddHangfire(configuration => configuration
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UseSqlServerStorage(Configuration.GetConnectionString("DbConnection"), new SqlServerStorageOptions
+                {
+                    CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                    SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                    QueuePollInterval = TimeSpan.Zero,
+                    UseRecommendedIsolationLevel = true,
+                    DisableGlobalLocks = true
+                }));
+
+            // Add the processing server as IHostedService
+            services.AddHangfireServer();
 
             services.AddControllers()
                 .ConfigureApplicationPartManager(appPart => {
@@ -206,6 +227,10 @@ namespace TransnationalLanka.ThreePL.WebApi
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseHangfireDashboard();
+
+            RecurringJob.AddOrUpdate("invoice-generate-job",(IInvoiceService invoiceService) => invoiceService.GenerateInvoices(), Cron.Daily);
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -214,6 +239,8 @@ namespace TransnationalLanka.ThreePL.WebApi
             //Initial the application
             var applicationService = app.ApplicationServices.GetService<IApplicationService>();
             applicationService?.Initial().Wait();
+
+           
         }
     }
 }

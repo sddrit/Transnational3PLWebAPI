@@ -44,6 +44,7 @@ namespace TransnationalLanka.ThreePL.Dal.Entities
 
     public class InvoiceItem : BaseEntity
     {
+        public DateTime? Date { get; set; }
         public InvoiceItemChargeType Type { get; set; }
         public string Description { get; set; }
         public decimal Amount { get; set; }

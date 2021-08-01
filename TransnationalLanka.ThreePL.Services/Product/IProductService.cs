@@ -11,5 +11,6 @@ namespace TransnationalLanka.ThreePL.Services.Product
         Task<Dal.Entities.Product> GetProductById(long id);
         Task SetProductStatus(long id, bool status);
         bool IsActiveProduct(Dal.Entities.Product product);
+        Task<decimal> GetStorageUnitCount(long supplierId);
     }
 }
