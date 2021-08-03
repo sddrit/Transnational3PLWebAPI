@@ -12,7 +12,6 @@ using TransnationalLanka.ThreePL.WebApi.Util.Authorization;
 
 namespace TransnationalLanka.ThreePL.WebApi.Controllers
 {
-    [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
     [Route("api/[controller]")]
     [ApiController]
     public class WareHouseController : ControllerBase
@@ -27,11 +26,13 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
         }
 
         [HttpGet]
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE, Roles.SUPPLIER_ROLE })]
         public async Task<LoadResult> Get(DataSourceLoadOptions loadOptions)
         {
             return await DataSourceLoader.LoadAsync(_warehouseService.GetWareHouses(), loadOptions);
         }
 
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(long id)
         {
@@ -39,6 +40,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
             return Ok(_mapper.Map<WareHouseBindingModel>(warehouse));
         }
 
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
         [HttpPost("set-status")]
         public async Task<IActionResult> Post([FromBody]SetWareHouseStatus model)
         {
@@ -46,6 +48,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
             return Ok();
         }
 
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]WareHouseBindingModel model)
         {
@@ -53,6 +56,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
             return Ok(_mapper.Map<WareHouseBindingModel>(warehouse));
         }
 
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] WareHouseBindingModel model)
         {

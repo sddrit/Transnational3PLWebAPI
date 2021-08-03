@@ -4,6 +4,7 @@ using TransnationalLanka.ThreePL.WebApi.Models.Account;
 using TransnationalLanka.ThreePL.WebApi.Models.Common;
 using TransnationalLanka.ThreePL.WebApi.Models.Delivery;
 using TransnationalLanka.ThreePL.WebApi.Models.Grn;
+using TransnationalLanka.ThreePL.WebApi.Models.Invoice;
 using TransnationalLanka.ThreePL.WebApi.Models.Product;
 using TransnationalLanka.ThreePL.WebApi.Models.PurchaseOrder;
 using TransnationalLanka.ThreePL.WebApi.Models.Stock;
@@ -80,6 +81,11 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.AutoMapper
             CreateMap<DeliveryHistory, DeliveryHistoryBindingModel>()
                 .ReverseMap();
             CreateMap<Delivery, DeliveryBindingModel>()
+                .ReverseMap();
+
+            CreateMap<InvoiceItem, InvoiceItemBindingModel>()
+                .ReverseMap();
+            CreateMap<Invoice, InvoiceBindingModel>()
                 .ReverseMap();
         }
     }

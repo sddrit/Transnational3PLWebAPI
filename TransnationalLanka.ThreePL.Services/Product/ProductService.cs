@@ -28,6 +28,12 @@ namespace TransnationalLanka.ThreePL.Services.Product
                 .Include(p => p.Supplier);
         }
 
+        public IQueryable<Dal.Entities.Product> GetProducts(long supplierId)
+        {
+            return _unitOfWork.ProductRepository.GetAll()
+                .Where(p => p.SupplierId == supplierId);
+        }
+
         public async Task<Dal.Entities.Product> AddProduct(Dal.Entities.Product product)
         {
             Guard.Argument(product, nameof(product)).NotNull();

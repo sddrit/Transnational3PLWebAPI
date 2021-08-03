@@ -13,15 +13,6 @@ using TransnationalLanka.ThreePL.Services.WareHouse;
 
 namespace TransnationalLanka.ThreePL.Services.Report
 {
-    public interface IReportService
-    {
-        Task<InventoryReport> GetInventoryReport(long? wareHouseId, long? supplierId);
-        Task<GrnReport> GetGrnReport(long id);
-        Task<WayBill> GetWayBill(int id);
-        Task<InventoryMovementReport> GetInventoryMovementReport(long? wareHouseId, DateTime fromDate, DateTime toDate, int? productId);        
-        Task<InvoiceReport> GetInvoice(long id);
-    }
-
     public class ReportService : IReportService
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -133,7 +124,7 @@ namespace TransnationalLanka.ThreePL.Services.Report
             };
         }
 
-        public async Task<WayBill> GetWayBill(int id)
+        public async Task<WayBill> GetWayBill(long id)
         {
             var delivery = await _deliveryService.GetDeliveryById(id);
 
@@ -161,6 +152,7 @@ namespace TransnationalLanka.ThreePL.Services.Report
 
             };
         }
+
         public async Task<InventoryMovementReport> GetInventoryMovementReport(long? wareHouseId, DateTime fromDate, DateTime toDate, int? productId)
         {
             string supplierName = null;

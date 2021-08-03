@@ -11,6 +11,7 @@ namespace TransnationalLanka.ThreePL.Dal.Entities
         public DateTime To { get; set; }
         public string InvoiceNo { get; set; }
         public long SupplierId { get; set; }
+        public bool Paid { get; set; }
         public virtual Supplier Supplier { get; set; }
         public virtual ICollection<InvoiceItem> InvoiceItems { get; set; }
         

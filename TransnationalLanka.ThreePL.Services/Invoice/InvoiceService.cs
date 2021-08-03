@@ -12,12 +12,6 @@ using TransnationalLanka.ThreePL.Services.Supplier;
 
 namespace TransnationalLanka.ThreePL.Services.Invoice
 {
-    public interface IInvoiceService
-    {
-        Task<Dal.Entities.Invoice> GetInvoice(long id);
-        Task GenerateInvoices();
-    }
-
     public class InvoiceService : IInvoiceService
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -32,6 +26,19 @@ namespace TransnationalLanka.ThreePL.Services.Invoice
             _supplierService = supplierService;
             _productService = productService;
             _deliveryService = deliveryService;
+        }
+
+        public IQueryable<Dal.Entities.Invoice> GetInvoices()
+        {
+            return _unitOfWork.InvoiceRepository.GetAll();
+        }
+
+        public async Task<Dal.Entities.Invoice> MarkAsPaid(long id)
+        {
+            var invoice = await GetInvoice(id);
+            invoice.Paid = true;
+            await _unitOfWork.SaveChanges();
+            return invoice;
         }
 
         public async Task GenerateInvoices()

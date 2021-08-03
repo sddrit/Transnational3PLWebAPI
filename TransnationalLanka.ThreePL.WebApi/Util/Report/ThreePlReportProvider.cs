@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Web;
 using DevExpress.DataAccess.ObjectBinding;
 using DevExpress.XtraReports.Services;
@@ -29,6 +28,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.Report
 
             if (string.IsNullOrEmpty(reportName))
                 return null;
+
             switch (reportName)
             {
                 case "StockBalanceReport":
@@ -41,10 +41,9 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.Report
                     };
                     stockBalanceReport.DataSource = objectDataSource;
                     return stockBalanceReport;
-
                 case "GrnReport":
                     var grnReport = new Grn();
-                    var grnReportData = AsyncContext.Run(() => _reportService.GetGrnReport(11));
+                    var grnReportData = AsyncContext.Run(() => _reportService.GetGrnReport(long.Parse(parameters["id"].ToString())));
                     var grnObjectDataSource = new ObjectDataSource
                     {
                         DataSource = grnReportData,
@@ -52,25 +51,20 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.Report
                     };
                     grnReport.DataSource = grnObjectDataSource;
                     return grnReport;
-
                 case "WayBill":
-                    var wayBillData = AsyncContext.Run(() => _reportService.GetWayBill(1));
-
+                    var wayBillData = AsyncContext.Run(() => _reportService.GetWayBill(long.Parse(parameters["id"].ToString())));
                     var report = new WayBill();
                     var wayBillObjectDataSource = new ObjectDataSource
                     {
                         DataSource = wayBillData,
                         Name = "wayBillDataSource"
                     };
-
                     report.DataSource = wayBillObjectDataSource;
                     report.Parameters["trackingNo"].Value = wayBillData.TrackingNo[0];                  
                     report.CreateDocument(true);
                     report.PrintingSystem.ContinuousPageNumbering = false;
 
-                   
-
-                    for (int i= 1; i<wayBillData.TrackingNo.Length;i++)
+                    for (int i= 1; i<wayBillData.TrackingNo.Length; i++)
                     {
                         var wayBillReport = new WayBill() ;
 
@@ -91,7 +85,6 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.Report
                         });
                     }
                     return report;
-
                 case "StockMovementReport":
                     var stockMovementReport = new StockBalanceReport();
                     var stockMovementReportData = AsyncContext.Run(() => _reportService.GetInventoryMovementReport(null,Convert.ToDateTime("01-06-2021"),Convert.ToDateTime( "06-30-2021"),1));
@@ -105,7 +98,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.Report
 
                 case "Invoice":
                     var invoiceReport = new InvoiceSvat();
-                    var invoiceReportData = AsyncContext.Run(() => _reportService.GetInvoice(10));
+                    var invoiceReportData = AsyncContext.Run(() => _reportService.GetInvoice(long.Parse(parameters["id"].ToString())));
                     var invoiceObjectDataSource = new ObjectDataSource
                     {
                         DataSource = invoiceReportData,

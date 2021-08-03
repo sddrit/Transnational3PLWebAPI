@@ -5,6 +5,7 @@ using DevExtreme.AspNet.Data.ResponseModel;
 using DevExtreme.AspNet.Mvc;
 using Microsoft.AspNetCore.Mvc;
 using TransnationalLanka.ThreePL.Dal.Entities;
+using TransnationalLanka.ThreePL.Services.Account;
 using TransnationalLanka.ThreePL.Services.Account.Core;
 using TransnationalLanka.ThreePL.Services.Supplier;
 using TransnationalLanka.ThreePL.WebApi.Models.Supplier;
@@ -19,11 +20,13 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
     {
         private readonly IMapper _mapper;
         private readonly ISupplierService _supplierService;
+        private readonly IAccountService _accountService;
 
-        public SupplierController(IMapper mapper, ISupplierService supplierService)
+        public SupplierController(IMapper mapper, ISupplierService supplierService, IAccountService accountService)
         {
             _mapper = mapper;
             _supplierService = supplierService;
+            _accountService = accountService;
         }
 
         [HttpGet]
@@ -43,6 +46,17 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
         public async Task<IActionResult> Post([FromBody]SetSupplierStatus model)
         {
             await _supplierService.SetSupplierStatus(model.Id, model.Status);
+            return Ok();
+        }
+
+        [HttpPost("create-account")]
+        public async Task<IActionResult> CreateAccount([FromBody] CreateSupplierAccount model)
+        {
+            await _accountService.CreateUser(
+                new User()
+                {
+                    UserName = model.UserName, Active = true, Email = model.Email, SupplierId = model.SupplierId
+                }, model.Password, Roles.SUPPLIER_ROLE);
             return Ok();
         }
 

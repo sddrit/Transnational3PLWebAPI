@@ -6,6 +6,7 @@ namespace TransnationalLanka.ThreePL.Services.Product
     public interface IProductService
     {
         IQueryable<Dal.Entities.Product> GetProducts();
+        IQueryable<Dal.Entities.Product> GetProducts(long supplierId);
         Task<Dal.Entities.Product> AddProduct(Dal.Entities.Product product);
         Task<Dal.Entities.Product> UpdateProduct(Dal.Entities.Product product);
         Task<Dal.Entities.Product> GetProductById(long id);

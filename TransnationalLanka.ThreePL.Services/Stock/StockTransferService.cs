@@ -13,13 +13,6 @@ using TransnationalLanka.ThreePL.Services.WareHouse;
 
 namespace TransnationalLanka.ThreePL.Services.Stock
 {
-    public interface IStockTransferService
-    {
-        IQueryable<Dal.Entities.StockTransfer> GetAll();
-        Task<StockTransfer> AddStockTransfer(StockTransfer stockTransfer);
-        Task<StockTransfer> GetStockTransferById(long id);
-    }
-
     public class StockTransferService : IStockTransferService
     {
         private readonly IUnitOfWork _unitOfWork;

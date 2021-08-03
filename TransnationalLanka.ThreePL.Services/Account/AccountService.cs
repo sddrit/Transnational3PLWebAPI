@@ -1,6 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +25,8 @@ namespace TransnationalLanka.ThreePL.Services.Account
 
         public async Task<User> CreateUser(User user, string password, string role)
         {
+            user.Active = true;
+
             await using var transaction = await _unitOfWork.GetTransaction();
 
             var createdUserResult = await _userManager.CreateAsync(user, password);
@@ -48,6 +50,36 @@ namespace TransnationalLanka.ThreePL.Services.Account
             return user;
         }
 
+        public async Task<User> UpdateUser(User user)
+        {
+            var currentUser = await GetUserById(user.Id);
+
+            if (user == null)
+            {
+                throw new ServiceException(new ErrorMessage[]
+                {
+                    new ErrorMessage()
+                    {
+                        Code = string.Empty,
+                        Message = $"Unable to find user"
+                    }
+                });
+            }
+
+            currentUser.UserName = user.UserName;
+            currentUser.Email = user.Email;
+
+            var updatedResult = await _userManager.UpdateAsync(user);
+
+            if (!updatedResult.Succeeded)
+            {
+                throw GenerateServiceException(updatedResult);
+            }
+
+            return currentUser;
+
+        }
+
         public async Task<User> Login(string username, string password)
         {
             var user = await GetUserByUserName(username);
@@ -60,6 +92,18 @@ namespace TransnationalLanka.ThreePL.Services.Account
                     {
                         Code = string.Empty,
                         Message = $"{username} is not found"
+                    }
+                });
+            }
+
+            if (!user.Active)
+            {
+                throw new ServiceException(new ErrorMessage[]
+                {
+                    new ErrorMessage()
+                    {
+                        Code = string.Empty,
+                        Message = "User is not an active user"
                     }
                 });
             }
@@ -79,6 +123,63 @@ namespace TransnationalLanka.ThreePL.Services.Account
             }
 
             return user;
+        }
+
+        public async Task<User> SetStatus(long id, bool status)
+        {
+            var user = await GetUserById(id);
+
+            if (user == null)
+            {
+                throw new ServiceException(new ErrorMessage[]
+                {
+                    new ErrorMessage()
+                    {
+                        Code = string.Empty,
+                        Message = $"User is not found"
+                    }
+                });
+            }
+
+            user.Active = status;
+            await _userManager.UpdateAsync(user);
+            return user;
+        }
+
+        public IQueryable<User> GetUsers()
+        {
+            return _userManager.Users;
+        }
+
+        public async Task ResetPassword(string username, string newPassword)
+        {
+            var user = await GetUserByUserName(username);
+
+            if (user == null)
+            {
+                throw new ServiceException(new ErrorMessage[]
+                {
+                    new ErrorMessage()
+                    {
+                        Code = string.Empty,
+                        Message = $"{username} is not found"
+                    }
+                });
+            }
+
+            var removePasswordResult = await _userManager.RemovePasswordAsync(user);
+
+            if (!removePasswordResult.Succeeded)
+            {
+                throw GenerateServiceException(removePasswordResult);
+            }
+
+            var addPasswordResult = await _userManager.AddPasswordAsync(user, newPassword);
+
+            if (!addPasswordResult.Succeeded)
+            {
+                throw GenerateServiceException(addPasswordResult);
+            }
         }
 
         public async Task<IList<string>> GetRoles(User user)
@@ -107,6 +208,12 @@ namespace TransnationalLanka.ThreePL.Services.Account
         public async Task<User> GetUserById(long id)
         {
             return await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
+        }
+
+        public async Task<User> GetUser(ClaimsPrincipal user)
+        {
+            var userId = long.Parse(user.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty);
+            return await GetUserById(userId);
         }
 
         private ServiceException GenerateServiceException(IdentityResult identityResult)

@@ -11,7 +11,6 @@ using TransnationalLanka.ThreePL.WebApi.Util.Authorization;
 
 namespace TransnationalLanka.ThreePL.WebApi.Controllers
 {
-    [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
     [Route("api/[controller]")]
     [ApiController]
     public class StockController : ControllerBase
@@ -25,6 +24,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
             _stockService = stockService;
         }
 
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE, Roles.SUPPLIER_ROLE })]
         [HttpGet("get-stocks-by-product-id/{id}")]
         public async Task<LoadResult> GetStocksByProductId(long id, DataSourceLoadOptions loadOptions)
         {
@@ -32,6 +32,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
             return await DataSourceLoader.LoadAsync(query, loadOptions);
         }
 
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE, Roles.SUPPLIER_ROLE })]
         [HttpGet("get-stock-adjustments-by-product-id/{id}")]
         public async Task<LoadResult> GetStockAdjustmentsBtProductId(long id, DataSourceLoadOptions loadOptions)
         {

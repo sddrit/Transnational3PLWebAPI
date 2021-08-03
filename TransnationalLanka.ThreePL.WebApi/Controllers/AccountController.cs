@@ -6,12 +6,18 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using DevExtreme.AspNet.Data;
+using DevExtreme.AspNet.Data.ResponseModel;
+using DevExtreme.AspNet.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using TransnationalLanka.ThreePL.Dal.Entities;
 using TransnationalLanka.ThreePL.Services.Account;
+using TransnationalLanka.ThreePL.Services.Account.Core;
 using TransnationalLanka.ThreePL.WebApi.Models.Account;
+using TransnationalLanka.ThreePL.WebApi.Util.Authorization;
 using TransnationalLanka.ThreePL.WebApi.Util.Options;
 
 namespace TransnationalLanka.ThreePL.WebApi.Controllers
@@ -32,7 +38,53 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
             _tokenConfiguration = tokenConfigurationOptions.Value;
         }
 
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
+        [HttpGet]
+        public async Task<LoadResult> Get(DataSourceLoadOptions loadOptions)
+        {
+            var query = _mapper.ProjectTo<UserBindingModel>(_accountService.GetUsers());
+            return await DataSourceLoader.LoadAsync(query, loadOptions);
+        }
+
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
+        [HttpGet("get-user/{id}")]
+        public async Task<IActionResult> Get(long id)
+        {
+            var user = await _accountService.GetUserById(id);
+            return Ok(_mapper.Map<UserBindingModel>(user));
+        }
+
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
+        [HttpPost("create-user")]
+        public async Task<IActionResult> CreateUser([FromBody] CreateUserBindingModel model)
+        {
+            var createdUser = await _accountService.CreateUser(new User() {UserName = model.UserName, Email = model.Email, Active = true},
+                model.Password, Roles.ADMIN_ROLE);
+            return Ok(_mapper.Map<UserBindingModel>(createdUser));
+        }
+
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
+        [HttpPost("update-user")]
+        public async Task<IActionResult> UpdateUser([FromBody] UserBindingModel model)
+        {
+            var user = await _accountService.GetUserById(model.Id);
+            user.UserName = model.UserName;
+            user.Email = model.Email;
+            user.Active = model.Active;
+            var updatedUser = await _accountService.UpdateUser(user);
+            return Ok(_mapper.Map<UserBindingModel>(updatedUser));
+        }
+
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
+        [HttpPost("set-status")]
+        public async Task<IActionResult> SetStatus([FromBody] SetUserStatus model)
+        {
+            var updatedUser = await _accountService.SetStatus(model.Id, model.Status);
+            return Ok(_mapper.Map<UserBindingModel>(updatedUser));
+        }
+
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody]LoginBindingModel model)
         {
             var user = await _accountService.Login(model.UserName, model.Password);
