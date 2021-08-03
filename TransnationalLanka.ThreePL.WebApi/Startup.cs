@@ -211,10 +211,12 @@ namespace TransnationalLanka.ThreePL.WebApi
             }
 
             app.UseCors(builder =>
-                builder.WithOrigins(Configuration["Origins"].Split(","))
+                builder
+                    .AllowAnyOrigin()
                     .AllowAnyHeader()
                     .AllowAnyMethod()
-            );
+                    .AllowCredentials()
+                    .SetIsOriginAllowed(_ => true));
 
             app.UseDevExpressControls();
 

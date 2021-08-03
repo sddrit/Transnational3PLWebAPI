@@ -7,6 +7,7 @@ using TransnationalLanka.ThreePL.Core.Constants;
 using TransnationalLanka.ThreePL.Core.Exceptions;
 using TransnationalLanka.ThreePL.Dal;
 using TransnationalLanka.ThreePL.Integration.Tracker;
+using TransnationalLanka.ThreePL.Integration.Tracker.Exceptions;
 using TransnationalLanka.ThreePL.Integration.Tracker.Model;
 using TransnationalLanka.ThreePL.Services.Common.Mapper;
 using TransnationalLanka.ThreePL.Services.Supplier.Core;
@@ -36,28 +37,50 @@ namespace TransnationalLanka.ThreePL.Services.Supplier
 
             await ValidateSupplier(supplier);
 
-            _unitOfWork.SupplierRepository.Insert(supplier);
-            await _unitOfWork.SaveChanges();
+            await using var transaction = await _unitOfWork.GetTransaction();
 
-            var savedSupplier = await GetSupplierById(supplier.Id);
-
-            var response = await _trackerApiService.CreateCustomer(new CreateCustomerRequest()
+            try
             {
-                CustomerName = savedSupplier.SupplierName,
-                CustomerAddress = $"{savedSupplier.Address.AddressLine1} {savedSupplier.Address.AddressLine2} {savedSupplier.Address.City.CityName} {savedSupplier.Address.PostalCode}",
-                ContactNumber = savedSupplier.Contact.Phone,
-                EmailAddress = savedSupplier.Contact.Email,
-                NicNo = string.Empty,
-                ContactPerson = savedSupplier.Contact.ContactPerson,
-                TaxRegNo = savedSupplier.VatNumber,
-                Vat = string.IsNullOrEmpty(savedSupplier.VatNumber)? "0": "1",
-                Remarks = string.Empty,
-                CreatedDate = System.DateTime.Now,
-                TplSupplierCode = savedSupplier.Code
-            });
+                _unitOfWork.SupplierRepository.Insert(supplier);
+                await _unitOfWork.SaveChanges();
 
-            if (response.IsSuccess != "1")
+                var savedSupplier = await GetSupplierById(supplier.Id);
+
+                var response = await _trackerApiService.CreateCustomer(new CreateCustomerRequest()
+                {
+                    CustomerName = savedSupplier.SupplierName,
+                    CustomerAddress =
+                        $"{savedSupplier.Address.AddressLine1} {savedSupplier.Address.AddressLine2} {savedSupplier.Address.City.CityName} {savedSupplier.Address.PostalCode}",
+                    ContactNumber = savedSupplier.Contact.Phone,
+                    EmailAddress = savedSupplier.Contact.Email,
+                    NicNo = string.Empty,
+                    ContactPerson = savedSupplier.Contact.ContactPerson,
+                    TaxRegNo = savedSupplier.VatNumber,
+                    Vat = string.IsNullOrEmpty(savedSupplier.VatNumber) ? "0" : "1",
+                    Remarks = string.Empty,
+                    CreatedDate = System.DateTime.Now,
+                    TplSupplierCode = savedSupplier.Code
+                });
+
+                if (response.IsSuccess != "1")
+                {
+                    throw new ServiceException(new ErrorMessage[]
+                    {
+                        new ErrorMessage()
+                        {
+                            Code = string.Empty,
+                            Message = $"Unable to create a supplier in tracker side"
+                        }
+                    });
+                }
+
+                savedSupplier.TrackerCode = response.Result.CustomerCode;
+                await _unitOfWork.SaveChanges();
+
+            }
+            catch (TrackingApiException ex)
             {
+                await transaction.RollbackAsync();
                 throw new ServiceException(new ErrorMessage[]
                 {
                     new ErrorMessage()
@@ -67,11 +90,13 @@ namespace TransnationalLanka.ThreePL.Services.Supplier
                     }
                 });
             }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
 
-            savedSupplier.TrackerCode = response.Result.CustomerCode;
-            await _unitOfWork.SaveChanges();
-
-            return savedSupplier;
+            return await GetSupplierById(supplier.Id);
         }
 
         public async Task<Dal.Entities.Supplier> UpdateSupplier(Dal.Entities.Supplier supplier)
@@ -80,25 +105,49 @@ namespace TransnationalLanka.ThreePL.Services.Supplier
 
             await ValidateSupplier(supplier);
 
-            var currentSupplier = await GetSupplierById(supplier.Id);
-            supplier.TrackerCode = currentSupplier.TrackerCode;
+            await using var transaction = await _unitOfWork.GetTransaction();
 
-            var mapper = ServiceMapper.GetMapper();
-            mapper.Map(supplier, currentSupplier);
-
-            await _unitOfWork.SaveChanges();
-
-            var savedSupplier = await GetSupplierById(supplier.Id);
-
-            await _trackerApiService.UpdateCustomerStatus(new UpdateCustomerRequest()
+            try
             {
-               Active = supplier.Active? "1": "0",
-               CustomerCode = savedSupplier.TrackerCode,
-               StatusDate = DateTime.Now,
-               StatusReason = "Update the supplier"
-            });
+                var currentSupplier = await GetSupplierById(supplier.Id);
+                supplier.TrackerCode = currentSupplier.TrackerCode;
 
-            return savedSupplier;
+                var mapper = ServiceMapper.GetMapper();
+                mapper.Map(supplier, currentSupplier);
+
+                await _unitOfWork.SaveChanges();
+
+                var savedSupplier = await GetSupplierById(supplier.Id);
+
+                await _trackerApiService.UpdateCustomerStatus(new UpdateCustomerRequest()
+                {
+                    Active = supplier.Active ? "1" : "0",
+                    CustomerCode = savedSupplier.TrackerCode,
+                    StatusDate = DateTime.Now,
+                    StatusReason = "Update the supplier"
+                });
+
+                await transaction.CommitAsync();
+            }
+            catch (TrackingApiException ex)
+            {
+                await transaction.RollbackAsync();
+                throw new ServiceException(new ErrorMessage[]
+                {
+                    new ErrorMessage()
+                    {
+                        Code = string.Empty,
+                        Message = $"Unable to create a supplier in tracker side"
+                    }
+                });
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+
+            return await GetSupplierById(supplier.Id);
         }
 
         public async Task<Dal.Entities.Supplier> GetSupplierById(long id)
