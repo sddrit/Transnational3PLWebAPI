@@ -77,6 +77,8 @@ namespace TransnationalLanka.ThreePL.Services.Supplier
                 savedSupplier.TrackerCode = response.Result.CustomerCode;
                 await _unitOfWork.SaveChanges();
 
+                await transaction.CommitAsync();
+
             }
             catch (TrackingApiException ex)
             {

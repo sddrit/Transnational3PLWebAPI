@@ -60,6 +60,7 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
                 .Where(d => d.Id == id)
                 .Include(d => d.Supplier)
                 .ThenInclude(s => s.Address.City)
+                .Include(d => d.DeliveryCustomer.City)
                 .Include(d => d.WareHouse)
                 .Include(d => d.DeliveryItems)
                 .ThenInclude(i => i.Product)

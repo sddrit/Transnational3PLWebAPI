@@ -215,7 +215,6 @@ namespace TransnationalLanka.ThreePL.WebApi
                     .AllowAnyOrigin()
                     .AllowAnyHeader()
                     .AllowAnyMethod()
-                    .AllowCredentials()
                     .SetIsOriginAllowed(_ => true));
 
             app.UseDevExpressControls();
