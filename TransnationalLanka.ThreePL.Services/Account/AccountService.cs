@@ -146,6 +146,25 @@ namespace TransnationalLanka.ThreePL.Services.Account
             return user;
         }
 
+        public async Task DeleteUser(long id)
+        {
+            var user = await GetUserById(id);
+
+            if (user == null)
+            {
+                throw new ServiceException(new ErrorMessage[]
+                {
+                    new ErrorMessage()
+                    {
+                        Code = string.Empty,
+                        Message = $"User is not found"
+                    }
+                });
+            }
+
+            await _userManager.DeleteAsync(user);
+        }
+
         public IQueryable<User> GetUsers()
         {
             return _userManager.Users;

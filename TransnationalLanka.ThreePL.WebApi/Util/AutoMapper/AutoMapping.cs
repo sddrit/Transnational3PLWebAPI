@@ -41,6 +41,8 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.AutoMapper
             CreateMap<Supplier, SupplierBindingModel>()
                 .ReverseMap();
             CreateMap<Supplier, SupplierDetailsBindingModel>();
+            CreateMap<Supplier, SupplierListItemBindingModel>()
+                .ReverseMap();
             CreateMap<Product, ProductBindingModel>()
                .ReverseMap();
             CreateMap<Product, ProductDetailsBindingModel>();
@@ -81,6 +83,8 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.AutoMapper
             CreateMap<DeliveryHistory, DeliveryHistoryBindingModel>()
                 .ReverseMap();
             CreateMap<Delivery, DeliveryBindingModel>()
+                .ReverseMap();
+            CreateMap<Delivery, DeliveryListItemBindingModel>()
                 .ReverseMap();
 
             CreateMap<InvoiceItem, InvoiceItemBindingModel>()

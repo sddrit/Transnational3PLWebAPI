@@ -33,16 +33,16 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
         [HttpGet]
         public async Task<LoadResult> Get(DataSourceLoadOptions loadOptions)
         {
-            IQueryable<DeliveryBindingModel> query = null;
+            IQueryable<DeliveryListItemBindingModel> query = null;
 
             if (User.IsInRole(Roles.SUPPLIER_ROLE))
             {
                 var user = await _accountService.GetUser(User);
-                query = _mapper.ProjectTo<DeliveryBindingModel>(_deliveryService.GetDeliveries(user.SupplierId ?? 0));
+                query = _mapper.ProjectTo<DeliveryListItemBindingModel>(_deliveryService.GetDeliveries(user.SupplierId ?? 0));
                 return await DataSourceLoader.LoadAsync(query, loadOptions);
             }
 
-            query = _mapper.ProjectTo<DeliveryBindingModel>(_deliveryService.GetDeliveries());
+            query = _mapper.ProjectTo<DeliveryListItemBindingModel>(_deliveryService.GetDeliveries());
             return await DataSourceLoader.LoadAsync(query, loadOptions);
         }
 

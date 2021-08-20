@@ -83,6 +83,14 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
             return Ok(_mapper.Map<UserBindingModel>(updatedUser));
         }
 
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(long id)
+        {
+            await _accountService.DeleteUser(id);
+            return Ok();
+        }
+
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody]LoginBindingModel model)

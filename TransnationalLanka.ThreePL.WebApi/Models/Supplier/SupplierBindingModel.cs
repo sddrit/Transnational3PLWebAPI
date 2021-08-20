@@ -25,6 +25,16 @@ namespace TransnationalLanka.ThreePL.WebApi.Models.Supplier
         public decimal HandlingCharge { get; set; }
     }
 
+    public class SupplierListItemBindingModel
+    {
+        public long Id { get; set; }
+        public string Code { get; set; }
+        public string SupplierName { get; set; }
+        public string BusinessRegistrationId { get; set; }
+        public string VatNumber { get; set; }
+        public bool Active { get; set; }
+    }
+
     public class SupplierBindingModel
     {
         public long Id { get; set; }

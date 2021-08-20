@@ -15,6 +15,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Models.Account
     public class UserBindingModel
     {
         public long Id { get; set; }
+        public long? SupplierId { get; set; }
         [Required]
         public string UserName { get; set; }
         [Required]

@@ -7,6 +7,19 @@ using TransnationalLanka.ThreePL.WebApi.Models.WareHouse;
 
 namespace TransnationalLanka.ThreePL.WebApi.Models.Delivery
 {
+    public class DeliveryListItemBindingModel
+    {
+        public long Id { get; set; }
+        public DeliveryType Type { get; set; }
+        public string DeliveryNo { get; set; }
+        public long SupplierId { get; set; }
+        public long? WareHouseId { get; set; }
+        public DateTimeOffset Created { get; set; }
+        public DateTimeOffset Updated { get; set; }
+        public DeliveryStatus DeliveryStatus { get; set; }
+        public DateTime DeliveryDate { get; set; }
+    }
+
     public class DeliveryBindingModel
     {
         public long Id { get; set; }

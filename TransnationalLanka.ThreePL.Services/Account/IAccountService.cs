@@ -11,6 +11,7 @@ namespace TransnationalLanka.ThreePL.Services.Account
         Task<User> CreateUser(User user, string password, string role);
         Task<User> UpdateUser(User user);
         Task<User> SetStatus(long id, bool status);
+        Task DeleteUser(long id);
         Task<User> Login(string username, string password);
         Task CreateRole(string roleName);
         Task<User> GetUserByUserName(string username);
