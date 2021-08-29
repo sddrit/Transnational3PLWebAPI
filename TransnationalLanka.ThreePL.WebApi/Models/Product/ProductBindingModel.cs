@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TransnationalLanka.ThreePL.Core.Enums;
-using TransnationalLanka.ThreePL.Core.Enums.Core;
 using TransnationalLanka.ThreePL.WebApi.Models.Supplier;
 
 namespace TransnationalLanka.ThreePL.WebApi.Models.Product
@@ -31,6 +30,8 @@ namespace TransnationalLanka.ThreePL.WebApi.Models.Product
         public MassUnit? MassUnit { get; set; }
         [Required]
         public bool Active { get; set; }
+        public long? UnitOfMeasureId { get; set; }
+        public virtual UnitOfMeasureBindingModel UnitOfMeasure { get; set; }
     }
 
     public class ProductDetailsBindingModel

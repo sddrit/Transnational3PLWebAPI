@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using TransnationalLanka.ThreePL.Core.Enums;
 
 namespace TransnationalLanka.ThreePL.Dal.Entities
 {
     public class PurchaseOrder : BaseEntity
     {
+        public PurchaseOrderStatus Status { get; set; }
         public string PoNumber { get; set; }
         public string Note { get; set; }
         public long SupplierId { get; set; }
@@ -22,6 +24,7 @@ namespace TransnationalLanka.ThreePL.Dal.Entities
         public long ProductId { get; set; }
         public virtual Product Product { get; set; }
         public decimal Quantity { get; set; }
+        public decimal ReceivedQuantity { get; set; }
         public decimal UnitCost { get; set; }
         [NotMapped]
         public decimal Value => Quantity * UnitCost;

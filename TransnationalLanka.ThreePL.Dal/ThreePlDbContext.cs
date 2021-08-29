@@ -31,6 +31,8 @@ namespace TransnationalLanka.ThreePL.Dal
         public DbSet<DeliveryHistory> DeliveryHistories { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<InvoiceItem> InvoiceItems { get; set; }
+        public DbSet<UnitOfMeasure> UnitOfMeasures { get; set; }
+        public DbSet<DeliveryTracking> DeliveryTrackings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -130,14 +132,6 @@ namespace TransnationalLanka.ThreePL.Dal
                 .HasOne(d => d.Supplier)
                 .WithMany(s => s.Deliveries)
                 .OnDelete(DeleteBehavior.NoAction);
-
-            var stringArrayConverter = new ValueConverter<string[], string>(
-                v => string.Join(";", v),
-                v => v.Split(";", StringSplitOptions.RemoveEmptyEntries).ToArray());
-
-            builder.Entity<Delivery>()
-                .Property(d => d.TrackingNumbers)
-                .HasConversion(stringArrayConverter);
 
             builder.Entity<DeliveryItem>()
                 .HasOne(d => d.Product)

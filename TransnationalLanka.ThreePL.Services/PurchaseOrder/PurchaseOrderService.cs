@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Dawn;
 using Microsoft.EntityFrameworkCore;
 using TransnationalLanka.ThreePL.Core.Constants;
+using TransnationalLanka.ThreePL.Core.Enums;
 using TransnationalLanka.ThreePL.Core.Exceptions;
 using TransnationalLanka.ThreePL.Dal;
 using TransnationalLanka.ThreePL.Services.Common.Mapper;
@@ -28,7 +30,12 @@ namespace TransnationalLanka.ThreePL.Services.PurchaseOrder
         {
             Guard.Argument(purchaseOrder, nameof(purchaseOrder)).NotNull();
 
+            purchaseOrder.Status = PurchaseOrderStatus.Pending;
+
             await ValidatePurchaseOrder(purchaseOrder);
+
+            purchaseOrder.Created = DateTimeOffset.UtcNow;
+            purchaseOrder.Updated = DateTimeOffset.UtcNow;
 
             _unitOfWork.PurchaseOrdeRepository.Insert(purchaseOrder);
             await _unitOfWork.SaveChanges();
@@ -42,11 +49,22 @@ namespace TransnationalLanka.ThreePL.Services.PurchaseOrder
             await ValidatePurchaseOrder(purchaseOrder);
 
             var currentPurchaseOrder = await GetPurchaseOrderById(purchaseOrder.Id);
+
             var mapper = ServiceMapper.GetMapper();
             mapper.Map(purchaseOrder, currentPurchaseOrder);
 
+            currentPurchaseOrder.Updated = DateTimeOffset.UtcNow;
+
             await _unitOfWork.SaveChanges();
             return currentPurchaseOrder;
+        }
+
+        public async Task<Dal.Entities.PurchaseOrder> SetPurchaseOrderStatus(long purchaseOrderId, PurchaseOrderStatus status)
+        {
+            var purchaseOrder = await GetPurchaseOrderById(purchaseOrderId);
+            purchaseOrder.Status = status;
+            await _unitOfWork.SaveChanges();
+            return purchaseOrder;
         }
 
         public async Task<Dal.Entities.PurchaseOrder> GetPurchaseOrderById(long id)
@@ -70,6 +88,26 @@ namespace TransnationalLanka.ThreePL.Services.PurchaseOrder
             }
 
             return purchaseOrder;
+        }
+
+        public PurchaseOrderStatus GetPurchaseOrderStatus(Dal.Entities.PurchaseOrder purchaseOrder)
+        {
+            if (purchaseOrder == null)
+            {
+                throw new ArgumentNullException(nameof(purchaseOrder));
+            }
+
+            if (purchaseOrder.PurchaseOrderItems.All(poi => poi.ReceivedQuantity >= poi.Quantity))
+            {
+                return PurchaseOrderStatus.Received;
+            }
+
+            if (purchaseOrder.PurchaseOrderItems.All(poi => poi.ReceivedQuantity == 0))
+            {
+                return PurchaseOrderStatus.Pending;
+            }
+
+            return PurchaseOrderStatus.PartiallyReceived;
         }
 
         private async Task ValidatePurchaseOrder(Dal.Entities.PurchaseOrder purchaseOrder)

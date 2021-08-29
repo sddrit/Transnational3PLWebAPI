@@ -1,13 +1,13 @@
-﻿using System.Data;
+﻿using System.Collections.Generic;
+using System.Data;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Dawn;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using TransnationalLanka.ThreePL.Core.Constants;
 using TransnationalLanka.ThreePL.Core.Exceptions;
 using TransnationalLanka.ThreePL.Dal;
+using TransnationalLanka.ThreePL.Dal.Entities;
 using TransnationalLanka.ThreePL.Services.Common.Mapper;
 using TransnationalLanka.ThreePL.Services.Product.Core;
 
@@ -32,6 +32,12 @@ namespace TransnationalLanka.ThreePL.Services.Product
         {
             return _unitOfWork.ProductRepository.GetAll()
                 .Where(p => p.SupplierId == supplierId);
+        }
+
+        public async Task<List<UnitOfMeasure>> GetUnitOfMeasures()
+        {
+            return await _unitOfWork.UnitOfMeasureRepository.GetAll()
+                .ToListAsync();
         }
 
         public async Task<Dal.Entities.Product> AddProduct(Dal.Entities.Product product)
@@ -81,25 +87,6 @@ namespace TransnationalLanka.ThreePL.Services.Product
                 });
             }
             return product;
-        }
-
-        public async Task<decimal> GetStorageUnitCount(long supplierId)
-        {
-            await using var command = _unitOfWork.Context.Database.GetDbConnection().CreateCommand();
-            command.CommandText = $"SELECT StorageUnits * (SELECT SUM(S.Quantity + S.ReturnQuantity) from ProductStocks S " +
-                                  "WHERE S.ProductId = P.Id) as StorageUnitCount FROM Products P " +
-                                  $"WHERE SupplierId = {supplierId}";
-            command.CommandType = CommandType.Text;
-
-            await _unitOfWork.Context.Database.OpenConnectionAsync();
-            await using var result = await command.ExecuteReaderAsync();
-
-            if (!await result.ReadAsync())
-            {
-                return 0;
-            }
-
-            return await result.GetFieldValueAsync<decimal>(0);
         }
 
         public async Task SetProductStatus(long id, bool status)

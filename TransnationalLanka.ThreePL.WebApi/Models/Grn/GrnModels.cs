@@ -12,6 +12,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Models.Grn
         public GrnType Type { get; set; }
         public DateTimeOffset Created { get; set; }
         public long? PurchaseOrderId { get; set; }
+        public long? ReturnGoodReceivedNoteId { get; set; }
         public long SupplierId { get; set; }
         public long WareHouseId { get; set; }
         public virtual ICollection<GoodReceivedNoteItemsBindingModel> GoodReceivedNoteItems { get; set; }

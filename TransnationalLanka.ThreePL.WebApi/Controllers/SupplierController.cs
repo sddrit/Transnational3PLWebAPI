@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using TransnationalLanka.ThreePL.Dal.Entities;
 using TransnationalLanka.ThreePL.Services.Account;
 using TransnationalLanka.ThreePL.Services.Account.Core;
+using TransnationalLanka.ThreePL.Services.Product;
 using TransnationalLanka.ThreePL.Services.Supplier;
 using TransnationalLanka.ThreePL.WebApi.Models.Supplier;
 using TransnationalLanka.ThreePL.WebApi.Util.Authorization;
@@ -20,13 +21,16 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
     {
         private readonly IMapper _mapper;
         private readonly ISupplierService _supplierService;
+        private readonly IStockService _stockService;
         private readonly IAccountService _accountService;
 
-        public SupplierController(IMapper mapper, ISupplierService supplierService, IAccountService accountService)
+        public SupplierController(IMapper mapper, ISupplierService supplierService, 
+            IStockService stockService, IAccountService accountService)
         {
             _mapper = mapper;
             _supplierService = supplierService;
             _accountService = accountService;
+            _stockService = stockService;
         }
 
         [HttpGet]
@@ -41,6 +45,22 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
         {
             var supplier = await _supplierService.GetSupplierById(id);
             return Ok(_mapper.Map<SupplierBindingModel>(supplier));
+        }
+
+        [HttpGet("storage-details/{id}")]
+        public async Task<IActionResult> GetStorageDetails(long id)
+        {
+            var supplier = await _supplierService.GetSupplierById(id);
+            var totalStorage = await _stockService.GetTotalStorage(id);
+            var remainStorage = await _stockService.GetRemainStorage(id);
+            var totalStorageByWareHouses = await _stockService.GetTotalStorageByWareHouses(id);
+            return Ok(new
+            {
+                AllocatedStorage = supplier.SupplierCharges.AllocatedUnits,
+                TotalStorage = totalStorage,
+                RemainStorage = remainStorage,
+                TotalStorageByWareHouses = totalStorageByWareHouses
+            });
         }
 
         [HttpPost("set-status")]

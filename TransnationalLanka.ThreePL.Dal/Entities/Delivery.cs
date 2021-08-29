@@ -19,7 +19,6 @@ namespace TransnationalLanka.ThreePL.Dal.Entities
         public DeliveryStatus DeliveryStatus { get; set; }
         public DateTime DeliveryDate { get; set; }
         public ICollection<DeliveryItem> DeliveryItems { get; set; }
-        public string[] TrackingNumbers { get; set; }
         [NotMapped]
         public decimal SubTotal
         {
@@ -33,6 +32,7 @@ namespace TransnationalLanka.ThreePL.Dal.Entities
             }
         }
         public ICollection<DeliveryHistory> DeliveryHistories { get; set; }
+        public ICollection<DeliveryTracking> DeliveryTrackings { get; set; }
     }
 
     public class DeliveryItem : BaseEntity
@@ -100,4 +100,24 @@ namespace TransnationalLanka.ThreePL.Dal.Entities
         public string UserName { get; set; }
         public string Note { get; set; }
     }
+
+    public class DeliveryTracking : BaseEntity
+    {
+        public long DeliveryId { get; set; }
+        public virtual Delivery Delivery { get; set; }
+        public string TrackingNumber { get; set; }
+        public TrackingStatus Status { get; set; }
+        public ICollection<DeliveryTrackingItem> DeliveryTrackingItems { get; set; }
+    }
+
+    public class DeliveryTrackingItem : BaseEntity
+    {
+        public long ProductId { get; set; }
+        public virtual Product Product { get; set; }
+        public decimal Quantity { get; set; }
+        public decimal UnitCost { get; set; }
+        [NotMapped] 
+        public decimal Value => Quantity * UnitCost;
+    }
+
 }

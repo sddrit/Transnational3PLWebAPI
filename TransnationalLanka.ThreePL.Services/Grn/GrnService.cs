@@ -7,18 +7,22 @@ using TransnationalLanka.ThreePL.Core.Exceptions;
 using TransnationalLanka.ThreePL.Dal;
 using TransnationalLanka.ThreePL.Dal.Entities;
 using TransnationalLanka.ThreePL.Services.Product;
+using TransnationalLanka.ThreePL.Services.PurchaseOrder;
 
 namespace TransnationalLanka.ThreePL.Services.Grn
 {
     public class GrnService : IGrnService
     {
         private readonly IStockService _stockService;
+        private readonly IPurchaseOrderService _purchaseOrderService;
         private readonly IUnitOfWork _unitOfWork;
 
-        public GrnService(IUnitOfWork unitOfWork, IStockService stockService)
+        public GrnService(IUnitOfWork unitOfWork, IStockService stockService, 
+            IPurchaseOrderService purchaseOrderService)
         {
             _unitOfWork = unitOfWork;
             _stockService = stockService;
+            _purchaseOrderService = purchaseOrderService;
         }
 
         public IQueryable<GoodReceivedNote> GetAll()
@@ -73,7 +77,9 @@ namespace TransnationalLanka.ThreePL.Services.Grn
 
             try
             {
-
+                goodReceivedNote.Created = DateTimeOffset.UtcNow;
+                goodReceivedNote.Updated = DateTimeOffset.UtcNow;
+                
                 _unitOfWork.GoodReceiveNoteRepository.Insert(goodReceivedNote);
                 await _unitOfWork.SaveChanges();
 
@@ -93,6 +99,33 @@ namespace TransnationalLanka.ThreePL.Services.Grn
                             item.ExpiredDate,
                             $"Good Return - GRN #{goodReceivedNote.Id}");
                     }
+                }
+
+                if (goodReceivedNote.PurchaseOrderId.HasValue)
+                {
+                    var purchaseOrder =
+                        await _purchaseOrderService.GetPurchaseOrderById(goodReceivedNote.PurchaseOrderId.Value);
+
+                    foreach (var goodReceivedNoteItem in goodReceivedNote.GoodReceivedNoteItems)
+                    {
+                        var purchaseOrderItem =
+                            purchaseOrder.PurchaseOrderItems.FirstOrDefault(poi =>
+                                poi.ProductId == goodReceivedNoteItem.ProductId);
+
+                        if (purchaseOrderItem != null && goodReceivedNote.Type == GrnType.Received)
+                        {
+                            purchaseOrderItem.ReceivedQuantity += goodReceivedNoteItem.Quantity;
+                        }
+                        else if (purchaseOrderItem != null && goodReceivedNote.Type == GrnType.Return)
+                        {
+                            purchaseOrderItem.ReceivedQuantity -= goodReceivedNoteItem.Quantity;
+                        }
+                    }
+
+                    var purchaseOrderStatus = _purchaseOrderService.GetPurchaseOrderStatus(purchaseOrder);
+                    purchaseOrder.Status = purchaseOrderStatus;
+
+                    await _purchaseOrderService.UpdatePurchaseOrder(purchaseOrder);
                 }
 
                 await transaction.CommitAsync();

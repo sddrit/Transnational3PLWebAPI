@@ -37,6 +37,8 @@ namespace TransnationalLanka.ThreePL.WebApi.Models.Delivery
         public ICollection<DeliveryItemBindingModel> DeliveryItems { get; set; }
         public string[] TrackingNumbers { get; set; }
         public ICollection<DeliveryHistoryBindingModel> DeliveryHistories { get; set; }
+        public ICollection<DeliveryTrackingBindingModel> DeliveryTrackings { get; set; }
+
     }
 
     public class DeliveryItemBindingModel
@@ -60,6 +62,21 @@ namespace TransnationalLanka.ThreePL.WebApi.Models.Delivery
         public string PostalCode { get; set; }
         public string Mobile { get; set; }
         public string Phone { get; set; }
+    }
+
+    public class DeliveryTrackingBindingModel
+    {
+        public string TrackingNumber { get; set; }
+        public TrackingStatus Status { get; set; }
+        public ICollection<DeliveryTrackingItemBindingModel> DeliveryTrackingItems { get; set; }
+    }
+
+    public class DeliveryTrackingItemBindingModel
+    {
+        public long ProductId { get; set; }
+        public decimal Quantity { get; set; }
+        public decimal UnitCost { get; set; }
+        public decimal Value { get; set; }
     }
 
     public class DeliveryHistoryBindingModel

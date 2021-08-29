@@ -85,8 +85,13 @@ namespace TransnationalLanka.ThreePL.Services.Stock
 
                 foreach (var stockTransferStockTransferItem in stockTransfer.StockTransferItems)
                 {
+
                     await _stockService.AdjustStock(stockTransfer.FromWareHouseId, stockTransferStockTransferItem.ProductId,
                         stockTransferStockTransferItem.UnitCost, -stockTransferStockTransferItem.Quantity,
+                        stockTransferStockTransferItem.ExpiredDate, $"Stock Transfer - {stockTransfer.StockTransferNumber}");
+
+                    await _stockService.AdjustStock(stockTransfer.ToWareHouseId, stockTransferStockTransferItem.ProductId,
+                        stockTransferStockTransferItem.UnitCost, stockTransferStockTransferItem.Quantity,
                         stockTransferStockTransferItem.ExpiredDate, $"Stock Transfer - {stockTransfer.StockTransferNumber}");
                 }
 

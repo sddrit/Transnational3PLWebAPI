@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using TransnationalLanka.ThreePL.Core.Enums;
 
 namespace TransnationalLanka.ThreePL.Services.PurchaseOrder
 {
@@ -9,5 +10,7 @@ namespace TransnationalLanka.ThreePL.Services.PurchaseOrder
         Task<Dal.Entities.PurchaseOrder> AddPurchaseOrder(Dal.Entities.PurchaseOrder purchaseOrder);
         Task<Dal.Entities.PurchaseOrder> UpdatePurchaseOrder(Dal.Entities.PurchaseOrder purchaseOrder);
         Task<Dal.Entities.PurchaseOrder> GetPurchaseOrderById(long id);
+        Task<Dal.Entities.PurchaseOrder> SetPurchaseOrderStatus(long purchaseOrderId, PurchaseOrderStatus status);
+        PurchaseOrderStatus GetPurchaseOrderStatus(Dal.Entities.PurchaseOrder purchaseOrder);
     }
 }

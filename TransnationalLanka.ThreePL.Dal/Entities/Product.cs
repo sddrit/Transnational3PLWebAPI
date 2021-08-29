@@ -19,6 +19,8 @@ namespace TransnationalLanka.ThreePL.Dal.Entities
         public decimal? Weight { get; set; }
         public MassUnit? MassUnit { get; set; }
         public bool Active { get; set; }
+        public long? UnitOfMeasureId { get; set; }
+        public virtual UnitOfMeasure UnitOfMeasure { get; set; }
         public virtual ICollection<ProductStock> Stocks { get; set; }
         public virtual ICollection<ProductStockAdjustment> StockAdjustments { get; set; }
         public virtual ICollection<PurchaseOrderItem> PurchaseOrderItems { get; set; }

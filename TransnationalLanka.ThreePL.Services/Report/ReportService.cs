@@ -139,7 +139,6 @@ namespace TransnationalLanka.ThreePL.Services.Report
                 WareHouseAddress = delivery.WareHouse.Address.AddressLine1 + delivery.WareHouse.Address.AddressLine2,
                 WareHouseCode = delivery.WareHouse.Code,
                 WareHouseName = delivery.WareHouse.Name,
-                TrackingNo = delivery.TrackingNumbers,
                 WayBillItems = delivery.DeliveryItems.Select(p => new WayBillItem()
                 {
                     ItemCode = p.Product.Code,

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Data.ResponseModel;
@@ -6,6 +7,8 @@ using DevExtreme.AspNet.Mvc;
 using Microsoft.AspNetCore.Mvc;
 using TransnationalLanka.ThreePL.Dal.Entities;
 using TransnationalLanka.ThreePL.Services.Account.Core;
+using TransnationalLanka.ThreePL.Services.Product;
+using TransnationalLanka.ThreePL.Services.Product.Core;
 using TransnationalLanka.ThreePL.Services.PurchaseOrder;
 using TransnationalLanka.ThreePL.WebApi.Models.PurchaseOrder;
 using TransnationalLanka.ThreePL.WebApi.Util.Authorization;
@@ -18,11 +21,14 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
     public class PurchaseOrderController : ControllerBase
     {
         private readonly IPurchaseOrderService _purchaseOrderService;
+        private readonly IStockService _stockService;
         private readonly IMapper _mapper;
 
-        public PurchaseOrderController(IPurchaseOrderService purchaseOrderService, IMapper mapper)
+        public PurchaseOrderController(IPurchaseOrderService purchaseOrderService, 
+            IStockService stockService, IMapper mapper)
         {
             _purchaseOrderService = purchaseOrderService;
+            _stockService = stockService;
             _mapper = mapper;
         }
 
@@ -47,6 +53,20 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
             return Ok(_mapper.Map<PurchaseOrderBindingModel>(createdPurchaseOrder));
         }
 
+        [HttpPost("calculate-storage")]
+        public async Task<IActionResult> CalculateStorage([FromBody]CalculateStorageBindingModel model)
+        {
+            var totalStorage = await _stockService.CalculateStorage(new CalculateStorageByProducts()
+            {
+                Products = model.Products
+                    .Select(p => new CalculateStorageProductItem() { ProductId = p.ProductId, Quantity = p.Quantity }).ToList()
+            });
+
+            return Ok(new
+            {
+                TotalStorage = totalStorage
+            });
+        }
 
         [HttpPut]
         public async Task<IActionResult> Put([FromBody]PurchaseOrderBindingModel model)

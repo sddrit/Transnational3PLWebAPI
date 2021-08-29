@@ -65,6 +65,8 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
                 .Include(d => d.DeliveryItems)
                 .ThenInclude(i => i.Product)
                 .Include(d => d.DeliveryHistories)
+                .Include(d => d.DeliveryTrackings)
+                .ThenInclude(t => t.DeliveryTrackingItems)
                 .FirstOrDefaultAsync();
 
             if (delivery == null)
@@ -112,7 +114,7 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
                 ConsigneePhone = string.IsNullOrEmpty(delivery.DeliveryCustomer.Phone) ? "" : delivery.DeliveryCustomer.Phone,
                 ConsigneeCity = delivery.DeliveryCustomer.City.CityName,
                 InsertedDate = DateTime.Now,
-                CODAmount = delivery.SubTotal.ToString("0.00"),
+                CODAmount = delivery.Type == DeliveryType.Cod? delivery.SubTotal.ToString("0.00") : "0.00",
             });
 
             if (response.IsSuccess == "1")
@@ -130,7 +132,23 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
                 });
             }
 
-            delivery.TrackingNumbers = trackingNumbers.ToArray();
+            delivery.DeliveryTrackings = new List<DeliveryTracking>();
+
+            foreach (var trackingNumber in trackingNumbers)
+            {
+                delivery.DeliveryTrackings.Add(new DeliveryTracking()
+                {
+                    Status = TrackingStatus.Pending,
+                    TrackingNumber = trackingNumber,
+                    DeliveryTrackingItems = delivery.DeliveryItems.Select(item => new DeliveryTrackingItem()
+                    {
+                        ProductId = item.ProductId,
+                        Quantity = 0,
+                        UnitCost = item.UnitCost
+                    }).ToList()
+                });
+            }
+
             delivery.DeliveryStatus = DeliveryStatus.Processing;
 
             await _unitOfWork.SaveChanges();

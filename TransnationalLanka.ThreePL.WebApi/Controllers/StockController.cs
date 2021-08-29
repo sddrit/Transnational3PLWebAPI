@@ -39,5 +39,13 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
             var query = _mapper.ProjectTo<ProductStockAdjustmentBindingModel>( _stockService.GetStockAdjustmentsByProductId(id));
             return await DataSourceLoader.LoadAsync(query, loadOptions);
         }
+
+        [HttpPost("transfer-return-stock")]
+        public async Task<IActionResult> TransferReturnStock([FromBody] TransferReturnStockBindingModel model)
+        {
+            await _stockService.TransferReturnStock(model.WareHouseId, model.ProductId, model.UnitCost, -model.Quantity,
+                model.ExpiredDate, model.Note);
+            return Ok();
+        }
     }
 }

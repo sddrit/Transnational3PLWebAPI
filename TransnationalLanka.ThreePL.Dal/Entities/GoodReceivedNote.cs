@@ -9,6 +9,9 @@ namespace TransnationalLanka.ThreePL.Dal.Entities
     {
         public string GrnNo { get; set; }
         public long? PurchaseOrderId { get; set; }
+        public long? ReturnGoodReceivedNoteId { get; set; }
+        [ForeignKey("ReturnGoodReceivedNoteId")]
+        public virtual GoodReceivedNote ReturnGoodReceivedNote { get; set; }
         public GrnType Type { get; set; }
         public virtual PurchaseOrder PurchaseOrder { get; set; }
         public long SupplierId { get; set; }

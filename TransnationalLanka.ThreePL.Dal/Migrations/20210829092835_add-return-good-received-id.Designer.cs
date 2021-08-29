@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TransnationalLanka.ThreePL.Dal;
 
 namespace TransnationalLanka.ThreePL.Dal.Migrations
 {
     [DbContext(typeof(ThreePlDbContext))]
-    partial class ThreePlDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210829092835_add-return-good-received-id")]
+    partial class addreturngoodreceivedid
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -209,6 +211,9 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                     b.Property<long>("SupplierId")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("TrackingNumbers")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
@@ -288,69 +293,6 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("DeliveryItems");
-                });
-
-            modelBuilder.Entity("TransnationalLanka.ThreePL.Dal.Entities.DeliveryTracking", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<long>("DeliveryId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TrackingNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset>("Updated")
-                        .HasColumnType("datetimeoffset");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeliveryId");
-
-                    b.ToTable("DeliveryTrackings");
-                });
-
-            modelBuilder.Entity("TransnationalLanka.ThreePL.Dal.Entities.DeliveryTrackingItem", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<long?>("DeliveryTrackingId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("ProductId")
-                        .HasColumnType("bigint");
-
-                    b.Property<decimal>("Quantity")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("UnitCost")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTimeOffset>("Updated")
-                        .HasColumnType("datetimeoffset");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeliveryTrackingId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("DeliveryTrackingItem");
                 });
 
             modelBuilder.Entity("TransnationalLanka.ThreePL.Dal.Entities.GoodReceivedNote", b =>
@@ -1178,32 +1120,6 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("TransnationalLanka.ThreePL.Dal.Entities.DeliveryTracking", b =>
-                {
-                    b.HasOne("TransnationalLanka.ThreePL.Dal.Entities.Delivery", "Delivery")
-                        .WithMany("DeliveryTrackings")
-                        .HasForeignKey("DeliveryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Delivery");
-                });
-
-            modelBuilder.Entity("TransnationalLanka.ThreePL.Dal.Entities.DeliveryTrackingItem", b =>
-                {
-                    b.HasOne("TransnationalLanka.ThreePL.Dal.Entities.DeliveryTracking", null)
-                        .WithMany("DeliveryTrackingItems")
-                        .HasForeignKey("DeliveryTrackingId");
-
-                    b.HasOne("TransnationalLanka.ThreePL.Dal.Entities.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("TransnationalLanka.ThreePL.Dal.Entities.GoodReceivedNote", b =>
                 {
                     b.HasOne("TransnationalLanka.ThreePL.Dal.Entities.PurchaseOrder", "PurchaseOrder")
@@ -1563,13 +1479,6 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                     b.Navigation("DeliveryHistories");
 
                     b.Navigation("DeliveryItems");
-
-                    b.Navigation("DeliveryTrackings");
-                });
-
-            modelBuilder.Entity("TransnationalLanka.ThreePL.Dal.Entities.DeliveryTracking", b =>
-                {
-                    b.Navigation("DeliveryTrackingItems");
                 });
 
             modelBuilder.Entity("TransnationalLanka.ThreePL.Dal.Entities.GoodReceivedNote", b =>

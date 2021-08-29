@@ -8,9 +8,9 @@ namespace TransnationalLanka.ThreePL.Core.Enums
         In = 1,
         [Description("Out")]
         Out = 2,
-        [Description("ReturnIn")]
+        [Description("Return In")]
         ReturnIn = 3,
-        [Description("ReturnOut")]
+        [Description("Return Out")]
         ReturnOut = 4
     }
 

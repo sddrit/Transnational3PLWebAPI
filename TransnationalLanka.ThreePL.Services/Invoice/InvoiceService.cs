@@ -17,14 +17,16 @@ namespace TransnationalLanka.ThreePL.Services.Invoice
         private readonly IUnitOfWork _unitOfWork;
         private readonly ISupplierService _supplierService;
         private readonly IProductService _productService;
+        private readonly IStockService _stockService;
         private readonly IDeliveryService _deliveryService;
 
         public InvoiceService(IUnitOfWork unitOfWork, ISupplierService supplierService, 
-            IProductService productService, IDeliveryService deliveryService)
+            IProductService productService, IStockService stockService, IDeliveryService deliveryService)
         {
             _unitOfWork = unitOfWork;
             _supplierService = supplierService;
             _productService = productService;
+            _stockService = stockService;
             _deliveryService = deliveryService;
         }
 
@@ -60,6 +62,11 @@ namespace TransnationalLanka.ThreePL.Services.Invoice
             }
         }
 
+        /// <summary>
+        /// Get the invoice by id
+        /// </summary>
+        /// <param name="id">Id of invoice</param>
+        /// <returns></returns>
         public async Task<Dal.Entities.Invoice> GetInvoice(long id)
         {
             var invoice = await _unitOfWork.InvoiceRepository.GetAll()
@@ -119,7 +126,7 @@ namespace TransnationalLanka.ThreePL.Services.Invoice
                 Description = "Storage Charges"
             });
 
-            var storageUnitCount = await _productService.GetStorageUnitCount(supplierId);
+            var storageUnitCount = await _stockService.GetTotalStorage(supplierId);
 
             if (storageUnitCount > supplier.SupplierCharges.AllocatedUnits)
             {
@@ -163,7 +170,7 @@ namespace TransnationalLanka.ThreePL.Services.Invoice
             var storageAmountItem = invoice.InvoiceItems.First(i => i.Type == InvoiceItemChargeType.StorageCharge);
             storageAmountItem.Amount = storageAmount;
 
-            var storageUnitCount = await _productService.GetStorageUnitCount(supplierId);
+            var storageUnitCount = await _stockService.GetTotalStorage(supplierId);
 
             if (storageUnitCount > supplier.SupplierCharges.AllocatedUnits)
             {

@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using AutoMapper;
 using TransnationalLanka.ThreePL.Services.Metadata;
+using TransnationalLanka.ThreePL.Services.Product;
+using TransnationalLanka.ThreePL.WebApi.Models.Product;
 
 namespace TransnationalLanka.ThreePL.WebApi.Controllers
 {
@@ -9,10 +13,14 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
     public class MetadataController : ControllerBase
     {
         private readonly IMetadataService _metadataService;
+        private readonly IProductService _productService;
+        private readonly IMapper _mapper;
 
-        public MetadataController(IMetadataService metadataService)
+        public MetadataController(IMapper mapper, IMetadataService metadataService, IProductService productService)
         {
+            _mapper = mapper;
             _metadataService = metadataService;
+            _productService = productService;
         }
 
         [HttpGet]
@@ -25,6 +33,9 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
             var grnTypes = _metadataService.GetGrnTypes();
             var deliveryStatus = _metadataService.GetDeliveryStatus();
             var deliveryTypes = _metadataService.GetDeliveryTypes();
+            var unitOfMeasures = await _productService.GetUnitOfMeasures();
+            var purchaseOrderStatus = _metadataService.GetPurchaseOrderStatus();
+
             return Ok(new
             {
                 StoreTypes = storeTypes,
@@ -33,7 +44,9 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
                 StockAdjustmentTypes = stockAdjustmentTypes,
                 GrnTypes = grnTypes,
                 DeliveryStatus = deliveryStatus,
-                DeliveryTypes = deliveryTypes
+                DeliveryTypes = deliveryTypes,
+                PurchaseOrderStatus = purchaseOrderStatus,
+                UnitOfMeasures = unitOfMeasures.Select(_mapper.Map<UnitOfMeasureBindingModel>)
             });
         }
     }

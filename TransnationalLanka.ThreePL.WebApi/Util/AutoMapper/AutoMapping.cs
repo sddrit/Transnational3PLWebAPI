@@ -22,18 +22,19 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.AutoMapper
             //Account Section
             CreateMap<User, UserBindingModel>();
             
-            //Supplier
+            //City Mapping
             CreateMap<City, CityBindingModel>()
                 .ReverseMap();
 
+            //Address Mapping
             CreateMap<Address, AddressBindingModel>();
             CreateMap<AddressBindingModel, Address>()
                 .ForMember(d => d.City, a => a.Ignore());
 
+            //Supplier Mapping
             CreateMap<SupplierAddress, SupplierAddressBindingModel>();
             CreateMap<SupplierAddressBindingModel, SupplierAddress>()
                 .ForMember(d => d.City, a => a.Ignore());
-
             CreateMap<Contact, ContactBindingModel>()
                 .ReverseMap();
             CreateMap<SupplierCharges, SupplierChargeBindingModel>()
@@ -43,15 +44,23 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.AutoMapper
             CreateMap<Supplier, SupplierDetailsBindingModel>();
             CreateMap<Supplier, SupplierListItemBindingModel>()
                 .ReverseMap();
+
+
+            //Product Mapping
             CreateMap<Product, ProductBindingModel>()
                .ReverseMap();
             CreateMap<Product, ProductDetailsBindingModel>();
+            CreateMap<UnitOfMeasure, UnitOfMeasureBindingModel>()
+                .ReverseMap();
+
+            //WareHouse Mapping
             CreateMap<WareHouseAddress, WareHouseAddressBindingModel>()
             .ReverseMap();
             CreateMap<WareHouse, WareHouseBindingModel>()
              .ReverseMap();
-            CreateMap<City, CityBindingModel>();
 
+
+            //Purchase Order Mapping
             CreateMap<PurchaseOrderItem, PurchaseOrderDetailsItemBindingModel>();
             CreateMap<PurchaseOrder, PurchaseOrderDetailsBindingModel>();
             CreateMap<PurchaseOrderItem, PurchaseOrderItemBindingModel>()
@@ -59,21 +68,26 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.AutoMapper
             CreateMap<PurchaseOrder, PurchaseOrderBindingModel>()
                 .ReverseMap();
 
+            //GRN Mapping
             CreateMap<GoodReceivedNoteItems, GoodReceivedNoteItemsBindingModel>()
                 .ReverseMap();
             CreateMap<GoodReceivedNote, GoodReceivedNoteBindingModel>()
                 .ReverseMap();
 
+            //Product Stock Mapping
             CreateMap<ProductStockAdjustment, ProductStockAdjustmentBindingModel>()
                 .ReverseMap();
             CreateMap<ProductStock, ProductStockBindingModel>()
               .ReverseMap();
 
+
+            //ST Mapping
             CreateMap<StockTransferItem, StockTransferItemBindingModel>()
                 .ReverseMap();
             CreateMap<StockTransfer, StockTransferBindingModel>()
                 .ReverseMap();
 
+            //Delivery Mapping
             CreateMap<City, DeliveryCustomerCityBindingModel>()
                 .ReverseMap();
             CreateMap<DeliveryCustomer, DeliveryCustomerBindingModel>()
@@ -82,11 +96,17 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.AutoMapper
                 .ReverseMap();
             CreateMap<DeliveryHistory, DeliveryHistoryBindingModel>()
                 .ReverseMap();
+            CreateMap<DeliveryTracking, DeliveryTrackingBindingModel>()
+                .ReverseMap();
+            CreateMap<DeliveryTrackingItem, DeliveryTrackingItemBindingModel>()
+                .ReverseMap();
             CreateMap<Delivery, DeliveryBindingModel>()
                 .ReverseMap();
             CreateMap<Delivery, DeliveryListItemBindingModel>()
                 .ReverseMap();
 
+
+            //Invoice Mapping
             CreateMap<InvoiceItem, InvoiceItemBindingModel>()
                 .ReverseMap();
             CreateMap<Invoice, InvoiceBindingModel>()
