@@ -62,6 +62,13 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
         }
 
         [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
+        [HttpPut("map-delivery-product")]
+        public async Task<IActionResult> Put([FromBody] DeliveryBindingModel model)
+        {
+            return Ok(_mapper.Map<DeliveryBindingModel>(await _deliveryService.MapDeliveryProduct(_mapper.Map<Delivery>(model))));
+        }
+
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
         [HttpPost("mark-as-processing")]
         public async Task<IActionResult> Post([FromBody] MarkAsProcessingBindingModel model)
         {

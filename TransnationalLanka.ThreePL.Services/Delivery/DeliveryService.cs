@@ -19,18 +19,21 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IStockService _stockService;
+        private readonly IProductService _productService;
         private readonly ISupplierService _supplierService;
         private readonly IEnvironment _environment;
         private readonly TrackerApiService _trackerApiService;
 
         public DeliveryService(IUnitOfWork unitOfWork, IStockService stockService,
             ISupplierService supplierService, TrackerApiService trackerApiService,
+            IProductService productService,
             IEnvironment environment)
         {
             _unitOfWork = unitOfWork;
             _stockService = stockService;
             _trackerApiService = trackerApiService;
             _supplierService = supplierService;
+            _productService = productService;
             _environment = environment;
         }
 
@@ -158,6 +161,48 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
             return delivery;
         }
 
+        public async Task<Dal.Entities.Delivery> MapDeliveryProduct(Dal.Entities.Delivery delivery)
+        {
+            var currentDelivery = await GetDeliveryById(delivery.Id);
+
+            var updatedDeliveryTrackingItems =
+                delivery.DeliveryTrackings.SelectMany(t => t.DeliveryTrackingItems).ToList();
+
+            foreach (var currentDeliveryDeliveryItem in currentDelivery.DeliveryItems)
+            {
+                if (currentDeliveryDeliveryItem.Quantity !=
+                    updatedDeliveryTrackingItems.Where(i => i.ProductId == currentDeliveryDeliveryItem.ProductId)
+                        .Sum(i => i.Quantity))
+                {
+                    var product = await _productService.GetProductById(currentDeliveryDeliveryItem.ProductId);
+
+                    throw new ServiceException(new ErrorMessage[]
+                    {
+                        new ErrorMessage()
+                        {
+                            Message = $"{product.Name} quantity is invalid for mapping products to tracking numbers"
+                        }
+                    });
+                }
+            }
+
+            currentDelivery.DeliveryTrackings.SelectMany(t => t.DeliveryTrackingItems).ToList()
+                .ForEach(deliveryTrackingItem =>
+                {
+                    var updatedDeliveryTrackingItem =
+                        updatedDeliveryTrackingItems.FirstOrDefault(i => i.Id == deliveryTrackingItem.Id);
+
+                    if (updatedDeliveryTrackingItem != null)
+                    {
+                        deliveryTrackingItem.Quantity = updatedDeliveryTrackingItem.Quantity;
+                    }
+                });
+
+            await _unitOfWork.SaveChanges();
+
+            return currentDelivery;
+        }
+
         public async Task<Dal.Entities.Delivery> MarkAsDispatch(long id, long warehouseId)
         {
             await using var transaction = await _unitOfWork.GetTransaction();
@@ -175,6 +220,23 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
                             Message = "Unable to mark as dispatch"
                         }
                     });
+                }
+
+                foreach (var deliveryItem in delivery.DeliveryItems)
+                {
+                    if (deliveryItem.Quantity != delivery.DeliveryTrackings.SelectMany(i => i.DeliveryTrackingItems)
+                        .Where(i => i.ProductId == deliveryItem.ProductId).Sum(i => i.Quantity))
+                    {
+                        var product = await _productService.GetProductById(deliveryItem.ProductId);
+
+                        throw new ServiceException(new ErrorMessage[]
+                        {
+                            new()
+                            {
+                                Message = $"{product.Name} quantity is invalid for mapping products to tracking numbers"
+                            }
+                        });
+                    }
                 }
 
                 delivery.WareHouseId = warehouseId;

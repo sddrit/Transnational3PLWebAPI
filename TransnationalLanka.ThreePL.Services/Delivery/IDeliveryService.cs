@@ -16,5 +16,6 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
         Task<Dal.Entities.Delivery> MarkAsReturn(long id, string note);
         Task<Dal.Entities.Delivery> MarkAsCustomerReturn(long id, string note);
         Task<long> GetDeliveryCount(long supplierId, DateTime from, DateTime to);
+        Task<Dal.Entities.Delivery> MapDeliveryProduct(Dal.Entities.Delivery delivery);
     }
 }
