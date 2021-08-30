@@ -41,6 +41,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.Report
                     };
                     stockBalanceReport.DataSource = objectDataSource;
                     return stockBalanceReport;
+
                 case "GrnReport":
                     var grnReport = new Grn();
                     var grnReportData = AsyncContext.Run(() => _reportService.GetGrnReport(long.Parse(parameters["id"].ToString())));
@@ -51,6 +52,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.Report
                     };
                     grnReport.DataSource = grnObjectDataSource;
                     return grnReport;
+
                 case "WayBill":
                     var wayBillData = AsyncContext.Run(() => _reportService.GetWayBill(long.Parse(parameters["id"].ToString())));
                     var report = new WayBill();
@@ -85,9 +87,22 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.Report
                         });
                     }
                     return report;
+
+                   
+                case "PurchaseOrder":
+                    var purchaseOrderReport = new PurchaseOrderReport ();
+                    var purchaseOrderReportData = AsyncContext.Run(() => _reportService.GetPurchaseOrderReport(long.Parse(parameters["id"].ToString())));
+                    var purchaseOrderObjectDataSource = new ObjectDataSource
+                    {
+                        DataSource = purchaseOrderReportData,
+                        Name = "purchaseOrderDataSource"
+                    };
+                    purchaseOrderReport.DataSource = purchaseOrderObjectDataSource;
+                    return purchaseOrderReport;
+
                 case "StockMovementReport":
                     var stockMovementReport = new StockBalanceReport();
-                    var stockMovementReportData = AsyncContext.Run(() => _reportService.GetInventoryMovementReport(null,Convert.ToDateTime("01-06-2021"),Convert.ToDateTime( "06-30-2021"),1));
+                    var stockMovementReportData = AsyncContext.Run(() => _reportService.GetInventoryMovementReport(null,Convert.ToDateTime(parameters["fromDate"].ToString()),Convert.ToDateTime(parameters["toDate"].ToString()),long.Parse( parameters["productId"].ToString())));
                     var stockMovementObjectDataSource = new ObjectDataSource
                     {
                         DataSource = stockMovementReportData,

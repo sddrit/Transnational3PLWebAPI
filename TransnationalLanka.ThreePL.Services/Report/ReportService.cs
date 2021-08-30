@@ -152,7 +152,36 @@ namespace TransnationalLanka.ThreePL.Services.Report
             };
         }
 
-        public async Task<InventoryMovementReport> GetInventoryMovementReport(long? wareHouseId, DateTime fromDate, DateTime toDate, int? productId)
+
+        public async Task<PurchaseOrderReport> GetPurchaseOrderReport(long id)
+        {
+            var po = await _purchaseOrderService.GetPurchaseOrderById(id);
+            var supplier = await _supplierService.GetSupplierById(po.SupplierId);
+            var wareHouse = await _wareHouseService.GetWareHouseById((long)po.WareHouseId);
+         
+
+            return new PurchaseOrderReport()
+            {
+               
+                Date = po.Created,
+                PurchaseOrderNumber= po.PoNumber,
+                SupplierName = supplier.SupplierName,
+                SupplierCode = supplier.Code,
+                WareHouse = wareHouse.Code,
+                WareHouseName = wareHouse.Name,
+                WareHouseAddressLine1 = wareHouse.Address.AddressLine1,
+                WareHouseAddressLine2 = wareHouse.Address.AddressLine2,
+                PurchaseOrderReportItems = po.PurchaseOrderItems.Select(item => new PurchaseOrderReportItem()
+                {                   
+                    ProductId = item.Product.Code,
+                    ProductName = item.Product.Description,
+                    Quantity = item.Quantity,
+                    UnitCost = item.UnitCost                
+                }).ToList()
+            };
+        }
+
+        public async Task<InventoryMovementReport> GetInventoryMovementReport(long? wareHouseId, DateTime fromDate, DateTime toDate, long? productId)
         {
             string supplierName = null;
             string supplierCode = null;

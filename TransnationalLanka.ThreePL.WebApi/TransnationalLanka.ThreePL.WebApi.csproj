@@ -5,6 +5,10 @@
   <ItemGroup>
     <None Remove="Reports\Grn.vsrepx" />
     <None Remove="Reports\InvoiceSvat.vsrepx" />
+    <None Remove="Reports\MonthlyReconsilationReport.vsrepx" />
+    <None Remove="Reports\MonthlySalesReport.vsrepx" />
+    <None Remove="Reports\PurchaseOrderReport.vsrepx" />
+    <None Remove="Reports\SellerWiseItemDetailReport.vsrepx" />
     <None Remove="Reports\StockBalanceReport.vsrepx" />
     <None Remove="Reports\StockMovementReport.vsrepx" />
     <None Remove="Reports\WayBill.vsrepx" />
@@ -12,6 +16,10 @@
   <ItemGroup>
     <EmbeddedResource Include="Reports\Grn.vsrepx" />
     <EmbeddedResource Include="Reports\InvoiceSvat.vsrepx" />
+    <EmbeddedResource Include="Reports\MonthlyReconsilationReport.vsrepx" />
+    <EmbeddedResource Include="Reports\MonthlySalesReport.vsrepx" />
+    <EmbeddedResource Include="Reports\PurchaseOrderReport.vsrepx" />
+    <EmbeddedResource Include="Reports\SellerWiseItemDetailReport.vsrepx" />
     <EmbeddedResource Include="Reports\StockBalanceReport.vsrepx" />
     <EmbeddedResource Include="Reports\StockMovementReport.vsrepx" />
     <EmbeddedResource Include="Reports\WayBill.vsrepx" />
@@ -50,6 +58,30 @@
     </Compile>
     <Compile Update="Reports\InvoiceSvat.Designer.cs">
       <DependentUpon>InvoiceSvat.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\MonthlyReconsilationReport.cs">
+      <DependentUpon>MonthlyReconsilationReport.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\MonthlyReconsilationReport.Designer.cs">
+      <DependentUpon>MonthlyReconsilationReport.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\MonthlySalesReport.cs">
+      <DependentUpon>MonthlySalesReport.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\MonthlySalesReport.Designer.cs">
+      <DependentUpon>MonthlySalesReport.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\PurchaseOrderReport.cs">
+      <DependentUpon>PurchaseOrderReport.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\PurchaseOrderReport.Designer.cs">
+      <DependentUpon>PurchaseOrderReport.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\SellerWiseItemDetailReport.cs">
+      <DependentUpon>SellerWiseItemDetailReport.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\SellerWiseItemDetailReport.Designer.cs">
+      <DependentUpon>SellerWiseItemDetailReport.vsrepx</DependentUpon>
     </Compile>
     <Compile Update="Reports\StockBalanceReport.cs">
       <DependentUpon>StockBalanceReport.vsrepx</DependentUpon>
