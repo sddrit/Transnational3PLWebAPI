@@ -8,13 +8,11 @@ namespace TransnationalLanka.ThreePL.Core.Enums
         Pending,
         [Description("Dispatched")]
         Dispatched,
-        [Description("Delivered")]
-        Delivered,
         [Description("Completed")]
         Completed,
         [Description("Returned")]
         Returned,
-        [Description("CustomerReturned")]
+        [Description("Customer Returned")]
         CustomerReturned
     }
 }

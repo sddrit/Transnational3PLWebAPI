@@ -10,10 +10,14 @@ namespace TransnationalLanka.ThreePL.Core.Enums
         Processing,
         [Description("Dispatched")]
         Dispatched,
+        [Description("Partially Completed")]
+        PartiallyCompleted,
         [Description("Completed")]
         Completed,
         [Description("Return")]
         Return,
+        [Description("Partially Customer Return")]
+        PartiallyCustomerReturn,
         [Description("Customer Return")]
         CustomerReturn
     }
