@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -96,10 +97,10 @@ namespace TransnationalLanka.ThreePL.Services.Report
 
         public async Task<GrnReport> GetGrnReport(long id)
         {
-            var grn = await _grnService.GetByIdIncludeWithProduct(id);           
+            var grn = await _grnService.GetByIdIncludeWithProduct(id);
             var supplier = await _supplierService.GetSupplierById(grn.SupplierId);
             var wareHouse = await _wareHouseService.GetWareHouseById(grn.WareHouseId);
-            Dal.Entities.PurchaseOrder purchaseOrder = !grn.PurchaseOrderId.HasValue? null: await _purchaseOrderService.GetPurchaseOrderById(grn.PurchaseOrderId.Value);
+            Dal.Entities.PurchaseOrder purchaseOrder = !grn.PurchaseOrderId.HasValue ? null : await _purchaseOrderService.GetPurchaseOrderById(grn.PurchaseOrderId.Value);
 
             return new GrnReport()
             {
@@ -124,32 +125,45 @@ namespace TransnationalLanka.ThreePL.Services.Report
             };
         }
 
-        public async Task<WayBill> GetWayBill(long id)
+        public async Task<List<WayBill>> GetWayBill(long id)
         {
             var delivery = await _deliveryService.GetDeliveryById(id);
 
-            return new WayBill()
+            List<WayBill> WayBills = new List<WayBill>();
+            if (delivery.WareHouse == null)
             {
-                DeliveryName = delivery.DeliveryCustomer.FullName,
-                DeliveryAddress = delivery.DeliveryCustomer.Address,
-                DeliveryNumber = delivery.DeliveryNo,
-                DeliveryPrice = delivery.SubTotal,//?
-                SupplierCode = delivery.Supplier.Code,
-                SupplierName = delivery.Supplier.SupplierName,
-                WareHouseAddress = delivery.WareHouse.Address.AddressLine1 + delivery.WareHouse.Address.AddressLine2,
-                WareHouseCode = delivery.WareHouse.Code,
-                WareHouseName = delivery.WareHouse.Name,
-                WayBillItems = delivery.DeliveryItems.Select(p => new WayBillItem()
-                {
-                    ItemCode = p.Product.Code,
-                    ItemDescription = p.Product.Description,
-                    Quantity = p.Quantity,
-                    UnitOfMeasure = p.Product.MassUnit.ToString(),
-                    UnitWeight = p.Product.Weight,
-                    UnitPrice = p.UnitCost
-                }).ToList()
+                return new List<WayBill>();
 
-            };
+            }
+            foreach (var item in delivery.DeliveryTrackings)
+            {
+                WayBill waybill = new WayBill()
+                {
+                    DeliveryName = delivery.DeliveryCustomer.FullName,
+                    DeliveryAddress = delivery.DeliveryCustomer.Address,
+                    DeliveryNumber = delivery.DeliveryNo,
+                    DeliveryPrice = item.DeliveryTrackingItems.Sum(x => x.Value),
+                    SupplierCode = delivery.Supplier.Code,
+                    SupplierName = delivery.Supplier.SupplierName,
+                    WareHouseAddress = delivery.WareHouse.Address.AddressLine1 + delivery.WareHouse.Address.AddressLine2,
+                    WareHouseCode = delivery.WareHouse.Code,
+                    WareHouseName = delivery.WareHouse.Name,
+                    TrackingNo = item.TrackingNumber,
+                    WayBillItems = item.DeliveryTrackingItems.Select(i => new WayBillItem()
+                    {
+                        ItemCode = i.Product.Code,
+                        ItemDescription = i.Product.Description,
+                        Quantity = i.Quantity,
+                        UnitOfMeasure = i.Product.MassUnit.ToString(),
+                        UnitPrice = i.Product.UnitPrice,
+                        UnitWeight = i.Product.Weight
+
+                    }).ToList()
+                };
+                WayBills.Add(waybill);
+
+            }
+            return WayBills.OrderBy(x => x.TrackingNo).ToList();
         }
 
         public async Task<InventoryMovementReport> GetInventoryMovementReport(long? wareHouseId, DateTime fromDate, DateTime toDate, int? productId)
@@ -159,7 +173,7 @@ namespace TransnationalLanka.ThreePL.Services.Report
             string wareHouseName = null;
             string wareHouseCode = null;
             string wareHouseAddress1 = null;
-            string wareHouseAddress2 = null;           
+            string wareHouseAddress2 = null;
 
             if (wareHouseId.HasValue)
             {
@@ -171,31 +185,31 @@ namespace TransnationalLanka.ThreePL.Services.Report
             }
 
             var query = _unitOfWork.ProductStockAdjustmentRepository.GetAll()
-                .Where(p => p.Created>= fromDate && p.Created<=toDate )              
+                .Where(p => p.Created >= fromDate && p.Created <= toDate)
                 .AsQueryable();
-           
+
 
             if (wareHouseId.HasValue)
             {
-                query = query.Where(p => p.WareHouseId==wareHouseId);
+                query = query.Where(p => p.WareHouseId == wareHouseId);
             }
 
             if (productId.HasValue)
             {
                 query = query.Where(p => p.ProductId == productId);
-            }    
-            
+            }
+
             return new InventoryMovementReport()
             {
                 SupplierName = supplierName,
                 WareHouseCode = wareHouseCode,
                 WareHouseName = wareHouseName,
-                SupplierCode = supplierCode,               
+                SupplierCode = supplierCode,
                 WareHouseAddressLine1 = wareHouseAddress1,
                 WareHouseAddressLine2 = wareHouseAddress2,
                 InventoryMovementReportItems = await query.Select(p => new InventoryMovementReportItem()
                 {
-                    Code =p.Product.Code,
+                    Code = p.Product.Code,
                     UnitPrice = p.Product.UnitPrice,
                     Quantity = p.Quantity,
                     Description = p.Product.Description,
