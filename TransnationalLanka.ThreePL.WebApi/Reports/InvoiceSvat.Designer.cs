@@ -23,6 +23,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Reports {
             this.PageHeader = reportInitializer.GetControl<DevExpress.XtraReports.UI.PageHeaderBand>("PageHeader");
             this.GroupFooter1 = reportInitializer.GetControl<DevExpress.XtraReports.UI.GroupFooterBand>("GroupFooter1");
             this.PageFooter = reportInitializer.GetControl<DevExpress.XtraReports.UI.PageFooterBand>("PageFooter");
+            this.label2 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("label2");
             this.label1 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("label1");
             this.GroupHeader1 = reportInitializer.GetControl<DevExpress.XtraReports.UI.GroupHeaderBand>("GroupHeader1");
             this.Detail1 = reportInitializer.GetControl<DevExpress.XtraReports.UI.DetailBand>("Detail1");
@@ -64,10 +65,18 @@ namespace TransnationalLanka.ThreePL.WebApi.Reports {
             this.tableRow2 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableRow>("tableRow2");
             this.tableRow5 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableRow>("tableRow5");
             this.tableRow6 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableRow>("tableRow6");
+            this.tableRow15 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableRow>("tableRow15");
+            this.tableRow18 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableRow>("tableRow18");
+            this.tableRow19 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableRow>("tableRow19");
+            this.tableRow20 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableRow>("tableRow20");
             this.tableCell1 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell1");
             this.tableCell2 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell2");
             this.tableCell3 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell3");
             this.tableCell4 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell4");
+            this.tableCell21 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell21");
+            this.tableCell22 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell22");
+            this.tableCell31 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell31");
+            this.tableCell32 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell32");
             this.table5 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTable>("table5");
             this.tableRow17 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableRow>("tableRow17");
             this.tableRow16 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableRow>("tableRow16");
@@ -77,15 +86,6 @@ namespace TransnationalLanka.ThreePL.WebApi.Reports {
             this.tableCell24 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell24");
             this.pageInfo1 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRPageInfo>("pageInfo1");
             this.pageInfo2 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRPageInfo>("pageInfo2");
-            this.label2 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("label2");
-            this.tableRow15 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableRow>("tableRow15");
-            this.tableCell21 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell21");
-            this.tableRow18 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableRow>("tableRow18");
-            this.tableCell22 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell22");
-            this.tableRow19 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableRow>("tableRow19");
-            this.tableCell31 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell31");
-            this.tableRow20 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableRow>("tableRow20");
-            this.tableCell32 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell32");
 
             // Data Sources
             this.invoiceDataSource = reportInitializer.GetDataSource<DevExpress.DataAccess.ObjectBinding.ObjectDataSource>("invoiceDataSource");
@@ -107,6 +107,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Reports {
         private DevExpress.XtraReports.UI.PageHeaderBand PageHeader;
         private DevExpress.XtraReports.UI.GroupFooterBand GroupFooter1;
         private DevExpress.XtraReports.UI.PageFooterBand PageFooter;
+        private DevExpress.XtraReports.UI.XRLabel label2;
         private DevExpress.XtraReports.UI.XRLabel label1;
         private DevExpress.XtraReports.UI.GroupHeaderBand GroupHeader1;
         private DevExpress.XtraReports.UI.DetailBand Detail1;
@@ -149,10 +150,18 @@ namespace TransnationalLanka.ThreePL.WebApi.Reports {
         private DevExpress.XtraReports.UI.XRTableRow tableRow2;
         private DevExpress.XtraReports.UI.XRTableRow tableRow5;
         private DevExpress.XtraReports.UI.XRTableRow tableRow6;
+        private DevExpress.XtraReports.UI.XRTableRow tableRow15;
+        private DevExpress.XtraReports.UI.XRTableRow tableRow18;
+        private DevExpress.XtraReports.UI.XRTableRow tableRow19;
+        private DevExpress.XtraReports.UI.XRTableRow tableRow20;
         private DevExpress.XtraReports.UI.XRTableCell tableCell1;
         private DevExpress.XtraReports.UI.XRTableCell tableCell2;
         private DevExpress.XtraReports.UI.XRTableCell tableCell3;
         private DevExpress.XtraReports.UI.XRTableCell tableCell4;
+        private DevExpress.XtraReports.UI.XRTableCell tableCell21;
+        private DevExpress.XtraReports.UI.XRTableCell tableCell22;
+        private DevExpress.XtraReports.UI.XRTableCell tableCell31;
+        private DevExpress.XtraReports.UI.XRTableCell tableCell32;
         private DevExpress.XtraReports.UI.XRTable table5;
         private DevExpress.XtraReports.UI.XRTableRow tableRow17;
         private DevExpress.XtraReports.UI.XRTableRow tableRow16;
@@ -169,14 +178,5 @@ namespace TransnationalLanka.ThreePL.WebApi.Reports {
         private DevExpress.XtraReports.UI.XRControlStyle DetailData2;
         private DevExpress.XtraReports.UI.XRControlStyle DetailData3_Odd;
         private DevExpress.XtraReports.UI.XRControlStyle PageInfo;
-        private DevExpress.XtraReports.UI.XRLabel label2;
-        private DevExpress.XtraReports.UI.XRTableRow tableRow15;
-        private DevExpress.XtraReports.UI.XRTableCell tableCell21;
-        private DevExpress.XtraReports.UI.XRTableRow tableRow18;
-        private DevExpress.XtraReports.UI.XRTableCell tableCell22;
-        private DevExpress.XtraReports.UI.XRTableRow tableRow19;
-        private DevExpress.XtraReports.UI.XRTableCell tableCell31;
-        private DevExpress.XtraReports.UI.XRTableRow tableRow20;
-        private DevExpress.XtraReports.UI.XRTableCell tableCell32;
     }
 }
