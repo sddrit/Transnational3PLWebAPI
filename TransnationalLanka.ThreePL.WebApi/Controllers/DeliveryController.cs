@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -6,6 +8,7 @@ using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Data.ResponseModel;
 using TransnationalLanka.ThreePL.Dal.Entities;
 using DevExtreme.AspNet.Mvc;
+using Microsoft.AspNetCore.Http;
 using TransnationalLanka.ThreePL.Services.Account;
 using TransnationalLanka.ThreePL.Services.Account.Core;
 using TransnationalLanka.ThreePL.Services.Delivery;
@@ -88,7 +91,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
         [HttpPost("mark-as-complete")]
         public async Task<IActionResult> Post([FromBody] MarkAsCompleteBindingModel model)
         {
-            await _deliveryService.MarkAsComplete(model.DeliveryId);
+            await _deliveryService.MarkAsComplete(model.DeliveryId, model.TrackingNumbers);
             return Ok();
         }
 
@@ -104,8 +107,19 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
         [HttpPost("mark-as-customer-return")]
         public async Task<IActionResult> Post([FromBody] MarkAsCustomerReturnBindingModel model)
         {
-            await _deliveryService.MarkAsCustomerReturn(model.DeliveryId, model.Note);
+            await _deliveryService.MarkAsCustomerReturn(model.DeliveryId, model.Note, model.TrackingNumbers);
             return Ok();
+        }
+
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
+        [HttpPost("process-delivery-complete")]
+        public async Task<IActionResult> ProcessDeliveryComplete(IFormFile file)
+        {
+            var fileStream = new MemoryStream();
+            await file.CopyToAsync(fileStream);
+
+            var result = await _deliveryService.ProcessDeliveryComplete(fileStream);
+            return Ok(result);
         }
     }
 }

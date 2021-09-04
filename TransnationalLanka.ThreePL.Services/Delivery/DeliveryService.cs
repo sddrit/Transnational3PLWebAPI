@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 using TransnationalLanka.ThreePL.Core.Enums;
 using TransnationalLanka.ThreePL.Core.Environment;
 using TransnationalLanka.ThreePL.Core.Exceptions;
@@ -10,6 +13,7 @@ using TransnationalLanka.ThreePL.Dal;
 using TransnationalLanka.ThreePL.Dal.Entities;
 using TransnationalLanka.ThreePL.Integration.Tracker;
 using TransnationalLanka.ThreePL.Integration.Tracker.Model;
+using TransnationalLanka.ThreePL.Services.Delivery.Core;
 using TransnationalLanka.ThreePL.Services.Product;
 using TransnationalLanka.ThreePL.Services.Supplier;
 
@@ -247,12 +251,16 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
                         -deliveryItem.Quantity, null, $"Delivery - {delivery.DeliveryNo}");
                 }
 
+                foreach (var deliveryTracking in delivery.DeliveryTrackings)
+                {
+                    deliveryTracking.Status = TrackingStatus.Dispatched;
+                }
+
                 delivery.DeliveryStatus = DeliveryStatus.Dispatched;
 
                 await _unitOfWork.SaveChanges();
 
                 await AddDeliveryNote(delivery.Id, "Mark as dispatched");
-
 
                 await transaction.CommitAsync();
                 return delivery;
@@ -265,7 +273,7 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
             }
         }
 
-        public async Task<Dal.Entities.Delivery> MarkAsComplete(long id)
+        public async Task<Dal.Entities.Delivery> MarkAsComplete(long id, string[] trackingNumbers)
         {
             var delivery = await GetDeliveryById(id);
 
@@ -280,7 +288,18 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
                 });
             }
 
-            delivery.DeliveryStatus = DeliveryStatus.Completed;
+            foreach (var deliveryTracking in delivery.DeliveryTrackings)
+            {
+                if (trackingNumbers.Contains(deliveryTracking.TrackingNumber))
+                {
+                    deliveryTracking.Status = TrackingStatus.Completed;
+                }
+            }
+
+            delivery.DeliveryStatus = 
+                delivery.DeliveryTrackings.All(t => t.Status == TrackingStatus.Completed) ? DeliveryStatus.Completed 
+                    : DeliveryStatus.PartiallyCompleted;
+
             await _unitOfWork.SaveChanges();
 
             await AddDeliveryNote(delivery.Id, "Mark as complete");
@@ -307,11 +326,16 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
                     });
                 }
 
-                foreach (var deliveryItem in delivery.DeliveryItems)
+                foreach (var deliveryTracking in delivery.DeliveryTrackings)
                 {
-                    await _stockService.AdjustReturnStock(delivery.WareHouseId.Value, deliveryItem.ProductId,
-                        deliveryItem.UnitCost,
-                        deliveryItem.Quantity, null, $"Delivery Return - {delivery.DeliveryNo}");
+                    foreach (var trackingItems in deliveryTracking.DeliveryTrackingItems)
+                    {
+                        await _stockService.AdjustReturnStock(delivery.WareHouseId.Value, trackingItems.ProductId,
+                            trackingItems.UnitCost,
+                            trackingItems.Quantity, null, $"Delivery Return - {delivery.DeliveryNo} #Tracking {deliveryTracking.TrackingNumber}");
+                    }
+
+                    deliveryTracking.Status = TrackingStatus.Returned;
                 }
 
                 delivery.DeliveryStatus = DeliveryStatus.Return;
@@ -330,7 +354,7 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
             }
         }
 
-        public async Task<Dal.Entities.Delivery> MarkAsCustomerReturn(long id, string note)
+        public async Task<Dal.Entities.Delivery> MarkAsCustomerReturn(long id, string note, string[] trackingNumbers)
         {
             await using var transaction = await _unitOfWork.GetTransaction();
 
@@ -349,16 +373,28 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
                     });
                 }
 
-                foreach (var deliveryItem in delivery.DeliveryItems)
+
+                foreach (var deliveryTracking in delivery.DeliveryTrackings)
                 {
-                    await _stockService.AdjustReturnStock(delivery.WareHouseId.Value, deliveryItem.ProductId,
-                        deliveryItem.UnitCost,
-                        deliveryItem.Quantity, null, $"Delivery Customer Return - {delivery.DeliveryNo}");
+                    if (trackingNumbers.Contains(deliveryTracking.TrackingNumber))
+                    {
+                        foreach (var trackingItems in deliveryTracking.DeliveryTrackingItems)
+                        {
+                            await _stockService.AdjustReturnStock(delivery.WareHouseId.Value, trackingItems.ProductId,
+                                trackingItems.UnitCost,
+                                trackingItems.Quantity, null, $"Delivery Customer Return - {delivery.DeliveryNo} #Tracking {deliveryTracking.TrackingNumber}");
+                        }
+
+                        deliveryTracking.Status = TrackingStatus.CustomerReturned;
+                    }
                 }
 
-                delivery.DeliveryStatus = DeliveryStatus.CustomerReturn;
-                await _unitOfWork.SaveChanges();
 
+                delivery.DeliveryStatus =
+                    delivery.DeliveryTrackings.All(t => t.Status == TrackingStatus.CustomerReturned) ? DeliveryStatus.CustomerReturn
+                        : DeliveryStatus.PartiallyCustomerReturn; 
+                
+                await _unitOfWork.SaveChanges();
                 await AddDeliveryNote(delivery.Id, $"Mark as customer return - Reason : {note}");
 
                 await transaction.CommitAsync();
@@ -380,6 +416,81 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
                 .LongCountAsync();
         }
 
+        public async Task<List<ProcessDeliverCompleteResult>> ProcessDeliveryComplete(Stream excelFile)
+        {
+            var result = new List<ProcessDeliverCompleteResult>();
+
+            excelFile.Position = 0;
+            var workbook = new XSSFWorkbook(excelFile);
+            var sheet = workbook.GetSheetAt(0);
+
+            for (int i = (sheet.FirstRowNum + 1); i <= sheet.LastRowNum; i++)
+            {
+                var row = sheet.GetRow(i);
+
+                if (row == null) continue;
+                if (row.Cells.All(d => d.CellType == CellType.Blank)) continue;
+
+                var cell = row.GetCell(0);
+                var trackingNumber = cell.StringCellValue;
+
+                try
+                {
+                    var deliveryId = await GetDeliveryByTrackingNumber(trackingNumber.Trim());
+
+                    await MarkAsComplete(deliveryId, new[] { trackingNumber.Trim() });
+
+                    result.Add(new ProcessDeliverCompleteResult()
+                    {
+                        TrackingNumber = trackingNumber,
+                        Success = true
+                    });
+                }
+                catch (ServiceException e)
+                {
+                    result.Add(new ProcessDeliverCompleteResult()
+                    {
+                        TrackingNumber = trackingNumber,
+                        Success = false,
+                        Message = e.Messages[0].Message
+                    });
+                }
+                catch (Exception e)
+                {
+                    result.Add(new ProcessDeliverCompleteResult()
+                    {
+                        TrackingNumber = trackingNumber,
+                        Success = false,
+                        Message = e.Message
+                    });
+                }
+            }
+
+            return result;
+        }
+
+        private async Task<long> GetDeliveryByTrackingNumber(string trackingNumber)
+        {
+            var deliveryId = await _unitOfWork.DeliveryRepository.GetAll()
+                .Where(d => d.DeliveryTrackings
+                    .Any(t => t.TrackingNumber.ToLower() == trackingNumber.ToLower()))
+                .Select(d => d.Id)
+                .FirstOrDefaultAsync();
+
+            if (deliveryId == 0)
+            {
+                throw new ServiceException(new ErrorMessage[]
+                {
+                    new ErrorMessage()
+                    {
+                        Message = $"Unable to find delivery from tracking number ${trackingNumber}"
+                    }
+                });
+            }
+
+            return deliveryId;
+        }
+
         private bool CanMarkAsProcessing(Dal.Entities.Delivery delivery)
         {
             return delivery.DeliveryStatus == DeliveryStatus.Pending;
@@ -392,17 +503,20 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
 
         private bool CanMarkAsComplete(Dal.Entities.Delivery delivery)
         {
-            return delivery.DeliveryStatus == DeliveryStatus.Dispatched;
+            return delivery.DeliveryStatus == DeliveryStatus.Dispatched 
+                   || delivery.DeliveryStatus == DeliveryStatus.PartiallyCompleted;
         }
 
         private bool CanMarkAsReturn(Dal.Entities.Delivery delivery)
         {
-            return delivery.DeliveryStatus == DeliveryStatus.Completed;
+            return delivery.DeliveryStatus == DeliveryStatus.Dispatched 
+                   || delivery.DeliveryStatus == DeliveryStatus.Completed;
         }
 
         private bool CanMarkAsCustomerReturn(Dal.Entities.Delivery delivery)
         {
-            return delivery.DeliveryStatus == DeliveryStatus.Completed;
+            return delivery.DeliveryStatus == DeliveryStatus.Completed 
+                   || delivery.DeliveryStatus == DeliveryStatus.PartiallyCustomerReturn;
         }
 
         private async Task AddDeliveryNote(long deliveryId, string note)

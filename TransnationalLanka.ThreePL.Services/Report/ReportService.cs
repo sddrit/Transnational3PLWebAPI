@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -128,32 +129,45 @@ namespace TransnationalLanka.ThreePL.Services.Report
             };
         }
 
-        public async Task<WayBill> GetWayBill(long id)
+        public async Task<List<WayBill>> GetWayBill(long id)
         {
             var delivery = await _deliveryService.GetDeliveryById(id);
 
-            return new WayBill()
+            List<WayBill> WayBills = new List<WayBill>();
+            if (delivery.WareHouse == null)
             {
-                DeliveryName = delivery.DeliveryCustomer.FullName,
-                DeliveryAddress = delivery.DeliveryCustomer.Address,
-                DeliveryNumber = delivery.DeliveryNo,
-                DeliveryPrice = delivery.SubTotal,//?
-                SupplierCode = delivery.Supplier.Code,
-                SupplierName = delivery.Supplier.SupplierName,
-                WareHouseAddress = delivery.WareHouse.Address.AddressLine1 + delivery.WareHouse.Address.AddressLine2,
-                WareHouseCode = delivery.WareHouse.Code,
-                WareHouseName = delivery.WareHouse.Name,
-                WayBillItems = delivery.DeliveryItems.Select(p => new WayBillItem()
-                {
-                    ItemCode = p.Product.Code,
-                    ItemDescription = p.Product.Description,
-                    Quantity = p.Quantity,
-                    UnitOfMeasure = p.Product.MassUnit.ToString(),
-                    UnitWeight = p.Product.Weight,
-                    UnitPrice = p.UnitCost
-                }).ToList()
+                return new List<WayBill>();
 
-            };
+            }
+            foreach (var item in delivery.DeliveryTrackings)
+            {
+                WayBill waybill = new WayBill()
+                {
+                    DeliveryName = delivery.DeliveryCustomer.FullName,
+                    DeliveryAddress = delivery.DeliveryCustomer.Address,
+                    DeliveryNumber = delivery.DeliveryNo,
+                    DeliveryPrice = item.DeliveryTrackingItems.Sum(x => x.Value),
+                    SupplierCode = delivery.Supplier.Code,
+                    SupplierName = delivery.Supplier.SupplierName,
+                    WareHouseAddress = delivery.WareHouse.Address.AddressLine1 + delivery.WareHouse.Address.AddressLine2,
+                    WareHouseCode = delivery.WareHouse.Code,
+                    WareHouseName = delivery.WareHouse.Name,
+                    TrackingNo = item.TrackingNumber,
+                    WayBillItems = item.DeliveryTrackingItems.Select(i => new WayBillItem()
+                    {
+                        ItemCode = i.Product.Code,
+                        ItemDescription = i.Product.Name,
+                        Quantity = i.Quantity,
+                        UnitOfMeasure = i.Product.MassUnit.ToString(),
+                        UnitPrice = i.UnitCost,
+                        UnitWeight = i.Product.Weight
+
+                    }).ToList()
+                };
+                WayBills.Add(waybill);
+
+            }
+            return WayBills.OrderBy(x => x.TrackingNo).ToList();
         }
 
 

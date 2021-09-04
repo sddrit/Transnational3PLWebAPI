@@ -46,31 +46,28 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.Report
 
                 case "WayBill":
                     var wayBillData = AsyncContext.Run(() => _reportService.GetWayBill(long.Parse(parameters["id"].ToString())));
+                    
+
                     var report = new WayBill();
                     var wayBillObjectDataSource = new ObjectDataSource
                     {
-                        DataSource = wayBillData,
+                        DataSource = wayBillData[0],
                         Name = "wayBillDataSource"
                     };
-                    report.DataSource = wayBillObjectDataSource;
-                    report.Parameters["trackingNo"].Value = wayBillData.TrackingNo[0];                  
-                    report.CreateDocument(true);
-                    report.PrintingSystem.ContinuousPageNumbering = false;
+                    report.DataSource = wayBillObjectDataSource;                 
+                    report.CreateDocument(true);                  
 
-                    for (int i= 1; i<wayBillData.TrackingNo.Length; i++)
+                    for (int i = 1; i < wayBillData.Count; i++)
                     {
-                        var wayBillReport = new WayBill() ;
+                        var wayBillReport = new WayBill();
 
                         wayBillObjectDataSource = new ObjectDataSource
                         {
-                            DataSource = wayBillData,
+                            DataSource = wayBillData[i],
                             Name = "wayBillDataSource"
                         };
-                        wayBillReport.DataSource = wayBillObjectDataSource;
-                        wayBillReport.Parameters["trackingNo"].Value = wayBillData.TrackingNo[i];
-                        wayBillReport.CreateDocument(true);
-                        wayBillReport.PrintingSystem.ContinuousPageNumbering = false;
-
+                        wayBillReport.DataSource = wayBillObjectDataSource;                     
+                        wayBillReport.CreateDocument(true);                      
                         report.ModifyDocument(x =>
                         {
                             x.AddPages(wayBillReport.Pages);

@@ -32,7 +32,10 @@ namespace TransnationalLanka.ThreePL.Services.Invoice
 
         public IQueryable<Dal.Entities.Invoice> GetInvoices()
         {
-            return _unitOfWork.InvoiceRepository.GetAll();
+            DateTime now = DateTime.Now;
+            var from = new DateTime(now.Year, now.Month, 1);
+            var to = from.AddMonths(1).AddDays(-1);
+            return _unitOfWork.InvoiceRepository.GetAll().Where(i => i.To < to);
         }
 
         public async Task<Dal.Entities.Invoice> MarkAsPaid(long id)

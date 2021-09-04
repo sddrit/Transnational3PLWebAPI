@@ -108,6 +108,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Models.Delivery
     public class MarkAsCompleteBindingModel
     {
         public long DeliveryId { get; set; }
+        public string[] TrackingNumbers { get; set; }
     }
 
     public class MarkAsReturnBindingModel
@@ -119,6 +120,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Models.Delivery
     public class MarkAsCustomerReturnBindingModel
     {
         public long DeliveryId { get; set; }
+        public string[] TrackingNumbers { get; set; }
         public string Note { get; set; }
     }
 
