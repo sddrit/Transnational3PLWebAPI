@@ -31,16 +31,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.Report
 
             switch (reportName)
             {
-                case "StockBalanceReport":
-                    var stockBalanceReport = new StockBalanceReport();
-                    var inventoryReportData = AsyncContext.Run(() => _reportService.GetInventoryReport(null, null));
-                    var objectDataSource = new ObjectDataSource
-                    {
-                        DataSource = inventoryReportData,
-                        Name = "InventoryBalanceDataSource"
-                    };
-                    stockBalanceReport.DataSource = objectDataSource;
-                    return stockBalanceReport;
+              
 
                 case "GrnReport":
                     var grnReport = new Grn();
@@ -91,7 +82,8 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.Report
                    
                 case "PurchaseOrder":
                     var purchaseOrderReport = new PurchaseOrderReport ();
-                    var purchaseOrderReportData = AsyncContext.Run(() => _reportService.GetPurchaseOrderReport(long.Parse(parameters["id"].ToString())));
+                    //var purchaseOrderReportData = AsyncContext.Run(() => _reportService.GetPurchaseOrderReport(long.Parse(parameters["id"].ToString())));
+                    var purchaseOrderReportData = AsyncContext.Run(() => _reportService.GetPurchaseOrderReport(2));
                     var purchaseOrderObjectDataSource = new ObjectDataSource
                     {
                         DataSource = purchaseOrderReportData,
@@ -100,16 +92,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.Report
                     purchaseOrderReport.DataSource = purchaseOrderObjectDataSource;
                     return purchaseOrderReport;
 
-                case "StockMovementReport":
-                    var stockMovementReport = new StockBalanceReport();
-                    var stockMovementReportData = AsyncContext.Run(() => _reportService.GetInventoryMovementReport(null,Convert.ToDateTime(parameters["fromDate"].ToString()),Convert.ToDateTime(parameters["toDate"].ToString()),long.Parse( parameters["productId"].ToString())));
-                    var stockMovementObjectDataSource = new ObjectDataSource
-                    {
-                        DataSource = stockMovementReportData,
-                        Name = "stockMovementDataSource"
-                    };
-                    stockMovementReport.DataSource = stockMovementObjectDataSource;
-                    return stockMovementReport;
+               
 
                 case "Invoice":
                     var invoiceReport = new InvoiceSvat();
@@ -121,6 +104,45 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.Report
                     };
                     invoiceReport.DataSource = invoiceObjectDataSource;
                     return invoiceReport;
+
+                case "SellerWiseItemDeailReport":
+                    var selllerWiseItemDetailReport = new SellerWiseItemDetailReport();
+                    //var selllerWiseItemDetailReportData = AsyncContext.Run(() => _reportService.GetSellerWiseItemDetail(
+                    //    long.Parse(parameters["wareHouseid"].ToString()),
+                    //    long.Parse(parameters["supplierid"].ToString())));
+                    var selllerWiseItemDetailReportData = AsyncContext.Run(() => _reportService.GetSellerWiseItemDetail(
+                     1,
+                     3));
+
+                    var selllerWiseItemDetailObjectDataSource = new ObjectDataSource
+                    {
+                        DataSource = selllerWiseItemDetailReportData,
+                        Name = "SellerWiseItemDetailDataSource"
+                    };
+                    selllerWiseItemDetailReport.DataSource = selllerWiseItemDetailObjectDataSource;
+                    return selllerWiseItemDetailReport;
+
+                case "StockMovementReport":
+                    var stockMovementReport = new StockBalanceReport();
+                    var stockMovementReportData = AsyncContext.Run(() => _reportService.GetInventoryMovementReport(null, Convert.ToDateTime(parameters["fromDate"].ToString()), Convert.ToDateTime(parameters["toDate"].ToString()), long.Parse(parameters["productId"].ToString())));
+                    var stockMovementObjectDataSource = new ObjectDataSource
+                    {
+                        DataSource = stockMovementReportData,
+                        Name = "stockMovementDataSource"
+                    };
+                    stockMovementReport.DataSource = stockMovementObjectDataSource;
+                    return stockMovementReport;
+
+                case "StockBalanceReport":
+                    var stockBalanceReport = new StockBalanceReport();
+                    var inventoryReportData = AsyncContext.Run(() => _reportService.GetInventoryReport(null, null));
+                    var objectDataSource = new ObjectDataSource
+                    {
+                        DataSource = inventoryReportData,
+                        Name = "InventoryBalanceDataSource"
+                    };
+                    stockBalanceReport.DataSource = objectDataSource;
+                    return stockBalanceReport;
             }
 
             return null;

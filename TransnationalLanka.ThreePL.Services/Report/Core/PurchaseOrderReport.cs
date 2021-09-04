@@ -23,7 +23,8 @@ namespace TransnationalLanka.ThreePL.Services.Report.Core
         public string ProductId { get; set; }
         public string ProductName { get; set; }     
         public decimal Quantity { get; set; }
-        public decimal UnitCost { get; set; }       
+        public decimal UnitCost { get; set; }
+        public decimal Value => Quantity * UnitCost;
 
     }
 }

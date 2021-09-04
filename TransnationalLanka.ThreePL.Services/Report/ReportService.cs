@@ -6,6 +6,7 @@ using TransnationalLanka.ThreePL.Dal;
 using TransnationalLanka.ThreePL.Services.Delivery;
 using TransnationalLanka.ThreePL.Services.Grn;
 using TransnationalLanka.ThreePL.Services.Invoice;
+using TransnationalLanka.ThreePL.Services.Product;
 using TransnationalLanka.ThreePL.Services.PurchaseOrder;
 using TransnationalLanka.ThreePL.Services.Report.Core;
 using TransnationalLanka.ThreePL.Services.Supplier;
@@ -22,8 +23,10 @@ namespace TransnationalLanka.ThreePL.Services.Report
         private readonly IPurchaseOrderService _purchaseOrderService;
         private readonly IDeliveryService _deliveryService;
         private readonly IInvoiceService _invoiceService;
+        private readonly IProductService _productService;
 
-        public ReportService(IUnitOfWork unitOfWork, ISupplierService supplierService, IWareHouseService wareHouseService, IGrnService grnService, IPurchaseOrderService purchaseOrderService, IDeliveryService deliveryService, IInvoiceService invoiceService)
+        public ReportService(IUnitOfWork unitOfWork, ISupplierService supplierService, IWareHouseService wareHouseService, IGrnService grnService, IPurchaseOrderService purchaseOrderService, IDeliveryService deliveryService, IInvoiceService invoiceService,
+            IProductService productService)
         {
             _unitOfWork = unitOfWork;
             _supplierService = supplierService;
@@ -32,6 +35,7 @@ namespace TransnationalLanka.ThreePL.Services.Report
             _purchaseOrderService = purchaseOrderService;
             _deliveryService = deliveryService;
             _invoiceService = invoiceService;
+            _productService = productService;
         }
 
         public async Task<InventoryReport> GetInventoryReport(long? wareHouseId, long? supplierId)
@@ -96,10 +100,10 @@ namespace TransnationalLanka.ThreePL.Services.Report
 
         public async Task<GrnReport> GetGrnReport(long id)
         {
-            var grn = await _grnService.GetByIdIncludeWithProduct(id);           
+            var grn = await _grnService.GetByIdIncludeWithProduct(id);
             var supplier = await _supplierService.GetSupplierById(grn.SupplierId);
             var wareHouse = await _wareHouseService.GetWareHouseById(grn.WareHouseId);
-            Dal.Entities.PurchaseOrder purchaseOrder = !grn.PurchaseOrderId.HasValue? null: await _purchaseOrderService.GetPurchaseOrderById(grn.PurchaseOrderId.Value);
+            Dal.Entities.PurchaseOrder purchaseOrder = !grn.PurchaseOrderId.HasValue ? null : await _purchaseOrderService.GetPurchaseOrderById(grn.PurchaseOrderId.Value);
 
             return new GrnReport()
             {
@@ -158,13 +162,13 @@ namespace TransnationalLanka.ThreePL.Services.Report
             var po = await _purchaseOrderService.GetPurchaseOrderById(id);
             var supplier = await _supplierService.GetSupplierById(po.SupplierId);
             var wareHouse = await _wareHouseService.GetWareHouseById((long)po.WareHouseId);
-         
+
 
             return new PurchaseOrderReport()
             {
-               
+
                 Date = po.Created,
-                PurchaseOrderNumber= po.PoNumber,
+                PurchaseOrderNumber = po.PoNumber,
                 SupplierName = supplier.SupplierName,
                 SupplierCode = supplier.Code,
                 WareHouse = wareHouse.Code,
@@ -172,11 +176,11 @@ namespace TransnationalLanka.ThreePL.Services.Report
                 WareHouseAddressLine1 = wareHouse.Address.AddressLine1,
                 WareHouseAddressLine2 = wareHouse.Address.AddressLine2,
                 PurchaseOrderReportItems = po.PurchaseOrderItems.Select(item => new PurchaseOrderReportItem()
-                {                   
+                {
                     ProductId = item.Product.Code,
                     ProductName = item.Product.Description,
                     Quantity = item.Quantity,
-                    UnitCost = item.UnitCost                
+                    UnitCost = item.UnitCost
                 }).ToList()
             };
         }
@@ -188,7 +192,7 @@ namespace TransnationalLanka.ThreePL.Services.Report
             string wareHouseName = null;
             string wareHouseCode = null;
             string wareHouseAddress1 = null;
-            string wareHouseAddress2 = null;           
+            string wareHouseAddress2 = null;
 
             if (wareHouseId.HasValue)
             {
@@ -200,31 +204,31 @@ namespace TransnationalLanka.ThreePL.Services.Report
             }
 
             var query = _unitOfWork.ProductStockAdjustmentRepository.GetAll()
-                .Where(p => p.Created>= fromDate && p.Created<=toDate )              
+                .Where(p => p.Created >= fromDate && p.Created <= toDate)
                 .AsQueryable();
-           
+
 
             if (wareHouseId.HasValue)
             {
-                query = query.Where(p => p.WareHouseId==wareHouseId);
+                query = query.Where(p => p.WareHouseId == wareHouseId);
             }
 
             if (productId.HasValue)
             {
                 query = query.Where(p => p.ProductId == productId);
-            }    
-            
+            }
+
             return new InventoryMovementReport()
             {
                 SupplierName = supplierName,
                 WareHouseCode = wareHouseCode,
                 WareHouseName = wareHouseName,
-                SupplierCode = supplierCode,               
+                SupplierCode = supplierCode,
                 WareHouseAddressLine1 = wareHouseAddress1,
                 WareHouseAddressLine2 = wareHouseAddress2,
                 InventoryMovementReportItems = await query.Select(p => new InventoryMovementReportItem()
                 {
-                    Code =p.Product.Code,
+                    Code = p.Product.Code,
                     UnitPrice = p.Product.UnitPrice,
                     Quantity = p.Quantity,
                     Description = p.Product.Description,
@@ -259,5 +263,31 @@ namespace TransnationalLanka.ThreePL.Services.Report
             };
         }
 
+        public async Task<SellerWiseItemReport> GetSellerWiseItemDetail(long wareHouseId, long supplierId)
+        {
+            var wareHouse = await _wareHouseService.GetWareHouseById(wareHouseId);
+            var supplier = await _supplierService.GetSupplierById(supplierId);
+            var product = await _productService.GetProductBySupplierId(supplierId);
+
+            return new SellerWiseItemReport()
+            {
+                WareHouseAddressLine1 = wareHouse.Address.AddressLine1,
+                WareHouseName = wareHouse.Name,
+                WareHouseAddressLine2 = wareHouse.Address.AddressLine2,
+                WareHouseCode = wareHouse.Code,
+                SupplierCode=supplier.Code,
+                SupplierName=supplier.SupplierName,
+                SellerWiseItemReportDetails = product.Select(item => new SellerWiseItemReportDetail()
+                {
+                    Code=item.Code,
+                    Description=item.Description,
+                    Quantity=2, //how to calculate this?
+                    UnitOfMeasure = item.MassUnit.ToString(),
+                    UnitPrice=item.UnitPrice,
+
+                }).ToList()
+
+            };
+        }
     }
 }
