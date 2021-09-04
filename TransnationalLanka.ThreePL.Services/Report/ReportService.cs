@@ -152,10 +152,10 @@ namespace TransnationalLanka.ThreePL.Services.Report
                     WayBillItems = item.DeliveryTrackingItems.Select(i => new WayBillItem()
                     {
                         ItemCode = i.Product.Code,
-                        ItemDescription = i.Product.Description,
+                        ItemDescription = i.Product.Name,
                         Quantity = i.Quantity,
                         UnitOfMeasure = i.Product.MassUnit.ToString(),
-                        UnitPrice = i.Product.UnitPrice,
+                        UnitPrice = i.UnitCost,
                         UnitWeight = i.Product.Weight
 
                     }).ToList()

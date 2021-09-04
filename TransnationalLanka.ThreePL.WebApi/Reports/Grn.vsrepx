@@ -100,7 +100,7 @@
                       </ExpressionBindings>
                       <StylePriority Ref="51" UseBorderColor="false" UseBorders="false" />
                     </Item3>
-                    <Item4 Ref="52" ControlType="XRTableCell" Name="tableCell4" Weight="0.1709386145980363" Multiline="true" Text="tableCell4" TextAlignment="MiddleRight" StyleName="DetailData2" BorderColor="Silver" Borders="Bottom">
+                    <Item4 Ref="52" ControlType="XRTableCell" Name="tableCell4" Weight="0.1709386145980363" TextFormatString="{0:dd/MM/yyyy}" Multiline="true" Text="tableCell4" TextAlignment="MiddleRight" StyleName="DetailData2" BorderColor="Silver" Borders="Bottom">
                       <ExpressionBindings>
                         <Item1 Ref="53" EventName="BeforePrint" PropertyName="Text" Expression="[ExpiredDate]" />
                       </ExpressionBindings>
