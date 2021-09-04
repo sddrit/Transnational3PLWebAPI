@@ -9,8 +9,13 @@ namespace TransnationalLanka.ThreePL.Services.Report
     {
         Task<InventoryReport> GetInventoryReport(long? wareHouseId, long? supplierId);
         Task<GrnReport> GetGrnReport(long id);
-        Task<List<WayBill>> GetWayBill(long id);
-        Task<InventoryMovementReport> GetInventoryMovementReport(long? wareHouseId, DateTime fromDate, DateTime toDate, int? productId);        
+        Task<PurchaseOrderReport> GetPurchaseOrderReport(long id);
+
+        Task<WayBill> GetWayBill(long id);
+        Task<InventoryMovementReport> GetInventoryMovementReport(long? wareHouseId, DateTime fromDate, DateTime toDate, long? productId);        
+
         Task<InvoiceReport> GetInvoice(long id);
+
+        Task<SellerWiseItemReport> GetSellerWiseItemDetail(long wareHouseId, long supplierId);
     }
 }

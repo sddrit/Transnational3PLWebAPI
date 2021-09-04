@@ -125,5 +125,27 @@ namespace TransnationalLanka.ThreePL.Services.Product
                 Message = e.ErrorMessage
             }).ToArray());
         }
+
+        public async Task<List<Dal.Entities.Product>> GetProductBySupplierId(long supplierId)
+        {
+
+            var product = await _unitOfWork.ProductRepository.GetAll()
+                .Include(p => p.Supplier)
+                .Where(p => p.SupplierId == supplierId).ToListAsync();
+                   
+
+                if (product == null)
+                {
+                    throw new ServiceException(new ErrorMessage[]
+                    {
+                    new ErrorMessage()
+                    {
+                        Code = string.Empty,
+                        Message = $"Unable to find Products by supplier id {supplierId}"
+                    }
+                    });
+                }
+                return product;           
+        }
     }
 }
