@@ -586,5 +586,35 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
             await _unitOfWork.SaveChanges();
 
         }
+
+        public async Task<List<Dal.Entities.Delivery>> GetDeliveryByDateRange(DateTime fromDate, DateTime toDate)
+        {
+            var delivery = await _unitOfWork.DeliveryRepository.GetAll()
+                .Where(d => d.DeliveryDate >= fromDate && d.DeliveryDate <= toDate)
+                .Include(d => d.Supplier)
+                .ThenInclude(s => s.Address.City)
+                .Include(d => d.DeliveryCustomer.City)
+                .Include(d => d.WareHouse)
+                .Include(d => d.DeliveryItems)
+                .ThenInclude(i => i.Product)
+                .Include(d => d.DeliveryHistories)
+                .Include(d => d.DeliveryTrackings)
+                .ThenInclude(t => t.DeliveryTrackingItems).ToListAsync();
+                
+
+            if (delivery == null)
+            {
+                throw new ServiceException(new ErrorMessage[]
+                {
+                    new ErrorMessage()
+                    {
+                        Message = "Unable to get delivery by id"
+                    }
+                });
+            }
+
+            return delivery;
+        }
+
     }
 }
