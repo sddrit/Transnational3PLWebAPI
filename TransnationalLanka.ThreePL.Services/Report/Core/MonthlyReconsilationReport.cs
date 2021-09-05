@@ -11,11 +11,12 @@ namespace TransnationalLanka.ThreePL.Services.Report.Core
         public DateTimeOffset ReconsilationDate { get; set; }
         public decimal OpeningBalance { get; set; }
         public decimal TotalReceivedGRN { get; set; }
-        public decimal TotalInventory { get; set; }
+        public decimal TotalInventory => OpeningBalance + TotalReceivedGRN;
+  
         public decimal TotalSales { get; set; }
         public decimal DamagedGoods { get; set; }
         public decimal ReturnsFromCustomer { get; set; }
-        public decimal ClosingBalance { get; set; }
+        public decimal ClosingBalance => TotalInventory + TotalSales+ DamagedGoods+ ReturnsFromCustomer;
 
         public string WareHouse { get; set; }
         public string WareHouseName { get; set; }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using TransnationalLanka.ThreePL.Core.Enums;
 using TransnationalLanka.ThreePL.Dal;
 using TransnationalLanka.ThreePL.Services.Delivery;
 using TransnationalLanka.ThreePL.Services.Grn;
@@ -289,19 +290,162 @@ namespace TransnationalLanka.ThreePL.Services.Report
                 WareHouseName = wareHouse.Name,
                 WareHouseAddressLine2 = wareHouse.Address.AddressLine2,
                 WareHouseCode = wareHouse.Code,
-                SupplierCode=supplier.Code,
-                SupplierName=supplier.SupplierName,
+                SupplierCode = supplier.Code,
+                SupplierName = supplier.SupplierName,
                 SellerWiseItemReportDetails = product.Select(item => new SellerWiseItemReportDetail()
                 {
-                    Code=item.Code,
-                    Description=item.Description,
-                    Quantity=2, //how to calculate this?
+                    Code = item.Code,
+                    Description = item.Description,
+                    Quantity = 2, //how to calculate this?
                     UnitOfMeasure = item.MassUnit.ToString(),
-                    UnitPrice=item.UnitPrice,
+                    UnitPrice = item.UnitPrice,
+
+                }).ToList()
+
+            };
+        }
+
+        public async Task<MonthlyReconsilationReport> GetMonthlyReconsilationReport(DateTime fromDate, DateTime toDate, long wareHouseId)
+        {
+            //logic to be implemented
+            var wareHouse = await _wareHouseService.GetWareHouseById(wareHouseId);
+
+            return new MonthlyReconsilationReport()
+            {
+                WareHouse = wareHouse.Code,
+                ReconsilationDate = toDate,
+                WareHouseAddressLine1 = wareHouse.Address.AddressLine1,
+                WareHouseAddressLine2 = wareHouse.Address.AddressLine2,
+                WareHouseName = wareHouse.Name,
+
+                //logic to be implemented
+                OpeningBalance = 5000000,
+                TotalReceivedGRN = 1500000,
+                TotalSales = -2500000,
+                DamagedGoods = -5400,
+                ReturnsFromCustomer = -15000
+
+
+            };
+        }
+
+        public async Task<MonthlySalesReport> GetMonthlySalesReport(DateTime fromDate, DateTime toDate, long wareHouseId)
+        {
+            //logic to be checked??? need to do group by?
+            var wareHouse = await _wareHouseService.GetWareHouseById(wareHouseId);
+
+            var delivery = await _deliveryService.GetDeliveryByDateRange(fromDate, toDate);
+
+            var completedDeliveries = delivery
+                .SelectMany(x => x.DeliveryTrackings.Where(x => x.Status == TrackingStatus.Completed)).SelectMany(x => x.DeliveryTrackingItems).ToList();
+
+            return new MonthlySalesReport()
+            {
+                WareHouseCode = wareHouse.Code,
+                WareHouseAddressLine1 = wareHouse.Address.AddressLine1,
+                WareHouseAddressLine2 = wareHouse.Address.AddressLine2,
+                WareHouseName = wareHouse.Name,
+                FromDate = fromDate,
+                ToDate = toDate,
+                MonthlySalesReportItems = completedDeliveries.Select(item => new MonthlySalesReportItem()
+                {
+                    Code = item.Product.Code,
+                    Date = item.Created, //date not sure??
+                    Description = item.Product.Name,
+                    Quantity = item.Quantity,
+                    UnitPrice = item.UnitCost,
+                    UnitOfMeasure = item.Product.MassUnit.ToString()
+
+                }).ToList()
+            };
+
+        }
+
+        public async Task<SellerWiseItemSummary> GetSellerWiseItemSummary(long wareHouseId)
+        {
+            //to check the logic
+            var wareHouse = await _wareHouseService.GetWareHouseById(wareHouseId);
+
+            var supplierProduct = _productService.GetProducts().GroupBy(x => new { x.Supplier.Code, x.Supplier.SupplierName, x.MassUnit })
+                   .Select(sp => new SellerWiseItemSummaryDetail
+                   {
+                       SupplierName = sp.Key.SupplierName,
+                       SupplierCode = sp.Key.Code,
+                       Quantity = 2, //how to calculate this?
+                       Value = sp.Sum(c => c.UnitPrice)
+                   }).ToList();
+
+            return new SellerWiseItemSummary()
+            {
+                WareHouseCode = wareHouse.Code,
+                WareHouseAddressLine1 = wareHouse.Address.AddressLine1,
+                WareHouseAddressLine2 = wareHouse.Address.AddressLine2,
+                WareHouseName = wareHouse.Name,
+                SellerWiseItemReportDetails = supplierProduct.Select(item => new SellerWiseItemSummaryDetail()
+                {
+                    SupplierCode = item.SupplierCode,
+                    SupplierName = item.SupplierName,
+                    Quantity = item.Quantity,
+                    UOM = item.UOM,
+                    Value = item.Value
+                }).ToList()
+            };
+        }
+
+        public async Task<StockAdjustmentReport> GetStockAdjustmentReport(long wareHouseId, long supplierId)
+        {
+            //to write the logic
+            var wareHouse = await _wareHouseService.GetWareHouseById(wareHouseId);
+
+            var product = _productService.GetProducts();
+
+            return new StockAdjustmentReport()
+            {
+                WareHouseCode = wareHouse.Code,
+                WareHouseAddressLine1 = wareHouse.Address.AddressLine1,
+                WareHouseAddressLine2 = wareHouse.Address.AddressLine2,
+                WareHouseName = wareHouse.Name,
+                StockAdjustmentItemDetails = product.Select(item => new StockAdjustmentItemDetail()
+                {
+                    Code = item.Code,
+                    Description = item.Name,
+                    Quantity = 2,
+                    UnitOfMeasure = item.MassUnit.ToString(),
+                    UnitPrice = item.UnitPrice,
+                    Remark = "Test"
+                }).ToList()
+
+            };
+
+        }
+
+        public async Task<ItemWiseReOrderLevelReport> GetReOrderLevelReport(long wareHouseId)
+        {
+            //to write the logic
+            var wareHouse = await _wareHouseService.GetWareHouseById(wareHouseId);
+
+            var product = _productService.GetProducts();
+
+            return new ItemWiseReOrderLevelReport()
+            {
+                WareHouseCode = wareHouse.Code,
+                WareHouseAddressLine1 = wareHouse.Address.AddressLine1,
+                WareHouseAddressLine2 = wareHouse.Address.AddressLine2,
+                WareHouseName = wareHouse.Name,
+                ItemWiseReOrderLevelDetails = product.Select(item => new ItemWiseReOrderLevelDetailReport()
+                {
+                    Code = item.Code,
+                    Description = item.Name,
+                    UnitOfMeasure = item.MassUnit.ToString(),
+                    ReOrderLevel = 100,
+                    StockInHand = 95
 
                 }).ToList()
 
             };
         }
     }
+
 }
+
+

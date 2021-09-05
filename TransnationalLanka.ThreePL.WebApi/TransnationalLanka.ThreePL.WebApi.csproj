@@ -5,10 +5,13 @@
   <ItemGroup>
     <None Remove="Reports\Grn.vsrepx" />
     <None Remove="Reports\InvoiceSvat.vsrepx" />
+    <None Remove="Reports\ItemWiseReOrderLevelReport.vsrepx" />
     <None Remove="Reports\MonthlyReconsilationReport.vsrepx" />
     <None Remove="Reports\MonthlySalesReport.vsrepx" />
     <None Remove="Reports\PurchaseOrderReport.vsrepx" />
     <None Remove="Reports\SellerWiseItemDetailReport.vsrepx" />
+    <None Remove="Reports\SellerWiseItemSummaryReport.vsrepx" />
+    <None Remove="Reports\StockAdjustmentReport.vsrepx" />
     <None Remove="Reports\StockBalanceReport.vsrepx" />
     <None Remove="Reports\StockMovementReport.vsrepx" />
     <None Remove="Reports\WayBill.vsrepx" />
@@ -16,10 +19,13 @@
   <ItemGroup>
     <EmbeddedResource Include="Reports\Grn.vsrepx" />
     <EmbeddedResource Include="Reports\InvoiceSvat.vsrepx" />
+    <EmbeddedResource Include="Reports\ItemWiseReOrderLevelReport.vsrepx" />
     <EmbeddedResource Include="Reports\MonthlyReconsilationReport.vsrepx" />
     <EmbeddedResource Include="Reports\MonthlySalesReport.vsrepx" />
     <EmbeddedResource Include="Reports\PurchaseOrderReport.vsrepx" />
     <EmbeddedResource Include="Reports\SellerWiseItemDetailReport.vsrepx" />
+    <EmbeddedResource Include="Reports\SellerWiseItemSummaryReport.vsrepx" />
+    <EmbeddedResource Include="Reports\StockAdjustmentReport.vsrepx" />
     <EmbeddedResource Include="Reports\StockBalanceReport.vsrepx" />
     <EmbeddedResource Include="Reports\StockMovementReport.vsrepx" />
     <EmbeddedResource Include="Reports\WayBill.vsrepx" />
@@ -59,6 +65,12 @@
     <Compile Update="Reports\InvoiceSvat.Designer.cs">
       <DependentUpon>InvoiceSvat.vsrepx</DependentUpon>
     </Compile>
+    <Compile Update="Reports\ItemWiseReOrderLevelReport.cs">
+      <DependentUpon>ItemWiseReOrderLevelReport.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\ItemWiseReOrderLevelReport.Designer.cs">
+      <DependentUpon>ItemWiseReOrderLevelReport.vsrepx</DependentUpon>
+    </Compile>
     <Compile Update="Reports\MonthlyReconsilationReport.cs">
       <DependentUpon>MonthlyReconsilationReport.vsrepx</DependentUpon>
     </Compile>
@@ -82,6 +94,18 @@
     </Compile>
     <Compile Update="Reports\SellerWiseItemDetailReport.Designer.cs">
       <DependentUpon>SellerWiseItemDetailReport.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\SellerWiseItemSummaryReport.cs">
+      <DependentUpon>SellerWiseItemSummaryReport.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\SellerWiseItemSummaryReport.Designer.cs">
+      <DependentUpon>SellerWiseItemSummaryReport.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\StockAdjustmentReport.cs">
+      <DependentUpon>StockAdjustmentReport.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\StockAdjustmentReport.Designer.cs">
+      <DependentUpon>StockAdjustmentReport.vsrepx</DependentUpon>
     </Compile>
     <Compile Update="Reports\StockBalanceReport.cs">
       <DependentUpon>StockBalanceReport.vsrepx</DependentUpon>

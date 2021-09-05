@@ -9,7 +9,7 @@ namespace TransnationalLanka.ThreePL.Services.Report.Core
    
     public class MonthlySalesReportItem
     {
-        public DateTime Date { get; set; }
+        public DateTimeOffset Date { get; set; }
         public string Code { get; set; }
         public string SalesInvoiceNumber { get; set; }
         public string Description { get; set; }
@@ -23,7 +23,8 @@ namespace TransnationalLanka.ThreePL.Services.Report.Core
     public class MonthlySalesReport
     {
 
-       
+        public DateTime FromDate { get; set; }
+        public DateTime ToDate { get; set; }
         public string WareHouseCode { get; set; }
         public string WareHouseName { get; set; }
         public string WareHouseAddressLine1 { get; set; }
