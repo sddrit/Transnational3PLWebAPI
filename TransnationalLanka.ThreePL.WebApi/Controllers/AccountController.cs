@@ -51,16 +51,25 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
         public async Task<IActionResult> Get(long id)
         {
             var user = await _accountService.GetUserById(id);
-            return Ok(_mapper.Map<UserBindingModel>(user));
+            return Ok(await GetUserResponse(user));
         }
 
         [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
         [HttpPost("create-user")]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserBindingModel model)
         {
-            var createdUser = await _accountService.CreateUser(new User() {UserName = model.UserName, Email = model.Email, Active = true},
-                model.Password, Roles.ADMIN_ROLE);
-            return Ok(_mapper.Map<UserBindingModel>(createdUser));
+            var user = new User() { UserName = model.UserName, Email = model.Email, Active = true };
+
+            if (model.WareHouses != null && model.WareHouses.Any())
+            {
+                user.UserWareHouses = model.WareHouses.Select(wareHouse => new UserWareHouse()
+                {
+                    WareHouseId = wareHouse
+                }).ToList();
+            }
+
+            var createdUser = await _accountService.CreateUser(user, model.Password, model.Role);
+            return Ok(await GetUserResponse(createdUser));
         }
 
         [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
@@ -68,11 +77,26 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
         public async Task<IActionResult> UpdateUser([FromBody] UserBindingModel model)
         {
             var user = await _accountService.GetUserById(model.Id);
+
             user.UserName = model.UserName;
             user.Email = model.Email;
             user.Active = model.Active;
-            var updatedUser = await _accountService.UpdateUser(user);
-            return Ok(_mapper.Map<UserBindingModel>(updatedUser));
+
+            if (model.WareHouses != null && model.WareHouses.Any())
+            {
+                user.UserWareHouses = model.WareHouses.Select(wareHouse => new UserWareHouse()
+                {
+                    WareHouseId = wareHouse
+                }).ToList();
+            }
+            else
+            {
+                user.UserWareHouses = new List<UserWareHouse>();
+            }
+
+            var updatedUser = await _accountService.UpdateUser(user, model.Role);
+
+            return Ok(await GetUserResponse(updatedUser));
         }
 
         [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
@@ -80,7 +104,15 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
         public async Task<IActionResult> SetStatus([FromBody] SetUserStatus model)
         {
             var updatedUser = await _accountService.SetStatus(model.Id, model.Status);
-            return Ok(_mapper.Map<UserBindingModel>(updatedUser));
+            return Ok(await GetUserResponse(updatedUser));
+        }
+
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordBindingModel model)
+        {
+            await _accountService.ResetPassword(model.Id, model.Password);
+            return Ok();
         }
 
         [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
@@ -106,9 +138,17 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
             {
                 Token = jwtToken,
                 ValidTo = lifeTime.ToUniversalTime(),
-                User = _mapper.Map<UserBindingModel>(user),
-                Roles = roles
+                User = await GetUserResponse(user),
             });
+        }
+
+        private async Task<UserBindingModel> GetUserResponse(User user)
+        {
+            var userBindingModel = _mapper.Map<UserBindingModel>(user);
+            var roles = await _accountService.GetRoles(user);
+
+            userBindingModel.Role = roles.FirstOrDefault();
+            return userBindingModel;
         }
 
         private async Task<JwtSecurityToken> GenerateToken(User user, string[] roles)

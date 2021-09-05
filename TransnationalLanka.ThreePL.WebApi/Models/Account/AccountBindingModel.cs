@@ -22,6 +22,8 @@ namespace TransnationalLanka.ThreePL.WebApi.Models.Account
         public string Email { get; set; }
         [Required]
         public bool Active { get; set; }
+        public long[] WareHouses { get; set; }
+        public string Role { get; set; }
     }
 
     public class CreateUserBindingModel
@@ -38,6 +40,9 @@ namespace TransnationalLanka.ThreePL.WebApi.Models.Account
         [Required]
         [Compare("Password")]
         public string ConfirmationPassword { get; set; }
+        [Required] 
+        public string Role { get; set; }
+        public long[] WareHouses { get; set; }
     }
 
     public class LoginResponse
@@ -45,12 +50,24 @@ namespace TransnationalLanka.ThreePL.WebApi.Models.Account
         public string Token { get; set; }
         public UserBindingModel User { get; set; }
         public DateTimeOffset ValidTo { get; set; }
-        public IList<string> Roles { get; set; }
     }
 
     public class SetUserStatus
     {
+        [Required]
         public long Id { get; set; }
+        [Required]
         public bool Status { get; set; }
+    }
+
+    public class ResetPasswordBindingModel
+    {
+        public long Id { get; set; }
+        [Required]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+        [Required]
+        [Compare("Password")]
+        public string ConfirmationPassword { get; set; }
     }
 }

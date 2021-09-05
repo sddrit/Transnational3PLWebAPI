@@ -65,11 +65,6 @@ namespace TransnationalLanka.ThreePL.Services.Invoice
             }
         }
 
-        /// <summary>
-        /// Get the invoice by id
-        /// </summary>
-        /// <param name="id">Id of invoice</param>
-        /// <returns></returns>
         public async Task<Dal.Entities.Invoice> GetInvoice(long id)
         {
             var invoice = await _unitOfWork.InvoiceRepository.GetAll()
@@ -78,6 +73,48 @@ namespace TransnationalLanka.ThreePL.Services.Invoice
                 .FirstOrDefaultAsync();
             return invoice;
         }
+
+        public async Task<Dal.Entities.Invoice> CreateOrUpdateManualCharges(long id, List<InvoiceItem> invoiceItems)
+        {
+            var invoice = await GetInvoice(id);
+
+            //Deleted items
+            var deletedItems = invoice.InvoiceItems.Where(i =>
+                i.Type == InvoiceItemChargeType.ManualCharges && invoiceItems.All(ui => ui.Id != i.Id)).ToList();
+
+            foreach (var deletedItem in deletedItems)
+            {
+                invoice.InvoiceItems.Remove(deletedItem);
+            }
+
+            //Updated items
+            var currentManualCharges =
+                invoice.InvoiceItems.Where(i => i.Type == InvoiceItemChargeType.ManualCharges).ToList();
+
+            foreach (var manualCharge in currentManualCharges)
+            {
+                var updatedItem = invoiceItems.FirstOrDefault(i => i.Id == manualCharge.Id);
+
+                if (updatedItem == null)
+                {
+                    continue;
+                }
+
+                manualCharge.Description = updatedItem.Description;
+                manualCharge.Amount = updatedItem.Amount;
+            }
+
+            //Added items
+            var addedItems = invoiceItems.Where(i => i.Id == 0).ToList();
+
+            foreach (var invoiceItem in addedItems)
+            {
+                invoice.InvoiceItems.Add(invoiceItem);
+            }
+
+            await _unitOfWork.SaveChanges();
+            return invoice;
+        } 
 
         private async Task GenerateInvoice(long supplierId)
         {
@@ -220,7 +257,5 @@ namespace TransnationalLanka.ThreePL.Services.Invoice
                 .FirstOrDefaultAsync();
             return invoice;
         }
-
-
     }
 }

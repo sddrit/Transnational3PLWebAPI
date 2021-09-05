@@ -1,8 +1,5 @@
-﻿using System;
-using System.Linq;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TransnationalLanka.ThreePL.Dal.Entities;
 
 namespace TransnationalLanka.ThreePL.Dal
@@ -33,6 +30,7 @@ namespace TransnationalLanka.ThreePL.Dal
         public DbSet<InvoiceItem> InvoiceItems { get; set; }
         public DbSet<UnitOfMeasure> UnitOfMeasures { get; set; }
         public DbSet<DeliveryTracking> DeliveryTrackings { get; set; }
+        public DbSet<UserWareHouse> UserWareHouses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

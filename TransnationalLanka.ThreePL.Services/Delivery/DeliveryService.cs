@@ -41,6 +41,116 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
             _environment = environment;
         }
 
+        public async Task<List<DeliveryStat>> GetTodayDeliveryStat(long? supplierId = null)
+        {
+            var query = _unitOfWork.DeliveryRepository.GetAll();
+
+            if (supplierId.HasValue)
+            {
+                query = query.Where(d => d.SupplierId == supplierId);
+            }
+
+            DateTime now = DateTime.Now.Date;
+
+            query = query.Where(d => d.DeliveryDate == now);
+
+            var result =  await query.GroupBy(d => d.DeliveryStatus)
+                .Select(g => new DeliveryStat()
+                {
+                    Count = g.LongCount(),
+                    Status = g.Key
+                }).ToListAsync();
+
+            //Fill the stat
+
+            var deliveryStatus = Enum.GetValues<DeliveryStatus>();
+
+            foreach (var deliveryStatusItem in deliveryStatus)
+            {
+                if (result.All(i => i.Status != deliveryStatusItem))
+                {
+                    result.Add(new DeliveryStat()
+                    {
+                        Status = deliveryStatusItem,
+                        Count = 0
+                    });
+                } 
+            }
+
+            return result;
+        }
+
+        public async Task<List<DayDeliveryStat>> GetMonthlyDeliveryStat(long? supplierId = null)
+        {
+            var query = _unitOfWork.DeliveryRepository.GetAll();
+
+            if (supplierId.HasValue)
+            {
+                query = query.Where(d => d.SupplierId == supplierId);
+            }
+
+            DateTime now = DateTime.Now;
+            var from = new DateTime(now.Year, now.Month, 1);
+            var to = from.AddMonths(1).AddDays(-1);
+
+            query = query.Where(d => d.DeliveryDate >= from && d.DeliveryDate <= to);
+
+            var groupedDeliveryStatDaily = await query.GroupBy(d => new {d.DeliveryDate, d.DeliveryStatus})
+                .Select(g => new {g.Key.DeliveryStatus, g.Key.DeliveryDate, Count = g.Count()})
+                .ToListAsync();
+
+            var result = groupedDeliveryStatDaily.GroupBy(g => g.DeliveryDate)
+                .Select(g => new DayDeliveryStat()
+                {
+                   Date = g.Key,
+                   DeliveryStats = g.GroupBy(i => i.DeliveryStatus)
+                       .Select(i => new DeliveryStat()
+                       {
+                           Count = i.Count(),
+                           Status = i.Key
+                       }).ToList()
+                }).ToList();
+
+
+            //Fill the data
+
+            var deliveryStatus = Enum.GetValues<DeliveryStatus>();
+
+            for (DateTime currentDate = from; currentDate <= to; currentDate = currentDate.AddDays(1))
+            {
+                if (result.All(i => i.Date != currentDate))
+                {
+                    result.Add(new DayDeliveryStat()
+                    {
+                        Date = currentDate,
+                        DeliveryStats = deliveryStatus.Select(status => new DeliveryStat()
+                        {
+                            Count = 0,
+                            Status = status
+                        }).ToList()
+                    });
+
+                    continue;
+                }
+
+                var resultItem = result.First(i => i.Date == currentDate);
+
+                foreach (var deliveryStatusItem in deliveryStatus)
+                {
+                    if (resultItem.DeliveryStats.All(i => i.Status != deliveryStatusItem))
+                    {
+                        resultItem.DeliveryStats.Add(new DeliveryStat()
+                        {
+                            Status = deliveryStatusItem,
+                            Count = 0
+                        });
+                    }
+                }
+            }
+
+            return result;
+        }
+
         public IQueryable<Dal.Entities.Delivery> GetDeliveries()
         {
             return _unitOfWork.DeliveryRepository.GetAll();
@@ -354,60 +464,6 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
             }
         }
 
-        public async Task<Dal.Entities.Delivery> MarkAsCustomerReturn(long id, string note, string[] trackingNumbers)
-        {
-            await using var transaction = await _unitOfWork.GetTransaction();
-
-            try
-            {
-                var delivery = await GetDeliveryById(id);
-
-                if (!CanMarkAsCustomerReturn(delivery))
-                {
-                    throw new ServiceException(new ErrorMessage[]
-                    {
-                        new ErrorMessage()
-                        {
-                            Message = "Unable to mark as customer return"
-                        }
-                    });
-                }
-
-
-                foreach (var deliveryTracking in delivery.DeliveryTrackings)
-                {
-                    if (trackingNumbers.Contains(deliveryTracking.TrackingNumber))
-                    {
-                        foreach (var trackingItems in deliveryTracking.DeliveryTrackingItems)
-                        {
-                            await _stockService.AdjustReturnStock(delivery.WareHouseId.Value, trackingItems.ProductId,
-                                trackingItems.UnitCost,
-                                trackingItems.Quantity, null, $"Delivery Customer Return - {delivery.DeliveryNo} #Tracking {deliveryTracking.TrackingNumber}");
-                        }
-
-                        deliveryTracking.Status = TrackingStatus.CustomerReturned;
-                    }
-                }
-
-
-                delivery.DeliveryStatus =
-                    delivery.DeliveryTrackings.All(t => t.Status == TrackingStatus.CustomerReturned) ? DeliveryStatus.CustomerReturn
-                        : DeliveryStatus.PartiallyCustomerReturn; 
-                
-                await _unitOfWork.SaveChanges();
-                await AddDeliveryNote(delivery.Id, $"Mark as customer return - Reason : {note}");
-
-                await transaction.CommitAsync();
-
-                return delivery;
-            }
-            catch
-            {
-                await transaction.RollbackAsync();
-                throw;
-            }
-        }
-
         public async Task<long> GetDeliveryCount(long supplierId, DateTime from, DateTime to)
         {
             return await _unitOfWork.DeliveryRepository.GetAll()
@@ -515,8 +571,7 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
 
         private bool CanMarkAsCustomerReturn(Dal.Entities.Delivery delivery)
         {
-            return delivery.DeliveryStatus == DeliveryStatus.Completed 
-                   || delivery.DeliveryStatus == DeliveryStatus.PartiallyCustomerReturn;
+            return delivery.DeliveryStatus == DeliveryStatus.Completed;
         }
 
         private async Task AddDeliveryNote(long deliveryId, string note)

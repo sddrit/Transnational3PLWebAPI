@@ -19,6 +19,8 @@ namespace TransnationalLanka.ThreePL.Services.Application
             //Creating the roles
             await _accountService.CreateRole(Roles.ADMIN_ROLE);
             await _accountService.CreateRole(Roles.SUPPLIER_ROLE);
+            await _accountService.CreateRole(Roles.USER_ROLE);
+            await _accountService.CreateRole(Roles.WAREHOUSE_MANAGER_ROLE);
 
             //Creating the admin
             if (await _accountService.GetUserByUserName("admin") == null)

@@ -25,6 +25,11 @@ namespace TransnationalLanka.ThreePL.WebApi.Models.Product
         [Required]
         public string Sku { get; set; }
         [Required]
+        public decimal Height { get; set; }
+        [Required]
+        public decimal Width { get; set; }
+        [Required]
+        public decimal Length { get; set; }
         public decimal StorageUnits { get; set; }
         public decimal? Weight { get; set; }
         public MassUnit? MassUnit { get; set; }
@@ -46,6 +51,9 @@ namespace TransnationalLanka.ThreePL.WebApi.Models.Product
         public decimal UnitPrice { get; set; }
         public decimal ReorderLevel { get; set; }
         public string Sku { get; set; }
+        public decimal Height { get; set; }
+        public decimal Width { get; set; }
+        public decimal Length { get; set; }
         public decimal StorageUnits { get; set; }
         public decimal? Weight { get; set; }
         public MassUnit? MassUnit { get; set; }

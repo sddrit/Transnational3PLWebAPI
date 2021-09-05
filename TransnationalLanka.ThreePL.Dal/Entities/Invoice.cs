@@ -40,7 +40,7 @@ namespace TransnationalLanka.ThreePL.Dal.Entities
         StorageCharge,
         StorageAdditionalCharge,
         PackageCharge,
-
+        ManualCharges
     }
 
     public class InvoiceItem : BaseEntity

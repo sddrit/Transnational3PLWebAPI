@@ -17,9 +17,10 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
         Task<Dal.Entities.Delivery> MarkAsDispatch(long id, long warehouseId);
         Task<Dal.Entities.Delivery> MarkAsComplete(long id, string[] trackingNumbers);
         Task<Dal.Entities.Delivery> MarkAsReturn(long id, string note);
-        Task<Dal.Entities.Delivery> MarkAsCustomerReturn(long id, string note, string[] trackingNumbers);
         Task<long> GetDeliveryCount(long supplierId, DateTime from, DateTime to);
         Task<Dal.Entities.Delivery> MapDeliveryProduct(Dal.Entities.Delivery delivery);
         Task<List<ProcessDeliverCompleteResult>> ProcessDeliveryComplete(Stream excelFile);
+        Task<List<DeliveryStat>> GetTodayDeliveryStat(long? supplierId = null);
+        Task<List<DayDeliveryStat>> GetMonthlyDeliveryStat(long? supplierId = null);
     }
 }

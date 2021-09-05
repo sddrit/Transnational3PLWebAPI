@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -47,6 +46,26 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
 
             query = _mapper.ProjectTo<DeliveryListItemBindingModel>(_deliveryService.GetDeliveries());
             return await DataSourceLoader.LoadAsync(query, loadOptions);
+        }
+
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE, Roles.SUPPLIER_ROLE })]
+        [HttpGet("delivery-stat")]
+        public async Task<IActionResult> GetDeliveryStat()
+        {
+            if (User.IsInRole(Roles.SUPPLIER_ROLE))
+            {
+                var user = await _accountService.GetUser(User);
+                return Ok(new
+                {
+                    DayStat = await _deliveryService.GetTodayDeliveryStat(user.SupplierId.Value),
+                    MonthlyStat = await _deliveryService.GetMonthlyDeliveryStat(user.SupplierId.Value)
+                });
+            }
+            return Ok(new
+            {
+                DayStat = await _deliveryService.GetTodayDeliveryStat(),
+                MonthlyStat = await _deliveryService.GetMonthlyDeliveryStat()
+            });
         }
 
         [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE, Roles.SUPPLIER_ROLE })]
@@ -100,14 +119,6 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
         public async Task<IActionResult> Post([FromBody] MarkAsReturnBindingModel model)
         {
             await _deliveryService.MarkAsReturn(model.DeliveryId, model.Note);
-            return Ok();
-        }
-
-        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
-        [HttpPost("mark-as-customer-return")]
-        public async Task<IActionResult> Post([FromBody] MarkAsCustomerReturnBindingModel model)
-        {
-            await _deliveryService.MarkAsCustomerReturn(model.DeliveryId, model.Note, model.TrackingNumbers);
             return Ok();
         }
 

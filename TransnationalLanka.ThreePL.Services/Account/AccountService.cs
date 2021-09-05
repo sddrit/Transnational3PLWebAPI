@@ -50,7 +50,7 @@ namespace TransnationalLanka.ThreePL.Services.Account
             return user;
         }
 
-        public async Task<User> UpdateUser(User user)
+        public async Task<User> UpdateUser(User user, string role)
         {
             var currentUser = await GetUserById(user.Id);
 
@@ -68,12 +68,40 @@ namespace TransnationalLanka.ThreePL.Services.Account
 
             currentUser.UserName = user.UserName;
             currentUser.Email = user.Email;
+            currentUser.Active = user.Active;
+
+            var addedWareHouses = user.UserWareHouses.Where(uw =>
+                currentUser.UserWareHouses.All(cuw => cuw.WareHouseId != uw.WareHouseId)).ToList();
+
+            var removedWareHouses = currentUser.UserWareHouses
+                .Where(cuw => user.UserWareHouses.All(uw => uw.WareHouseId != cuw.WareHouseId)).ToList();
+
+            foreach (var removedWareHouse in removedWareHouses)
+            {
+                currentUser.UserWareHouses.Remove(removedWareHouse);
+            }
+
+            foreach (var addedWareHouse in addedWareHouses)
+            {
+                currentUser.UserWareHouses.Add(new UserWareHouse()
+                {
+                    UserId = currentUser.Id,
+                    WareHouseId = addedWareHouse.WareHouseId
+                });
+            }
 
             var updatedResult = await _userManager.UpdateAsync(user);
 
             if (!updatedResult.Succeeded)
             {
                 throw GenerateServiceException(updatedResult);
+            }
+
+            if (!await _userManager.IsInRoleAsync(user, role))
+            {
+                var currentRoles = await _userManager.GetRolesAsync(user);
+                await _userManager.RemoveFromRolesAsync(user, currentRoles);
+                await _userManager.AddToRoleAsync(user, role);
             }
 
             return currentUser;
@@ -170,9 +198,9 @@ namespace TransnationalLanka.ThreePL.Services.Account
             return _userManager.Users;
         }
 
-        public async Task ResetPassword(string username, string newPassword)
+        public async Task ResetPassword(long id, string newPassword)
         {
-            var user = await GetUserByUserName(username);
+            var user = await GetUserById(id);
 
             if (user == null)
             {
@@ -181,7 +209,7 @@ namespace TransnationalLanka.ThreePL.Services.Account
                     new ErrorMessage()
                     {
                         Code = string.Empty,
-                        Message = $"{username} is not found"
+                        Message = $"User is not found"
                     }
                 });
             }
@@ -221,18 +249,26 @@ namespace TransnationalLanka.ThreePL.Services.Account
 
         public async Task<User> GetUserByUserName(string username)
         {
-            return await _userManager.FindByNameAsync(username);
+            var user = await _userManager.FindByNameAsync(username);
+            return await GetUserById(user.Id);
         }
 
         public async Task<User> GetUserById(long id)
         {
-            return await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
+            return await _userManager.Users
+                .Include(u => u.UserWareHouses)
+                .FirstOrDefaultAsync(u => u.Id == id);
         }
 
         public async Task<User> GetUser(ClaimsPrincipal user)
         {
             var userId = long.Parse(user.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty);
             return await GetUserById(userId);
+        }
+
+        public async Task<IList<string>> GetRoles()
+        {
+            return await _roleManager.Roles.Select(r => r.Name).ToArrayAsync();
         }
 
         private ServiceException GenerateServiceException(IdentityResult identityResult)

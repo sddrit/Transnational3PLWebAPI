@@ -8,6 +8,9 @@ using TransnationalLanka.ThreePL.Services.Account.Core;
 using TransnationalLanka.ThreePL.Services.Invoice;
 using TransnationalLanka.ThreePL.WebApi.Models.Invoice;
 using TransnationalLanka.ThreePL.WebApi.Util.Authorization;
+using System.Collections.Generic;
+using System.Linq;
+using TransnationalLanka.ThreePL.Dal.Entities;
 
 namespace TransnationalLanka.ThreePL.WebApi.Controllers
 {
@@ -32,7 +35,6 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
             return await DataSourceLoader.LoadAsync(query, loadOptions);
         }
 
-
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(long id)
         {
@@ -45,6 +47,14 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
         {
             await _invoiceService.MarkAsPaid(model.Id);
             return Ok();
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateManualCharges(long id, List<InvoiceItemBindingModel> model)
+        {
+            var invoice =
+                await _invoiceService.CreateOrUpdateManualCharges(id, model.Select(_mapper.Map<InvoiceItem>).ToList());
+            return Ok(_mapper.Map<InvoiceBindingModel>(invoice));
         }
     }
 }

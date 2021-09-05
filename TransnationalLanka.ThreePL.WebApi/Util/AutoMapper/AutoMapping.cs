@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq;
+using AutoMapper;
 using TransnationalLanka.ThreePL.Dal.Entities;
 using TransnationalLanka.ThreePL.WebApi.Models.Account;
 using TransnationalLanka.ThreePL.WebApi.Models.Common;
@@ -20,8 +21,10 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.AutoMapper
         public AutoMapping()
         {
             //Account Section
-            CreateMap<User, UserBindingModel>();
-            
+            CreateMap<User, UserBindingModel>()
+                .ForMember(u => u.WareHouses,
+                    o => o.MapFrom(u => u.UserWareHouses.Select(uw => uw.WareHouseId).ToArray()));
+
             //City Mapping
             CreateMap<City, CityBindingModel>()
                 .ReverseMap();

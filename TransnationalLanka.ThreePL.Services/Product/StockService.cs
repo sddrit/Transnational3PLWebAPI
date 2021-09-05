@@ -55,7 +55,7 @@ namespace TransnationalLanka.ThreePL.Services.Product
             return await _unitOfWork.ProductStockRepository.GetAll()
                 .Include(s => s.Product)
                 .Where(s => s.Product.SupplierId == supplierId)
-                .SumAsync(s => (s.Quantity + s.ReturnQuantity) * s.Product.StorageUnits);
+                .SumAsync(s => (s.Quantity + s.ReturnQuantity) * (s.Product.Width * s.Product.Height * s.Product.Length));
         }
 
         public async Task<List<TotalStorageByWareHouse>> GetTotalStorageByWareHouses(long supplierId)
@@ -64,14 +64,14 @@ namespace TransnationalLanka.ThreePL.Services.Product
                 .Include(s => s.WareHouse)
                 .Include(s => s.Product)
                 .Where(s => s.Product.SupplierId == supplierId)
-                .Select(s => new { s.WareHouseId, s.WareHouse.Name, s.WareHouse.Code, s.Product.StorageUnits, s.Quantity, s.ReturnQuantity })
+                .Select(s => new { s.WareHouseId, s.WareHouse.Name, s.WareHouse.Code, s.Product.Width, s.Product.Height, s.Product.Length, s.Quantity, s.ReturnQuantity })
                 .GroupBy(s => new {s.WareHouseId, s.Code, s.Name})
                 .Select(g => new TotalStorageByWareHouse()
                 {
                     WareHouseId = g.Key.WareHouseId,
                     WareHouseCode = g.Key.Code,
                     WareHouseName = g.Key.Name,
-                    TotalStorage = g.Sum(i => (i.Quantity* i.StorageUnits) + (i.ReturnQuantity * i.StorageUnits))
+                    TotalStorage = g.Sum(i => ((i.Quantity * + i.ReturnQuantity) * (i.Width * i.Height * i.Length)))
                 }).ToListAsync();
         }
 
@@ -83,7 +83,7 @@ namespace TransnationalLanka.ThreePL.Services.Product
             {
                 totalStorage += await _unitOfWork.ProductRepository.GetAll()
                     .Where(p => p.Id == product.ProductId)
-                    .Select(p => p.StorageUnits * product.Quantity)
+                    .Select(p => ((p.Width * p.Height * p.Length) * product.Quantity))
                     .FirstOrDefaultAsync();
             }
 
