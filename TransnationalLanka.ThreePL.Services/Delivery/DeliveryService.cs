@@ -13,6 +13,7 @@ using TransnationalLanka.ThreePL.Dal;
 using TransnationalLanka.ThreePL.Dal.Entities;
 using TransnationalLanka.ThreePL.Integration.Tracker;
 using TransnationalLanka.ThreePL.Integration.Tracker.Model;
+using TransnationalLanka.ThreePL.Services.Common.Mapper;
 using TransnationalLanka.ThreePL.Services.Delivery.Core;
 using TransnationalLanka.ThreePL.Services.Product;
 using TransnationalLanka.ThreePL.Services.Supplier;
@@ -169,6 +170,31 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
             _unitOfWork.DeliveryRepository.Insert(delivery);
             await _unitOfWork.SaveChanges();
             return delivery;
+        }
+
+        public async Task<Dal.Entities.Delivery> UpdateDelivery(Dal.Entities.Delivery delivery)
+        {
+            var currentDelivery = await GetDeliveryById(delivery.Id);
+
+            if (currentDelivery.DeliveryStatus != DeliveryStatus.Pending)
+            {
+                throw new ServiceException(new ErrorMessage[]
+                {
+                    new ErrorMessage()
+                    {
+                        Message = "Unable update the delivery"
+                    }
+                });
+            }
+
+            var mapper = ServiceMapper.GetMapper();
+            mapper.Map(delivery, currentDelivery);
+
+            currentDelivery.Updated = DateTimeOffset.UtcNow;
+
+            await _unitOfWork.SaveChanges();
+
+            return currentDelivery;
         }
 
         public async Task<Dal.Entities.Delivery> GetDeliveryById(long id)
@@ -472,7 +498,23 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
                 .LongCountAsync();
         }
 
-        public async Task<List<ProcessDeliverCompleteResult>> ProcessDeliveryComplete(Stream excelFile)
+        public async Task<decimal> GetLatestDeliveryUnitPrice(long productId)
+        {
+            var latestDeliveryItem = await _unitOfWork.DeliveryItemRepository.GetAll()
+                .Where(di => di.ProductId == productId)
+                .OrderByDescending(di => di.Created)
+                .FirstOrDefaultAsync();
+
+            if (latestDeliveryItem == null)
+            {
+                var product = await _productService.GetProductById(productId);
+                return product.UnitPrice;
+            }
+
+            return latestDeliveryItem.UnitCost;
+        }
+
+        public async Task<List<ProcessDeliverCompleteResult>> ProcessDeliverySheet(Stream excelFile)
         {
             var result = new List<ProcessDeliverCompleteResult>();
 
@@ -487,14 +529,34 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
                 if (row == null) continue;
                 if (row.Cells.All(d => d.CellType == CellType.Blank)) continue;
 
-                var cell = row.GetCell(0);
-                var trackingNumber = cell.StringCellValue;
+                var trackingNumberCell = row.GetCell(0);
+                var trackingNumber = trackingNumberCell.StringCellValue;
+
+                var typeCell = row.GetCell(1);
+                var type = typeCell.StringCellValue.Trim().ToLower();
 
                 try
                 {
                     var deliveryId = await GetDeliveryByTrackingNumber(trackingNumber.Trim());
 
-                    await MarkAsComplete(deliveryId, new[] { trackingNumber.Trim() });
+                    if (type == "complete")
+                    {
+                        await MarkAsComplete(deliveryId, new[] { trackingNumber.Trim() });
+                    }
+                    else if(type == "return")
+                    {
+                        await MarkAsReturn(deliveryId, "Return marked by processing delivery sheet");
+                    }
+                    else
+                    {
+                        result.Add(new ProcessDeliverCompleteResult()
+                        {
+                            TrackingNumber = trackingNumber,
+                            Success = false,
+                            Message = $"{type} type is invalid for processing tracking number {trackingNumber}"
+                        });
+                        continue;
+                    }
 
                     result.Add(new ProcessDeliverCompleteResult()
                     {

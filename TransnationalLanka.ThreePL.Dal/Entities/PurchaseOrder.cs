@@ -10,6 +10,8 @@ namespace TransnationalLanka.ThreePL.Dal.Entities
         public PurchaseOrderStatus Status { get; set; }
         public string PoNumber { get; set; }
         public string Note { get; set; }
+        public bool Printed { get; set; }
+        public DateTimeOffset? PrintedDate { get; set; }
         public long SupplierId { get; set; }
         public virtual Supplier Supplier { get; set; }
         public long? WareHouseId { get; set; }

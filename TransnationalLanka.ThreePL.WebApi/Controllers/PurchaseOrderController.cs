@@ -68,6 +68,13 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
             });
         }
 
+        [HttpPost("mark-as-printed/{id}")]
+        public async Task<IActionResult> MarkAsPrinted(long id)
+        {
+            await _purchaseOrderService.MarkAsPrinted(id);
+            return Ok();
+        }
+
         [HttpPut]
         public async Task<IActionResult> Put([FromBody]PurchaseOrderBindingModel model)
         {

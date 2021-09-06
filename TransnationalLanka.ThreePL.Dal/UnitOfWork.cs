@@ -19,6 +19,7 @@ namespace TransnationalLanka.ThreePL.Dal
         IRepository<ProductStockAdjustment> ProductStockAdjustmentRepository { get; }
         IRepository<StockTransfer> StockTransferRepository { get; }
         IRepository<Delivery> DeliveryRepository { get; }
+        IRepository<DeliveryItem> DeliveryItemRepository { get; }
         IRepository<Invoice> InvoiceRepository { get; }
         IRepository<UnitOfMeasure> UnitOfMeasureRepository { get; }
         ThreePlDbContext Context { get; }
@@ -42,6 +43,7 @@ namespace TransnationalLanka.ThreePL.Dal
         private IRepository<ProductStockAdjustment> _productStockAdjustmentRepository;
         private IRepository<StockTransfer> _stockTransferRepository;
         private IRepository<Delivery> _deliveryRepository;
+        private IRepository<DeliveryItem> _deliveryItemRepository;
         private IRepository<Invoice> _invoiceRepository;
         private IRepository<UnitOfMeasure> _unitOfMeasureRepository;
 
@@ -55,6 +57,14 @@ namespace TransnationalLanka.ThreePL.Dal
             get
             {
                 return _deliveryRepository ??= new Repository<Delivery>(_context);
+            }
+        }
+
+        public IRepository<DeliveryItem> DeliveryItemRepository
+        {
+            get
+            {
+                return _deliveryItemRepository ??= new Repository<DeliveryItem>(_context);
             }
         }
 

@@ -38,7 +38,7 @@ namespace TransnationalLanka.ThreePL.Services.Common.Mapper
 
                 configuration.CreateMap<Dal.Entities.Product, Dal.Entities.Product>()
                     .ForMember(i => i.Created, o => o.Ignore())
-                    .ForMember(d => d.Supplier, o => o.Ignore());
+                    .ForMember(i => i.Supplier, o => o.Ignore());
 
                 configuration.CreateMap<PurchaseOrderItem, PurchaseOrderItem>()
                     .ForMember(i => i.Product, o => o.Ignore())
@@ -51,7 +51,25 @@ namespace TransnationalLanka.ThreePL.Services.Common.Mapper
                     .ForMember(p => p.WareHouse, o => o.Ignore())
                     .ForMember(p => p.Supplier, o => o.Ignore())
                     .ForMember(p => p.Status, o => o.Ignore())
+                    .ForMember(p => p.Created, o => o.Ignore())
+                    .EqualityComparison((s, d) => s.Id == d.Id);
+
+                configuration.CreateMap<DeliveryItem, DeliveryItem>()
+                    .ForMember(i => i.Product, o => o.Ignore())
+                    .ForMember(i => i.Delivery, o => o.Ignore())
                     .ForMember(i => i.Created, o => o.Ignore())
+                    .EqualityComparison((s, d) => s.Id == d.Id);
+
+                configuration.CreateMap<Dal.Entities.DeliveryCustomer, Dal.Entities.DeliveryCustomer>()
+                    .ForMember(d => d.City, o => o.Ignore());
+
+                configuration.CreateMap<Dal.Entities.Delivery, Dal.Entities.Delivery>()
+                    .ForMember(d => d.WareHouse, o => o.Ignore())
+                    .ForMember(d => d.Supplier, o => o.Ignore())
+                    .ForMember(d => d.DeliveryStatus, o => o.Ignore())
+                    .ForMember(d => d.DeliveryHistories, o => o.Ignore())
+                    .ForMember(d => d.DeliveryTrackings, o => o.Ignore())
+                    .ForMember(d => d.Created, o => o.Ignore())
                     .EqualityComparison((s, d) => s.Id == d.Id);
             });
 

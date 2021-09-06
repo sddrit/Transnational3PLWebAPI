@@ -50,6 +50,17 @@ namespace TransnationalLanka.ThreePL.Services.PurchaseOrder
 
             var currentPurchaseOrder = await GetPurchaseOrderById(purchaseOrder.Id);
 
+            if (currentPurchaseOrder.Printed)
+            {
+                throw new ServiceException(new ErrorMessage[]
+                {
+                    new ErrorMessage()
+                    {
+                        Message = "You can't update printed purchase order"
+                    }
+                });
+            }
+
             var mapper = ServiceMapper.GetMapper();
             mapper.Map(purchaseOrder, currentPurchaseOrder);
 
@@ -57,6 +68,18 @@ namespace TransnationalLanka.ThreePL.Services.PurchaseOrder
 
             await _unitOfWork.SaveChanges();
             return currentPurchaseOrder;
+        }
+
+        public async Task<Dal.Entities.PurchaseOrder> MarkAsPrinted(long id)
+        {
+            var purchaseOrder = await GetPurchaseOrderById(id);
+
+            purchaseOrder.Printed = true;
+            purchaseOrder.PrintedDate = DateTimeOffset.UtcNow;
+
+            await _unitOfWork.SaveChanges();
+
+            return purchaseOrder;
         }
 
         public async Task<Dal.Entities.PurchaseOrder> SetPurchaseOrderStatus(long purchaseOrderId, PurchaseOrderStatus status)

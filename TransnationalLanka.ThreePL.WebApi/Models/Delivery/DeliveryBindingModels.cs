@@ -44,6 +44,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Models.Delivery
     public class DeliveryItemBindingModel
     {
         public long Id { get; set; }
+        public long DeliveryId { get; set; }
         public long ProductId { get; set; }
         public ProductBindingModel Product { get; set; }
         public decimal Quantity { get; set; }

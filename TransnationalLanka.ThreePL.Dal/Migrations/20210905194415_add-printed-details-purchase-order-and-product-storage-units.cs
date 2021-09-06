@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TransnationalLanka.ThreePL.Dal.Migrations
 {
-    public partial class addwidthheightlengthtoproducts : Migration
+    public partial class addprinteddetailspurchaseorderandproductstorageunits : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,6 +11,19 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                 name: "StorageUnits",
                 table: "Products",
                 newName: "Width");
+
+            migrationBuilder.AddColumn<bool>(
+                name: "Printed",
+                table: "PurchaseOrders",
+                type: "bit",
+                nullable: false,
+                defaultValue: false);
+
+            migrationBuilder.AddColumn<DateTimeOffset>(
+                name: "PrintedDate",
+                table: "PurchaseOrders",
+                type: "datetimeoffset",
+                nullable: true);
 
             migrationBuilder.AddColumn<decimal>(
                 name: "Height",
@@ -69,6 +82,14 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
         {
             migrationBuilder.DropTable(
                 name: "UserWareHouses");
+
+            migrationBuilder.DropColumn(
+                name: "Printed",
+                table: "PurchaseOrders");
+
+            migrationBuilder.DropColumn(
+                name: "PrintedDate",
+                table: "PurchaseOrders");
 
             migrationBuilder.DropColumn(
                 name: "Height",

@@ -102,7 +102,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.Report
 
                     var purchaseOrderReport = new PurchaseOrderReport();
 
-                    var purchaseOrderReportData = AsyncContext.Run(() => _reportService.GetPurchaseOrderReport(2));
+                    var purchaseOrderReportData = AsyncContext.Run(() => _reportService.GetPurchaseOrderReport(long.Parse(parameters["id"].ToString())));
 
                     var purchaseOrderObjectDataSource = new ObjectDataSource
                     {

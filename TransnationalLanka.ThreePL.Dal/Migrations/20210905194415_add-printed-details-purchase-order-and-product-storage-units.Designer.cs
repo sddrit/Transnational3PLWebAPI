@@ -10,8 +10,8 @@ using TransnationalLanka.ThreePL.Dal;
 namespace TransnationalLanka.ThreePL.Dal.Migrations
 {
     [DbContext(typeof(ThreePlDbContext))]
-    [Migration("20210905063205_add-width-height-length-to-products")]
-    partial class addwidthheightlengthtoproducts
+    [Migration("20210905194415_add-printed-details-purchase-order-and-product-storage-units")]
+    partial class addprinteddetailspurchaseorderandproductstorageunits
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -681,6 +681,12 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(max)")
                         .HasComputedColumnSql("('PO'+right(replicate('0',(8))+CONVERT([varchar],[Id]),(8)))");
+
+                    b.Property<bool>("Printed")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("PrintedDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");

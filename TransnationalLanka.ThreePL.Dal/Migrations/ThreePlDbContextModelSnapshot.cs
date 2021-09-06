@@ -565,7 +565,7 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                     b.Property<DateTimeOffset>("Updated")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<decimal>("Weight")
+                    b.Property<decimal?>("Weight")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Width")
@@ -679,6 +679,12 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(max)")
                         .HasComputedColumnSql("('PO'+right(replicate('0',(8))+CONVERT([varchar],[Id]),(8)))");
+
+                    b.Property<bool>("Printed")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("PrintedDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");

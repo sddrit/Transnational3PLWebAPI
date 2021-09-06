@@ -13,6 +13,8 @@ namespace TransnationalLanka.ThreePL.WebApi.Models.PurchaseOrder
         public long Id { get; set; }
         public string Note { get; set; }
         public PurchaseOrderStatus Status { get; set; }
+        public bool Printed { get; set; }
+        public DateTimeOffset? PrintedDate { get; set; }
         public string PoNumber { get; set; }
         public long SupplierId { get; set; }
         public DateTimeOffset Created { get; set; }

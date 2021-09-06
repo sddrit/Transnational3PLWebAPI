@@ -68,6 +68,17 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
             });
         }
 
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
+        [HttpGet("latest-delivery-unit-price/{productId}")]
+        public async Task<IActionResult> GetLatestDeliveryUnitPrice(long productId)
+        {
+            var unitPrice = await _deliveryService.GetLatestDeliveryUnitPrice(productId);
+            return Ok(new
+            {
+                UnitPrice = unitPrice
+            });
+        }
+
         [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE, Roles.SUPPLIER_ROLE })]
         [HttpGet("get-delivery/{id}")]
         public async Task<IActionResult> GetById(long id)
@@ -83,9 +94,17 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
             return Ok(_mapper.Map<DeliveryBindingModel>(await _deliveryService.CreateDelivery(_mapper.Map<Delivery>(model))));
         }
 
+
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
+        [HttpPut]
+        public async Task<IActionResult> Put([FromBody] DeliveryBindingModel model)
+        {
+            return Ok(_mapper.Map<DeliveryBindingModel>(await _deliveryService.UpdateDelivery(_mapper.Map<Delivery>(model))));
+        }
+
         [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
         [HttpPut("map-delivery-product")]
-        public async Task<IActionResult> Put([FromBody] DeliveryBindingModel model)
+        public async Task<IActionResult> MapDeliveryProduct([FromBody] DeliveryBindingModel model)
         {
             return Ok(_mapper.Map<DeliveryBindingModel>(await _deliveryService.MapDeliveryProduct(_mapper.Map<Delivery>(model))));
         }
@@ -123,13 +142,13 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
         }
 
         [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
-        [HttpPost("process-delivery-complete")]
+        [HttpPost("process-delivery-sheet")]
         public async Task<IActionResult> ProcessDeliveryComplete(IFormFile file)
         {
             var fileStream = new MemoryStream();
             await file.CopyToAsync(fileStream);
 
-            var result = await _deliveryService.ProcessDeliveryComplete(fileStream);
+            var result = await _deliveryService.ProcessDeliverySheet(fileStream);
             return Ok(result);
         }
     }
