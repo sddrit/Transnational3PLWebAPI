@@ -2,6 +2,7 @@
 {
     public class Roles
     {
+        public const string POWER_ROLE = "Power";
         public const string ADMIN_ROLE = "Admin";
         public const string SUPPLIER_ROLE = "Supplier";
         public const string WAREHOUSE_MANAGER_ROLE = "Warehouse Manager";

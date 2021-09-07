@@ -9,7 +9,6 @@ using TransnationalLanka.ThreePL.WebApi.Util.Authorization;
 
 namespace TransnationalLanka.ThreePL.WebApi.Controllers
 {
-    [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
     [Route("api/[controller]")]
     [ApiController]
     public class CityController : ControllerBase

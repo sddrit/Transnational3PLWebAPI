@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using TransnationalLanka.ThreePL.Core.Enums;
+using TransnationalLanka.ThreePL.Dal.Core;
 
 namespace TransnationalLanka.ThreePL.Dal.Entities
 {
-    public class PurchaseOrder : BaseEntity
+    public class PurchaseOrder : BaseEntity, IOptionallyWareHouseRelatedEntity
     {
         public PurchaseOrderStatus Status { get; set; }
         public string PoNumber { get; set; }

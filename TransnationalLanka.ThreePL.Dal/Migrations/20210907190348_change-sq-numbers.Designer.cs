@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TransnationalLanka.ThreePL.Dal;
 
 namespace TransnationalLanka.ThreePL.Dal.Migrations
 {
     [DbContext(typeof(ThreePlDbContext))]
-    partial class ThreePlDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210907190348_change-sq-numbers")]
+    partial class changesqnumbers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1042,20 +1044,11 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<decimal>("Height")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("Length")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset>("Updated")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<decimal>("Width")
-                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 

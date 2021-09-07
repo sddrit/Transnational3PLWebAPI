@@ -4,10 +4,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using TransnationalLanka.ThreePL.Core.Enums;
+using TransnationalLanka.ThreePL.Dal.Core;
 
 namespace TransnationalLanka.ThreePL.Dal.Entities
 {
-    public class Delivery : BaseEntity
+    public class Delivery : BaseEntity, IOptionallyWareHouseRelatedEntity
     {
         public DeliveryType Type { get; set; }
         public string DeliveryNo { get; set; }

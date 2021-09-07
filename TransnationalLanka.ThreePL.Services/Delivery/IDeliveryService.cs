@@ -22,8 +22,8 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
         Task<Dal.Entities.Delivery> MapDeliveryProduct(Dal.Entities.Delivery delivery);
         Task<List<ProcessDeliverCompleteResult>> ProcessDeliverySheet(Stream excelFile);
         Task<List<Dal.Entities.Delivery>> GetDeliveryByDateRange(DateTime fromDate, DateTime toDate);
-        Task<List<DeliveryStat>> GetTodayDeliveryStat(long? supplierId = null);
-        Task<List<DayDeliveryStat>> GetMonthlyDeliveryStat(long? supplierId = null);
+        Task<List<DayDeliveryStat>> GetMonthlyDeliveryStat(long? supplierId = null, long[] wareHouses = null);
+        Task<List<DeliveryStat>> GetTodayDeliveryStat(long? supplierId = null, long[] wareHouses = null);
         Task<decimal> GetLatestDeliveryUnitPrice(long productId);
     }
 }

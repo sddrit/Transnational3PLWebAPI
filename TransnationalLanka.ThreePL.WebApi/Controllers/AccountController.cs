@@ -139,6 +139,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
                 Token = jwtToken,
                 ValidTo = lifeTime.ToUniversalTime(),
                 User = await GetUserResponse(user),
+                Roles = roles
             });
         }
 

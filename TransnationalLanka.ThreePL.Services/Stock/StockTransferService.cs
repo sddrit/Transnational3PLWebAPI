@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Dawn;
 using Microsoft.EntityFrameworkCore;
 using TransnationalLanka.ThreePL.Core.Constants;
+using TransnationalLanka.ThreePL.Core.Enums;
 using TransnationalLanka.ThreePL.Core.Exceptions;
 using TransnationalLanka.ThreePL.Dal;
 using TransnationalLanka.ThreePL.Dal.Entities;
@@ -86,11 +87,11 @@ namespace TransnationalLanka.ThreePL.Services.Stock
                 foreach (var stockTransferStockTransferItem in stockTransfer.StockTransferItems)
                 {
 
-                    await _stockService.AdjustStock(stockTransfer.FromWareHouseId, stockTransferStockTransferItem.ProductId,
-                        stockTransferStockTransferItem.UnitCost, -stockTransferStockTransferItem.Quantity,
+                    await _stockService.AdjustStock(StockAdjustmentType.Out, stockTransfer.FromWareHouseId, stockTransferStockTransferItem.ProductId,
+                        stockTransferStockTransferItem.UnitCost, stockTransferStockTransferItem.Quantity,
                         stockTransferStockTransferItem.ExpiredDate, $"Stock Transfer - {stockTransfer.StockTransferNumber}");
 
-                    await _stockService.AdjustStock(stockTransfer.ToWareHouseId, stockTransferStockTransferItem.ProductId,
+                    await _stockService.AdjustStock(StockAdjustmentType.In, stockTransfer.ToWareHouseId, stockTransferStockTransferItem.ProductId,
                         stockTransferStockTransferItem.UnitCost, stockTransferStockTransferItem.Quantity,
                         stockTransferStockTransferItem.ExpiredDate, $"Stock Transfer - {stockTransfer.StockTransferNumber}");
                 }

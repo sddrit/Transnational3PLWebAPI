@@ -7,6 +7,8 @@ namespace TransnationalLanka.ThreePL.Core.Enums
         [Description("Received")]
         Received,
         [Description("Return")]
-        Return
+        Return,
+        [Description("Sales Return")]
+        SalesReturn
     }
 }

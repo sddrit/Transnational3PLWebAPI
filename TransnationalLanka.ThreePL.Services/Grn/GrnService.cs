@@ -87,17 +87,24 @@ namespace TransnationalLanka.ThreePL.Services.Grn
                 {
                     if (goodReceivedNote.Type == GrnType.Received)
                     {
-                        await _stockService.AdjustStock(goodReceivedNote.WareHouseId, item.ProductId, item.UnitCost,
+                        await _stockService.AdjustStock(StockAdjustmentType.In, goodReceivedNote.WareHouseId, item.ProductId, item.UnitCost,
                             item.Quantity,
                             item.ExpiredDate,
                             $"Good Received - GRN #{goodReceivedNote.Id}");
                     }
-                    else
+                    else if(goodReceivedNote.Type == GrnType.Return)
                     {
-                        await _stockService.AdjustStock(goodReceivedNote.WareHouseId, item.ProductId, item.UnitCost,
-                            -item.Quantity,
+                        await _stockService.AdjustStock(StockAdjustmentType.Out, goodReceivedNote.WareHouseId, item.ProductId, item.UnitCost,
+                            item.Quantity,
                             item.ExpiredDate,
                             $"Good Return - GRN #{goodReceivedNote.Id}");
+                    }
+                    else
+                    {
+                        await _stockService.AdjustStock(StockAdjustmentType.SalesReturnIn, goodReceivedNote.WareHouseId, item.ProductId, item.UnitCost,
+                            item.Quantity,
+                            item.ExpiredDate,
+                            $"Sales Return - GRN #{goodReceivedNote.Id}");
                     }
                 }
 

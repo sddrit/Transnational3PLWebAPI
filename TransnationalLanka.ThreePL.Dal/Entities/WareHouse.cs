@@ -9,6 +9,10 @@ namespace TransnationalLanka.ThreePL.Dal.Entities
         public string Name { get; set; }        
         public WareHouseAddress Address { get; set; }
         public bool Active { get; set; }
+        public decimal Height { get; set; }
+        public decimal Width { get; set; }
+        public decimal Length { get; set; }
+        public decimal StorageCapacity => Height * Width * Length;
         public ICollection<ProductStock> ProductStocks { get; set; }
         public ICollection<PurchaseOrder> PurchaseOrders { get; set; }
         public ICollection<GoodReceivedNote> GoodReceivedNotes { get; set; }

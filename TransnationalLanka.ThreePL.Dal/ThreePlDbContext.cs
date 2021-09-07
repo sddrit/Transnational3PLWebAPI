@@ -49,27 +49,27 @@ namespace TransnationalLanka.ThreePL.Dal
             builder.Entity<PurchaseOrder>()
                 .Property(p => p.PoNumber)
                 .IsUnicode(false)
-                .HasComputedColumnSql("('PO'+right(replicate('0',(8))+CONVERT([varchar],[Id]),(8)))");
+                .HasComputedColumnSql("([dbo].[FN_GENERATE_PO_NUMBER]([Id]))");
 
             builder.Entity<GoodReceivedNote>()
                 .Property(p => p.GrnNo)
                 .IsUnicode(false)
-                .HasComputedColumnSql("('GRN'+right(replicate('0',(8))+CONVERT([varchar],[Id]),(8)))");
+                .HasComputedColumnSql("([dbo].[FN_GENERATE_GRN_NUMBER]([Id]))");
 
             builder.Entity<StockTransfer>()
                 .Property(p => p.StockTransferNumber)
                 .IsUnicode(false)
-                .HasComputedColumnSql("('ST'+right(replicate('0',(8))+CONVERT([varchar],[Id]),(8)))");
+                .HasComputedColumnSql("([dbo].[FN_GENERATE_ST_NUMBER]([Id]))");
 
             builder.Entity<Delivery>()
                 .Property(p => p.DeliveryNo)
                 .IsUnicode(false)
-                .HasComputedColumnSql("('DL'+right(replicate('0',(8))+CONVERT([varchar],[Id]),(8)))");
+                .HasComputedColumnSql("([dbo].[FN_GENERATE_DELIVERY_NUMBER]([Id]))");
 
             builder.Entity<Invoice>()
                 .Property(p => p.InvoiceNo)
                 .IsUnicode(false)
-                .HasComputedColumnSql("('IN'+right(replicate('0',(8))+CONVERT([varchar],[Id]),(8)))");
+                .HasComputedColumnSql("([dbo].[FN_GENERATE_INVOICE_NUMBER]([Id]))");
 
             builder.Entity<Address>()
                 .HasOne(e => e.City)

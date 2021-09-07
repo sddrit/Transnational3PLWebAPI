@@ -32,7 +32,8 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
         }
 
         [HttpGet]
-        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE, Roles.SUPPLIER_ROLE })]
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE, Roles.SUPPLIER_ROLE,
+            Roles.USER_ROLE, Roles.WAREHOUSE_MANAGER_ROLE })]
         public async Task<LoadResult> Get(DataSourceLoadOptions loadOptions)
         {
             IQueryable<ProductDetailsBindingModel> query;
@@ -49,6 +50,8 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
         }
 
         [HttpGet("{id}")]
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE, Roles.SUPPLIER_ROLE,
+            Roles.USER_ROLE, Roles.WAREHOUSE_MANAGER_ROLE })]
         public async Task<IActionResult> Get(long id)
         {
             var product = await _productService.GetProductById(id);

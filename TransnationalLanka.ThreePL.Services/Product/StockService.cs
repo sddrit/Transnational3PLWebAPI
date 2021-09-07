@@ -55,7 +55,8 @@ namespace TransnationalLanka.ThreePL.Services.Product
             return await _unitOfWork.ProductStockRepository.GetAll()
                 .Include(s => s.Product)
                 .Where(s => s.Product.SupplierId == supplierId)
-                .SumAsync(s => (s.Quantity + s.ReturnQuantity) * (s.Product.Width * s.Product.Height * s.Product.Length));
+                .SumAsync(s => (s.Quantity + s.DamageStockQuantity + s.DispatchReturnQuantity + s.SalesReturnQuantity) 
+                               * (s.Product.Width * s.Product.Height * s.Product.Length));
         }
 
         public async Task<List<TotalStorageByWareHouse>> GetTotalStorageByWareHouses(long supplierId)
@@ -64,14 +65,17 @@ namespace TransnationalLanka.ThreePL.Services.Product
                 .Include(s => s.WareHouse)
                 .Include(s => s.Product)
                 .Where(s => s.Product.SupplierId == supplierId)
-                .Select(s => new { s.WareHouseId, s.WareHouse.Name, s.WareHouse.Code, s.Product.Width, s.Product.Height, s.Product.Length, s.Quantity, s.ReturnQuantity })
+                .Select(s => new { s.WareHouseId, s.WareHouse.Name, s.WareHouse.Code, 
+                    s.Product.Width, s.Product.Height, s.Product.Length, s.Quantity, s.DamageStockQuantity, 
+                    s.DispatchReturnQuantity, s.SalesReturnQuantity })
                 .GroupBy(s => new {s.WareHouseId, s.Code, s.Name})
                 .Select(g => new TotalStorageByWareHouse()
                 {
                     WareHouseId = g.Key.WareHouseId,
                     WareHouseCode = g.Key.Code,
                     WareHouseName = g.Key.Name,
-                    TotalStorage = g.Sum(i => ((i.Quantity * + i.ReturnQuantity) * (i.Width * i.Height * i.Length)))
+                    TotalStorage = g.Sum(i => ((i.Quantity * + i.DamageStockQuantity + 
+                                                i.DispatchReturnQuantity + i.SalesReturnQuantity) * (i.Width * i.Height * i.Length)))
                 }).ToListAsync();
         }
 
@@ -90,90 +94,25 @@ namespace TransnationalLanka.ThreePL.Services.Product
             return totalStorage;
         }
 
-        public async Task TransferReturnStock(long warehouseId, long productId, decimal unitCost, decimal quantity, DateTime? expiredDate,
-            string note)
+        public async Task TransferDispatchReturnStock(long warehouseId, long productId, decimal unitCost, decimal quantity, decimal damageQuantity, DateTime? expiredDate,
+            string note, string trackingNumber)
         {
-            await AdjustReturnStock(warehouseId, productId, unitCost, quantity, expiredDate, note);
-            await AdjustStock(warehouseId, productId, unitCost, -quantity, expiredDate, note);
+            var fullNote = $"Transfer dispatch return stock {trackingNumber}, Note - {note}";
+            await AdjustStock(StockAdjustmentType.DispatchReturnOut ,warehouseId, productId, unitCost, quantity + damageQuantity, expiredDate, fullNote);
+            await AdjustStock(StockAdjustmentType.In, warehouseId, productId, unitCost, quantity, expiredDate, fullNote);
+            await AdjustStock(StockAdjustmentType.DamageIn, warehouseId, productId, unitCost, damageQuantity, expiredDate, fullNote);
         }
 
-        public async Task AdjustReturnStock(long warehouseId, long productId, decimal unitCost, decimal quantity, DateTime? expiredDate,
-            string note)
+        public async Task TransferSalesReturnStock(long warehouseId, long productId, decimal unitCost, decimal quantity, decimal damageQuantity, DateTime? expiredDate,
+            string note, string trackingNumber)
         {
-            var wareHouse = await _wareHouseService.GetWareHouseById(warehouseId);
-
-            if (!_wareHouseService.IsActiveWareHouse(wareHouse))
-            {
-                throw new ServiceException(new ErrorMessage[]
-                {
-                    new()
-                    {
-                        Message = "Warehouse is not active"
-                    }
-                });
-            }
-
-            var product = await _productService.GetProductById(productId);
-
-            if (!_productService.IsActiveProduct(product))
-            {
-                throw new ServiceException(new ErrorMessage[]
-                {
-                    new()
-                    {
-                        Message = "Product is not active"
-                    }
-                });
-            }
-
-            //Check if already exists product stock
-
-            var productStock = await _unitOfWork.ProductStockRepository.GetAll()
-                .FirstOrDefaultAsync(s => s.WareHouseId == warehouseId && s.ProductId == productId);
-
-            if (productStock == null)
-            {
-                productStock = new ProductStock()
-                {
-                    ProductId = productId,
-                    Quantity = quantity,
-                    WareHouseId = warehouseId
-                };
-
-                _unitOfWork.ProductStockRepository.Insert(productStock);
-            }
-            else
-            {
-                if (quantity < 0 && (productStock.ReturnQuantity + quantity) < 0)
-                {
-                    throw new ServiceException(new ErrorMessage[]
-                    {
-                        new()
-                        {
-                            Message = "Insufficient return quantity to adjust"
-                        }
-                    });
-                }
-
-                productStock.ReturnQuantity += quantity;
-            }
-
-            var productStockAdjustment = new ProductStockAdjustment()
-            {
-                WareHouseId = warehouseId,
-                Quantity = quantity,
-                ExpiredDate = expiredDate,
-                ProductId = productId,
-                UnitCost = unitCost,
-                Type = quantity < 0 ? StockAdjustmentType.ReturnOut : StockAdjustmentType.ReturnIn,
-                Note = note
-            };
-
-            _unitOfWork.ProductStockAdjustmentRepository.Insert(productStockAdjustment);
-            await _unitOfWork.SaveChanges();
+            var fullNote = $"Transfer sales return stock {trackingNumber}, Note - {note}";
+            await AdjustStock(StockAdjustmentType.SalesReturnOut, warehouseId, productId, unitCost, quantity + damageQuantity, expiredDate, fullNote);
+            await AdjustStock(StockAdjustmentType.In, warehouseId, productId, unitCost, quantity, expiredDate, fullNote);
+            await AdjustStock(StockAdjustmentType.DamageIn, warehouseId, productId, unitCost, damageQuantity, expiredDate, fullNote);
         }
 
-        public async Task AdjustStock(long warehouseId, long productId, decimal unitCost, decimal quantity, DateTime? expiredDate, 
+        public async Task AdjustStock(StockAdjustmentType stockAdjustmentType, long warehouseId, long productId, decimal unitCost, decimal quantity, DateTime? expiredDate, 
             string note)
         {
             var wareHouse = await _wareHouseService.GetWareHouseById(warehouseId);
@@ -212,15 +151,23 @@ namespace TransnationalLanka.ThreePL.Services.Product
                 productStock = new ProductStock()
                 {
                     ProductId = productId,
-                    Quantity = quantity,
+                    Quantity = 0,
                     WareHouseId = warehouseId
                 };
 
                 _unitOfWork.ProductStockRepository.Insert(productStock);
             }
-            else
+
+            //Grn Stock Adjustments
+
+            if (stockAdjustmentType == StockAdjustmentType.In)
             {
-                if (quantity < 0 && (productStock.Quantity + quantity) < 0)
+                productStock.Quantity += quantity;
+            }
+
+            if (stockAdjustmentType == StockAdjustmentType.Out)
+            {
+                if (productStock.Quantity - quantity < 0)
                 {
                     throw new ServiceException(new ErrorMessage[]
                     {
@@ -231,8 +178,78 @@ namespace TransnationalLanka.ThreePL.Services.Product
                     });
                 }
 
-                productStock.Quantity += quantity;
+                productStock.Quantity -= quantity;
             }
+
+            //Damage Adjustments
+
+            if (stockAdjustmentType == StockAdjustmentType.DamageIn)
+            {
+                productStock.DamageStockQuantity += quantity;
+            }
+
+            if (stockAdjustmentType == StockAdjustmentType.DamageOut)
+            {
+                if (productStock.DamageStockQuantity - quantity < 0)
+                {
+                    throw new ServiceException(new ErrorMessage[]
+                    {
+                        new()
+                        {
+                            Message = "Insufficient Quantity"
+                        }
+                    });
+                }
+
+                productStock.DamageStockQuantity -= quantity;
+            }
+
+            //Dispatch Return Adjustments
+
+            if (stockAdjustmentType == StockAdjustmentType.DispatchReturnIn)
+            {
+                productStock.DispatchReturnQuantity += quantity;
+            }
+
+            if (stockAdjustmentType == StockAdjustmentType.DispatchReturnOut)
+            {
+                if (productStock.DispatchReturnQuantity - quantity < 0)
+                {
+                    throw new ServiceException(new ErrorMessage[]
+                    {
+                        new()
+                        {
+                            Message = "Insufficient Quantity"
+                        }
+                    });
+                }
+
+                productStock.DispatchReturnQuantity -= quantity;
+            }
+
+            //Sales Return Adjustments
+
+            if (stockAdjustmentType == StockAdjustmentType.SalesReturnIn)
+            {
+                productStock.SalesReturnQuantity += quantity;
+            }
+
+            if (stockAdjustmentType == StockAdjustmentType.SalesReturnOut)
+            {
+                if (productStock.SalesReturnQuantity - quantity < 0)
+                {
+                    throw new ServiceException(new ErrorMessage[]
+                    {
+                        new()
+                        {
+                            Message = "Insufficient Quantity"
+                        }
+                    });
+                }
+
+                productStock.SalesReturnQuantity -= quantity;
+            }
+
 
             var productStockAdjustment = new ProductStockAdjustment()
             {
@@ -241,7 +258,7 @@ namespace TransnationalLanka.ThreePL.Services.Product
                 ExpiredDate = expiredDate,
                 ProductId = productId,
                 UnitCost = unitCost,
-                Type = quantity < 0 ? StockAdjustmentType.Out : StockAdjustmentType.In,
+                Type = stockAdjustmentType,
                 Note = note
             };
 
@@ -249,5 +266,8 @@ namespace TransnationalLanka.ThreePL.Services.Product
 
             await _unitOfWork.SaveChanges();
         }
+
+
+
     }
 }

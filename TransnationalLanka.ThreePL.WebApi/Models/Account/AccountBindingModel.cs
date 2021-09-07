@@ -50,6 +50,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Models.Account
         public string Token { get; set; }
         public UserBindingModel User { get; set; }
         public DateTimeOffset ValidTo { get; set; }
+        public IList<string> Roles { get; set; }
     }
 
     public class SetUserStatus

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TransnationalLanka.ThreePL.Dal;
 
 namespace TransnationalLanka.ThreePL.Dal.Migrations
 {
     [DbContext(typeof(ThreePlDbContext))]
-    partial class ThreePlDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210907112239_stock-changes-for-return-items")]
+    partial class stockchangesforreturnitems
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -201,7 +203,7 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .IsUnicode(false)
                         .HasColumnType("varchar(max)")
-                        .HasComputedColumnSql("([dbo].[FN_GENERATE_DELIVERY_NUMBER]([Id]))");
+                        .HasComputedColumnSql("('DL'+right(replicate('0',(8))+CONVERT([varchar],[Id]),(8)))");
 
                     b.Property<int>("DeliveryStatus")
                         .HasColumnType("int");
@@ -367,7 +369,7 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .IsUnicode(false)
                         .HasColumnType("varchar(max)")
-                        .HasComputedColumnSql("([dbo].[FN_GENERATE_GRN_NUMBER]([Id]))");
+                        .HasComputedColumnSql("('GRN'+right(replicate('0',(8))+CONVERT([varchar],[Id]),(8)))");
 
                     b.Property<long?>("PurchaseOrderId")
                         .HasColumnType("bigint");
@@ -454,7 +456,7 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .IsUnicode(false)
                         .HasColumnType("varchar(max)")
-                        .HasComputedColumnSql("([dbo].[FN_GENERATE_INVOICE_NUMBER]([Id]))");
+                        .HasComputedColumnSql("('IN'+right(replicate('0',(8))+CONVERT([varchar],[Id]),(8)))");
 
                     b.Property<bool>("Paid")
                         .HasColumnType("bit");
@@ -684,7 +686,7 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .IsUnicode(false)
                         .HasColumnType("varchar(max)")
-                        .HasComputedColumnSql("([dbo].[FN_GENERATE_PO_NUMBER]([Id]))");
+                        .HasComputedColumnSql("('PO'+right(replicate('0',(8))+CONVERT([varchar],[Id]),(8)))");
 
                     b.Property<bool>("Printed")
                         .HasColumnType("bit");
@@ -799,7 +801,7 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .IsUnicode(false)
                         .HasColumnType("varchar(max)")
-                        .HasComputedColumnSql("([dbo].[FN_GENERATE_ST_NUMBER]([Id]))");
+                        .HasComputedColumnSql("('ST'+right(replicate('0',(8))+CONVERT([varchar],[Id]),(8)))");
 
                     b.Property<long>("ToWareHouseId")
                         .HasColumnType("bigint");
@@ -1042,20 +1044,11 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<decimal>("Height")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("Length")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset>("Updated")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<decimal>("Width")
-                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 

@@ -22,7 +22,9 @@ namespace TransnationalLanka.ThreePL.WebApi.Models.Stock
         public long Id { get; set; }
         public long WareHouseId { get; set; }
         public decimal Quantity { get; set; }
-        public decimal ReturnQuantity { get; set; }
+        public decimal DispatchReturnQuantity { get; set; }
+        public decimal DamageStockQuantity { get; set; }
+        public decimal SalesReturnQuantity { get; set; }
         public long ProductId { get; set; }
     }
 }

@@ -1,9 +1,10 @@
 ﻿using System;
 using TransnationalLanka.ThreePL.Core.Enums;
+using TransnationalLanka.ThreePL.Dal.Core;
 
 namespace TransnationalLanka.ThreePL.Dal.Entities
 {
-    public class ProductStockAdjustment : BaseEntity
+    public class ProductStockAdjustment : BaseEntity, IWareHouseRelatedEntity
     {
         public long ProductId  { get; set; }
         public virtual Product Product { get; set; }

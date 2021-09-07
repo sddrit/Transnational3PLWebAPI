@@ -6,36 +6,42 @@ using DevExtreme.AspNet.Data.ResponseModel;
 using DevExtreme.AspNet.Mvc;
 using Microsoft.AspNetCore.Mvc;
 using TransnationalLanka.ThreePL.Dal.Entities;
+using TransnationalLanka.ThreePL.Services.Account;
 using TransnationalLanka.ThreePL.Services.Account.Core;
 using TransnationalLanka.ThreePL.Services.Product;
 using TransnationalLanka.ThreePL.Services.Product.Core;
 using TransnationalLanka.ThreePL.Services.PurchaseOrder;
 using TransnationalLanka.ThreePL.WebApi.Models.PurchaseOrder;
 using TransnationalLanka.ThreePL.WebApi.Util.Authorization;
+using TransnationalLanka.ThreePL.WebApi.Util.Linq;
 
 namespace TransnationalLanka.ThreePL.WebApi.Controllers
 {
-    [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
+    [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE, Roles.USER_ROLE, Roles.WAREHOUSE_MANAGER_ROLE })]
     [Route("api/[controller]")]
     [ApiController]
     public class PurchaseOrderController : ControllerBase
     {
         private readonly IPurchaseOrderService _purchaseOrderService;
         private readonly IStockService _stockService;
+        private readonly IAccountService _accountService;
         private readonly IMapper _mapper;
 
         public PurchaseOrderController(IPurchaseOrderService purchaseOrderService, 
-            IStockService stockService, IMapper mapper)
+            IStockService stockService, IAccountService accountService, IMapper mapper)
         {
             _purchaseOrderService = purchaseOrderService;
             _stockService = stockService;
+            _accountService = accountService;
             _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<LoadResult> Get(DataSourceLoadOptions loadOptions)
         {
-            var query = _mapper.ProjectTo<PurchaseOrderBindingModel>(_purchaseOrderService.GetAll());
+            var user = await _accountService.GetUser(User);
+            var query = _mapper.ProjectTo<PurchaseOrderBindingModel>(_purchaseOrderService.GetAll()
+                .FilterByUserWareHousesOptionally(user));
             return await DataSourceLoader.LoadAsync(query, loadOptions);
         }
 

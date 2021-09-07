@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Dawn;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,26 @@ namespace TransnationalLanka.ThreePL.Services.WareHouse
         {
             return _unitOfWork.WareHouseRepository.GetAll()
                 .Include(w => w.Address.City);
+        }
+
+        public async Task<List<WareHouseStorageInfo>> GetStorageDetails()
+        {
+            var wareHouseStorageInfo = await _unitOfWork.WareHouseRepository.GetAll()
+                .Include(w => w.ProductStocks)
+                .ThenInclude(s => s.Product)
+                .Where(w => w.Active)
+                .Select(w => new WareHouseStorageInfo()
+                {
+                    Code = w.Code,
+                    WareHouseId = w.Id,
+                    WareHouseName = w.Name,
+                    UsedSpace = w.ProductStocks.Sum(s =>
+                        (s.DamageStockQuantity + s.DispatchReturnQuantity + s.Quantity + s.SalesReturnQuantity) *
+                        (s.Product.Height * s.Product.Length * s.Product.Width)),
+                    StorageCapacity = w.Height * w.Length * w.Width
+                }).ToListAsync();
+
+            return wareHouseStorageInfo;
         }
 
         public async Task<Dal.Entities.WareHouse> AddWareHouse(Dal.Entities.WareHouse warehouse)

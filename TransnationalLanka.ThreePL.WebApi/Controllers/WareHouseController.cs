@@ -1,10 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Data.ResponseModel;
 using DevExtreme.AspNet.Mvc;
 using Microsoft.AspNetCore.Mvc;
 using TransnationalLanka.ThreePL.Dal.Entities;
+using TransnationalLanka.ThreePL.Services.Account;
 using TransnationalLanka.ThreePL.Services.Account.Core;
 using TransnationalLanka.ThreePL.Services.WareHouse;
 using TransnationalLanka.ThreePL.WebApi.Models.WareHouse;
@@ -18,21 +20,42 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IWareHouseService _warehouseService;
+        private readonly IAccountService _accountService;
 
-        public WareHouseController(IMapper mapper, IWareHouseService warehouseService)
+        public WareHouseController(IMapper mapper, IWareHouseService warehouseService, IAccountService accountService)
         {
             _mapper = mapper;
             _warehouseService = warehouseService;
+            _accountService = accountService;
         }
 
         [HttpGet]
-        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE, Roles.SUPPLIER_ROLE })]
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE, Roles.SUPPLIER_ROLE,
+            Roles.USER_ROLE, Roles.WAREHOUSE_MANAGER_ROLE })]
         public async Task<LoadResult> Get(DataSourceLoadOptions loadOptions)
         {
-            return await DataSourceLoader.LoadAsync(_warehouseService.GetWareHouses(), loadOptions);
+            var user = await _accountService.GetUser(User);
+            var userWareHouseIds = user.UserWareHouses.Select(w => w.WareHouseId).ToList();
+
+            var wareHouseQuery = _warehouseService.GetWareHouses();
+
+            if (userWareHouseIds.Any())
+            {
+                wareHouseQuery = wareHouseQuery.Where(w => userWareHouseIds.Contains(w.Id));
+            }
+
+            return await DataSourceLoader.LoadAsync(wareHouseQuery, loadOptions);
         }
 
-        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
+        [HttpGet("warehouse-storage-info")]
+        public async Task<IActionResult> GetWareHouseStorageInfo()
+        {
+            var storageInfo = await _warehouseService.GetStorageDetails();
+            return Ok(storageInfo);
+        }
+
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE, Roles.SUPPLIER_ROLE,
+            Roles.USER_ROLE, Roles.WAREHOUSE_MANAGER_ROLE })]
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(long id)
         {

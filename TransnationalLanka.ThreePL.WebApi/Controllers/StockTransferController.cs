@@ -12,7 +12,7 @@ using TransnationalLanka.ThreePL.WebApi.Util.Authorization;
 
 namespace TransnationalLanka.ThreePL.WebApi.Controllers
 {
-    [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
+    [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE, Roles.WAREHOUSE_MANAGER_ROLE, Roles.USER_ROLE })]
     [Route("api/[controller]")]
     [ApiController]
     public class StockTransferController : Controller

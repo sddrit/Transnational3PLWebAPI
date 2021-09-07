@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using TransnationalLanka.ThreePL.Core.Enums;
+using TransnationalLanka.ThreePL.Dal.Core;
 
 namespace TransnationalLanka.ThreePL.Dal.Entities
 {
-    public class GoodReceivedNote : BaseEntity
+    public class GoodReceivedNote : BaseEntity, IWareHouseRelatedEntity
     {
         public string GrnNo { get; set; }
         public long? PurchaseOrderId { get; set; }

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Data.ResponseModel;
@@ -14,7 +15,7 @@ using TransnationalLanka.ThreePL.WebApi.Util.Authorization;
 
 namespace TransnationalLanka.ThreePL.WebApi.Controllers
 {
-    [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
+    
     [Route("api/[controller]")]
     [ApiController]
     public class SupplierController : ControllerBase
@@ -33,12 +34,23 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
             _stockService = stockService;
         }
 
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE, Roles.USER_ROLE, Roles.WAREHOUSE_MANAGER_ROLE, Roles.SUPPLIER_ROLE })]
         [HttpGet]
         public async Task<LoadResult> Get(DataSourceLoadOptions loadOptions)
         {
-            var query = _mapper.ProjectTo<SupplierListItemBindingModel>(_supplierService.GetSuppliers());
+            IQueryable<Supplier> supplierQuery = _supplierService.GetSuppliers();
+            var user = await _accountService.GetUser(User);
+
+            if (User.IsInRole(Roles.SUPPLIER_ROLE))
+            {
+                supplierQuery = supplierQuery.Where(s => s.Id == user.SupplierId.Value);
+            }
+
+            var query = _mapper.ProjectTo<SupplierListItemBindingModel>(supplierQuery);
             return await DataSourceLoader.LoadAsync(query, loadOptions);
         }
+
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE, Roles.USER_ROLE, Roles.WAREHOUSE_MANAGER_ROLE })]
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(long id)
@@ -47,6 +59,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
             return Ok(_mapper.Map<SupplierBindingModel>(supplier));
         }
 
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE, Roles.USER_ROLE, Roles.WAREHOUSE_MANAGER_ROLE })]
         [HttpGet("storage-details/{id}")]
         public async Task<IActionResult> GetStorageDetails(long id)
         {
@@ -63,6 +76,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
             });
         }
 
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
         [HttpPost("set-status")]
         public async Task<IActionResult> Post([FromBody]SetSupplierStatus model)
         {
@@ -70,6 +84,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
             return Ok();
         }
 
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
         [HttpPost("create-account")]
         public async Task<IActionResult> CreateAccount([FromBody] CreateSupplierAccount model)
         {
@@ -81,6 +96,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
             return Ok();
         }
 
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]SupplierBindingModel model)
         {
@@ -88,6 +104,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
             return Ok(_mapper.Map<SupplierBindingModel>(supplier));
         }
 
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] SupplierBindingModel model)
         {

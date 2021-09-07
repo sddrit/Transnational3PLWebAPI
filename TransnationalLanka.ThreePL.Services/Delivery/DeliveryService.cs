@@ -42,13 +42,19 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
             _environment = environment;
         }
 
-        public async Task<List<DeliveryStat>> GetTodayDeliveryStat(long? supplierId = null)
+        public async Task<List<DeliveryStat>> GetTodayDeliveryStat(long? supplierId = null, long[] wareHouses = null)
         {
             var query = _unitOfWork.DeliveryRepository.GetAll();
 
             if (supplierId.HasValue)
             {
                 query = query.Where(d => d.SupplierId == supplierId);
+            }
+
+            if (wareHouses != null && wareHouses.Any())
+            {
+                query = query.Where(d =>
+                    d.WareHouseId == null || (d.WareHouseId.HasValue && wareHouses.Contains(d.WareHouseId.Value)));
             }
 
             DateTime now = DateTime.Now.Date;
@@ -81,13 +87,19 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
             return result;
         }
 
-        public async Task<List<DayDeliveryStat>> GetMonthlyDeliveryStat(long? supplierId = null)
+        public async Task<List<DayDeliveryStat>> GetMonthlyDeliveryStat(long? supplierId = null, long[] wareHouses = null)
         {
             var query = _unitOfWork.DeliveryRepository.GetAll();
 
             if (supplierId.HasValue)
             {
                 query = query.Where(d => d.SupplierId == supplierId);
+            }
+
+            if (wareHouses != null && wareHouses.Any())
+            {
+                query = query.Where(d =>
+                    d.WareHouseId == null || (d.WareHouseId.HasValue && wareHouses.Contains(d.WareHouseId.Value)));
             }
 
             DateTime now = DateTime.Now;
@@ -383,8 +395,8 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
 
                 foreach (var deliveryItem in delivery.DeliveryItems)
                 {
-                    await _stockService.AdjustStock(warehouseId, deliveryItem.ProductId, deliveryItem.UnitCost,
-                        -deliveryItem.Quantity, null, $"Delivery - {delivery.DeliveryNo}");
+                    await _stockService.AdjustStock(StockAdjustmentType.Out, warehouseId, deliveryItem.ProductId, deliveryItem.UnitCost,
+                        deliveryItem.Quantity, null, $"Delivery - {delivery.DeliveryNo}");
                 }
 
                 foreach (var deliveryTracking in delivery.DeliveryTrackings)
@@ -466,7 +478,7 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
                 {
                     foreach (var trackingItems in deliveryTracking.DeliveryTrackingItems)
                     {
-                        await _stockService.AdjustReturnStock(delivery.WareHouseId.Value, trackingItems.ProductId,
+                        await _stockService.AdjustStock(StockAdjustmentType.DispatchReturnIn, delivery.WareHouseId.Value, trackingItems.ProductId,
                             trackingItems.UnitCost,
                             trackingItems.Quantity, null, $"Delivery Return - {delivery.DeliveryNo} #Tracking {deliveryTracking.TrackingNumber}");
                     }

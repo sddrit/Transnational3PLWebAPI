@@ -14,6 +14,13 @@ namespace TransnationalLanka.ThreePL.WebApi.Models.WareHouse
         public WareHouseAddressBindingModel Address { get; set; }
         [Required]
         public bool Active { get; set; }
+        [Required]
+        public decimal Height { get; set; }
+        [Required]
+        public decimal Width { get; set; }
+        [Required]
+        public decimal Length { get; set; }
+        public decimal StorageCapacity { get; set; }
 
     }
 

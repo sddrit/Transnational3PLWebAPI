@@ -3,8 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TransnationalLanka.ThreePL.WebApi.Models.Stock
 {
-    public class TransferReturnStockBindingModel
+    public class TransferStockBindingModel
     {
+        [Required] 
+        public string TransferType { get; set; }
         [Required]
         public long WareHouseId { get; set; }
         [Required] 
@@ -14,6 +16,10 @@ namespace TransnationalLanka.ThreePL.WebApi.Models.Stock
         public DateTime? ExpiredDate { get; set; }
         [Required]
         public decimal Quantity { get; set; }
+        [Required] 
+        public decimal DamageQuantity { get; set; }
+        [Required] 
+        public string TrackingNumber { get; set; }
         [Required]
         public string Note { get; set; }
     }
