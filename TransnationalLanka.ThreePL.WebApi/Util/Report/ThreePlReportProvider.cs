@@ -28,7 +28,8 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.Report
                 new MonthlyReconciliationReportGenerator(_reportService),
                 new MonthlySalesReportGenerator(_reportService),
                 new SellerWiseItemSummeryReport(_reportService),
-                new StockReorderReportGenerator(_reportService)
+                new StockReorderReportGenerator(_reportService),
+                new WaybillReportGenerator(_reportService)
             };
 
             string[] parts = url.Split("?");
