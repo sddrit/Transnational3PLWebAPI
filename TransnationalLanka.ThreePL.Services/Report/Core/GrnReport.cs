@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TransnationalLanka.ThreePL.Services.Report.Core
 {
@@ -10,6 +7,7 @@ namespace TransnationalLanka.ThreePL.Services.Report.Core
     {
         public DateTimeOffset Date { get; set; }
         public string WareHouse { get; set; }
+        public string GrnType { get; set; }
         public string WareHouseName { get; set; }
         public string SupplierName { get; set; }
         public string SupplierCode { get; set; }

@@ -32,19 +32,19 @@ namespace TransnationalLanka.ThreePL.WebApi.Reports {
             this.label1 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("label1");
             this.label6 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("label6");
             this.Detail1 = reportInitializer.GetControl<DevExpress.XtraReports.UI.DetailBand>("Detail1");
+            this.GroupHeader1 = reportInitializer.GetControl<DevExpress.XtraReports.UI.GroupHeaderBand>("GroupHeader1");
             this.table1 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTable>("table1");
             this.tableRow1 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableRow>("tableRow1");
             this.tableCell1 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell1");
             this.tableCell2 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell2");
             this.tableCell3 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell3");
-            this.GroupHeader1 = reportInitializer.GetControl<DevExpress.XtraReports.UI.GroupHeaderBand>("GroupHeader1");
+            this.tableCell7 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell7");
+            this.tableCell8 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell8");
             this.table2 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTable>("table2");
             this.tableRow2 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableRow>("tableRow2");
             this.tableCell4 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell4");
             this.tableCell5 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell5");
             this.tableCell6 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell6");
-            this.tableCell7 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell7");
-            this.tableCell8 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell8");
             this.tableCell9 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell9");
             this.tableCell10 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell10");
 
@@ -78,6 +78,21 @@ namespace TransnationalLanka.ThreePL.WebApi.Reports {
         private DevExpress.XtraReports.UI.XRLabel label1;
         private DevExpress.XtraReports.UI.XRLabel label6;
         private DevExpress.XtraReports.UI.DetailBand Detail1;
+        private DevExpress.XtraReports.UI.GroupHeaderBand GroupHeader1;
+        private DevExpress.XtraReports.UI.XRTable table1;
+        private DevExpress.XtraReports.UI.XRTableRow tableRow1;
+        private DevExpress.XtraReports.UI.XRTableCell tableCell1;
+        private DevExpress.XtraReports.UI.XRTableCell tableCell2;
+        private DevExpress.XtraReports.UI.XRTableCell tableCell3;
+        private DevExpress.XtraReports.UI.XRTableCell tableCell7;
+        private DevExpress.XtraReports.UI.XRTableCell tableCell8;
+        private DevExpress.XtraReports.UI.XRTable table2;
+        private DevExpress.XtraReports.UI.XRTableRow tableRow2;
+        private DevExpress.XtraReports.UI.XRTableCell tableCell4;
+        private DevExpress.XtraReports.UI.XRTableCell tableCell5;
+        private DevExpress.XtraReports.UI.XRTableCell tableCell6;
+        private DevExpress.XtraReports.UI.XRTableCell tableCell9;
+        private DevExpress.XtraReports.UI.XRTableCell tableCell10;
         private DevExpress.DataAccess.ObjectBinding.ObjectDataSource sellerWiseItemSummaryDataSource;
         private DevExpress.XtraReports.UI.XRControlStyle Title;
         private DevExpress.XtraReports.UI.XRControlStyle DetailCaption1;
@@ -86,20 +101,5 @@ namespace TransnationalLanka.ThreePL.WebApi.Reports {
         private DevExpress.XtraReports.UI.XRControlStyle DetailData2;
         private DevExpress.XtraReports.UI.XRControlStyle DetailData3_Odd;
         private DevExpress.XtraReports.UI.XRControlStyle PageInfo;
-        private DevExpress.XtraReports.UI.XRTable table1;
-        private DevExpress.XtraReports.UI.XRTableRow tableRow1;
-        private DevExpress.XtraReports.UI.XRTableCell tableCell1;
-        private DevExpress.XtraReports.UI.XRTableCell tableCell2;
-        private DevExpress.XtraReports.UI.XRTableCell tableCell3;
-        private DevExpress.XtraReports.UI.GroupHeaderBand GroupHeader1;
-        private DevExpress.XtraReports.UI.XRTable table2;
-        private DevExpress.XtraReports.UI.XRTableRow tableRow2;
-        private DevExpress.XtraReports.UI.XRTableCell tableCell4;
-        private DevExpress.XtraReports.UI.XRTableCell tableCell5;
-        private DevExpress.XtraReports.UI.XRTableCell tableCell6;
-        private DevExpress.XtraReports.UI.XRTableCell tableCell7;
-        private DevExpress.XtraReports.UI.XRTableCell tableCell8;
-        private DevExpress.XtraReports.UI.XRTableCell tableCell9;
-        private DevExpress.XtraReports.UI.XRTableCell tableCell10;
     }
 }

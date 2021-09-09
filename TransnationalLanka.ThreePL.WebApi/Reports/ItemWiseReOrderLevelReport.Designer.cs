@@ -22,7 +22,6 @@ namespace TransnationalLanka.ThreePL.WebApi.Reports {
             this.DetailReport = reportInitializer.GetControl<DevExpress.XtraReports.UI.DetailReportBand>("DetailReport");
             this.pageInfo1 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRPageInfo>("pageInfo1");
             this.pageInfo2 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRPageInfo>("pageInfo2");
-            this.label5 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("label5");
             this.label4 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("label4");
             this.label3 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("label3");
             this.label2 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("label2");
@@ -66,7 +65,6 @@ namespace TransnationalLanka.ThreePL.WebApi.Reports {
         private DevExpress.XtraReports.UI.DetailReportBand DetailReport;
         private DevExpress.XtraReports.UI.XRPageInfo pageInfo1;
         private DevExpress.XtraReports.UI.XRPageInfo pageInfo2;
-        private DevExpress.XtraReports.UI.XRLabel label5;
         private DevExpress.XtraReports.UI.XRLabel label4;
         private DevExpress.XtraReports.UI.XRLabel label3;
         private DevExpress.XtraReports.UI.XRLabel label2;

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TransnationalLanka.ThreePL.Core.Enums;
+using TransnationalLanka.ThreePL.Core.Enums.Core;
 using TransnationalLanka.ThreePL.Dal;
 using TransnationalLanka.ThreePL.Services.Delivery;
 using TransnationalLanka.ThreePL.Services.Grn;
@@ -93,9 +94,14 @@ namespace TransnationalLanka.ThreePL.Services.Report
                 {
                     Code = p.Code,
                     UnitPrice = p.UnitPrice,
-                    Quantity = p.Stocks.Sum(s => s.Quantity),
+                    Quantity = p.Stocks.Where(s => wareHouseId.HasValue && s.WareHouseId == wareHouseId.Value || !wareHouseId.HasValue)
+                        .Sum(s => s.Quantity),
                     Description = p.Description,
-                    UnitOfMeasure = p.MassUnit.ToString()
+                    UnitOfMeasure = p.MassUnit.ToString(),
+                    Value = p.StockAdjustments
+                        .Where(a => wareHouseId.HasValue && a.WareHouseId == wareHouseId.Value || !wareHouseId.HasValue)
+                        .Where(a => a.Type == StockAdjustmentType.In || a.Type == StockAdjustmentType.Out)
+                        .Sum(a => a.Type == StockAdjustmentType.In? a.Quantity * a.UnitCost: -(a.Quantity * a.UnitCost))
                 }).ToListAsync()
             };
         }
@@ -111,6 +117,7 @@ namespace TransnationalLanka.ThreePL.Services.Report
             {
                 GrnNo = grn.GrnNo,
                 Date = grn.Created,
+                GrnType = grn.Type.GetDescription(),
                 PurchaseOrderNumber = purchaseOrder?.PoNumber,
                 SupplierName = supplier.SupplierName,
                 SupplierCode = supplier.Code,
@@ -178,7 +185,6 @@ namespace TransnationalLanka.ThreePL.Services.Report
             var supplier = await _supplierService.GetSupplierById(po.SupplierId);
             var wareHouse = await _wareHouseService.GetWareHouseById((long)po.WareHouseId);
 
-
             return new PurchaseOrderReport()
             {
 
@@ -200,10 +206,8 @@ namespace TransnationalLanka.ThreePL.Services.Report
             };
         }
 
-        public async Task<InventoryMovementReport> GetInventoryMovementReport(long? wareHouseId, DateTime fromDate, DateTime toDate, long? productId)
+        public async Task<InventoryMovementReport> GetInventoryMovementReport(long productId, DateTime fromDate, DateTime toDate, long? wareHouseId)
         {
-            string supplierName = null;
-            string supplierCode = null;
             string wareHouseName = null;
             string wareHouseCode = null;
             string wareHouseAddress1 = null;
@@ -218,8 +222,10 @@ namespace TransnationalLanka.ThreePL.Services.Report
                 wareHouseCode = wareHouse.Code;
             }
 
+            var product = await _productService.GetProductById(productId);
+
             var query = _unitOfWork.ProductStockAdjustmentRepository.GetAll()
-                .Where(p => p.Created >= fromDate && p.Created <= toDate)
+                .Where(p => p.ProductId == productId && p.Created >= fromDate && p.Created <= toDate)
                 .AsQueryable();
 
 
@@ -228,26 +234,25 @@ namespace TransnationalLanka.ThreePL.Services.Report
                 query = query.Where(p => p.WareHouseId == wareHouseId);
             }
 
-            if (productId.HasValue)
-            {
-                query = query.Where(p => p.ProductId == productId);
-            }
-
             return new InventoryMovementReport()
             {
-                SupplierName = supplierName,
+                From = fromDate,
+                To = toDate,
                 WareHouseCode = wareHouseCode,
                 WareHouseName = wareHouseName,
-                SupplierCode = supplierCode,
                 WareHouseAddressLine1 = wareHouseAddress1,
                 WareHouseAddressLine2 = wareHouseAddress2,
+                ProductCode = product.Code,
+                ProductName = product.Name,
+                UnitOfMeasure = product.UnitOfMeasure?.ToString(),
                 InventoryMovementReportItems = await query.Select(p => new InventoryMovementReportItem()
                 {
-                    Code = p.Product.Code,
-                    UnitPrice = p.Product.UnitPrice,
+                    Date = p.Created,
+                    UnitPrice = p.UnitCost,
+                    Note = p.Note,
                     Quantity = p.Quantity,
-                    Description = p.Product.Description,
-                    UnitOfMeasure = p.Product.MassUnit.ToString()
+                    TypeName = p.Type.GetDescription(),
+                    Type = p.Type
                 }).ToListAsync()
             };
         }
@@ -282,7 +287,14 @@ namespace TransnationalLanka.ThreePL.Services.Report
         {
             var wareHouse = await _wareHouseService.GetWareHouseById(wareHouseId);
             var supplier = await _supplierService.GetSupplierById(supplierId);
-            var product = await _productService.GetProductBySupplierId(supplierId);
+
+            var query = _unitOfWork.ProductRepository.GetAll()
+                .Where(p => p.Active && p.Supplier.Active)
+                .Include(p => p.Stocks)
+                .AsQueryable();
+
+            query = query.Where(p => p.SupplierId == supplierId);
+            query = query.Where(p => p.Stocks.Any(s => s.WareHouseId == wareHouseId));
 
             return new SellerWiseItemReport()
             {
@@ -292,23 +304,76 @@ namespace TransnationalLanka.ThreePL.Services.Report
                 WareHouseCode = wareHouse.Code,
                 SupplierCode = supplier.Code,
                 SupplierName = supplier.SupplierName,
-                SellerWiseItemReportDetails = product.Select(item => new SellerWiseItemReportDetail()
+                SellerWiseItemReportDetails = query.Select(item => new SellerWiseItemReportDetail()
                 {
                     Code = item.Code,
                     Description = item.Description,
-                    Quantity = 2, //how to calculate this?
-                    UnitOfMeasure = item.MassUnit.ToString(),
+                    Quantity = item.Stocks.Where(s => s.WareHouseId == wareHouseId).Sum(s => s.Quantity),
+                    UnitOfMeasure = item.UnitOfMeasure.Code,
+                    Value = item.StockAdjustments
+                        .Where(a => a.WareHouseId == wareHouseId && (a.Type == StockAdjustmentType.In || a.Type == StockAdjustmentType.Out))
+                        .Sum(a => a.Type == StockAdjustmentType.In ? a.Quantity * a.UnitCost : -(a.Quantity * a.UnitCost)),
                     UnitPrice = item.UnitPrice,
-
                 }).ToList()
-
             };
         }
 
         public async Task<MonthlyReconsilationReport> GetMonthlyReconsilationReport(DateTime fromDate, DateTime toDate, long wareHouseId)
         {
-            //logic to be implemented
+            var from = fromDate;
+            var to = toDate.AddDays(1);
+
             var wareHouse = await _wareHouseService.GetWareHouseById(wareHouseId);
+
+            var oldTotalReceivedGrn = await _unitOfWork.GoodReceiveNoteRepository.GetAll()
+                .Where(g => g.Created < from && g.Type == GrnType.Received)
+                .SelectMany(g => g.GoodReceivedNoteItems)
+                .SumAsync(i => i.UnitCost * i.Quantity);
+
+            var oldReturnGrn = await _unitOfWork.GoodReceiveNoteRepository.GetAll()
+                .Where(g => g.Created < from && g.Type == GrnType.Return)
+                .SelectMany(g => g.GoodReceivedNoteItems)
+                .SumAsync(i => i.UnitCost * i.Quantity);
+
+            var oldReturnFromCustomer = await _unitOfWork.ProductStockAdjustmentRepository.GetAll()
+                .Where(a => a.Created < from && a.Type == StockAdjustmentType.SalesReturnIn)
+                .SumAsync(a => a.UnitCost * a.Quantity);
+
+            var oldDamageGoods = await _unitOfWork.ProductStockAdjustmentRepository.GetAll()
+                .Where(a => a.Created < from && a.Type == StockAdjustmentType.DamageIn)
+                .SumAsync(a => a.UnitCost * a.Quantity);
+
+            var oldTotalSales = await _unitOfWork.DeliveryRepository.GetAll()
+                .Where(d => d.DeliveryDate < from && d.DeliveryStatus != DeliveryStatus.Return)
+                .SelectMany(d => d.DeliveryItems)
+                .SumAsync(i => i.Quantity * i.UnitCost);
+
+            var openingBalance = oldTotalReceivedGrn - oldReturnGrn - oldTotalSales + oldReturnFromCustomer -
+                                 oldDamageGoods;
+
+            var currentTotalReceivedGrn = await _unitOfWork.GoodReceiveNoteRepository.GetAll()
+                .Where(g => g.Created >= from && g.Created < to && g.Type == GrnType.Received)
+                .SelectMany(g => g.GoodReceivedNoteItems)
+                .SumAsync(i => i.UnitCost * i.Quantity);
+
+            var currentTotalReturnGrn = await _unitOfWork.GoodReceiveNoteRepository.GetAll()
+                .Where(g => g.Created < from && g.Type == GrnType.Return)
+                .SelectMany(g => g.GoodReceivedNoteItems)
+                .SumAsync(i => i.UnitCost * i.Quantity);
+
+            var currentTotalSales = await _unitOfWork.DeliveryRepository.GetAll()
+                .Where(d => d.DeliveryDate >= from && d.DeliveryDate < to &&
+                            d.DeliveryStatus != DeliveryStatus.Return)
+                .SelectMany(d => d.DeliveryItems)
+                .SumAsync(i => i.Quantity * i.UnitCost);
+
+            var currentDamagedGoods = await _unitOfWork.ProductStockAdjustmentRepository.GetAll()
+                .Where(a => a.Created >= from && a.Created < to && a.Type == StockAdjustmentType.DamageIn)
+                .SumAsync(a => a.UnitCost * a.Quantity);
+
+            var currentReturnFromCustomer = await _unitOfWork.ProductStockAdjustmentRepository.GetAll()
+                .Where(a => a.Created >= from && a.Created < to && a.Type == StockAdjustmentType.SalesReturnIn)
+                .SumAsync(a => a.UnitCost * a.Quantity);
 
             return new MonthlyReconsilationReport()
             {
@@ -317,27 +382,39 @@ namespace TransnationalLanka.ThreePL.Services.Report
                 WareHouseAddressLine1 = wareHouse.Address.AddressLine1,
                 WareHouseAddressLine2 = wareHouse.Address.AddressLine2,
                 WareHouseName = wareHouse.Name,
-
-                //logic to be implemented
-                OpeningBalance = 5000000,
-                TotalReceivedGRN = 1500000,
-                TotalSales = -2500000,
-                DamagedGoods = -5400,
-                ReturnsFromCustomer = -15000
-
-
+                OpeningBalance = openingBalance,
+                TotalReceivedGRN = currentTotalReceivedGrn,
+                TotalReturnGRN = -currentTotalReturnGrn,
+                TotalSales = -currentTotalSales,
+                DamagedGoods = -currentDamagedGoods,
+                ReturnsFromCustomer = currentReturnFromCustomer
             };
         }
 
         public async Task<MonthlySalesReport> GetMonthlySalesReport(DateTime fromDate, DateTime toDate, long wareHouseId)
         {
-            //logic to be checked??? need to do group by?
+            var from = fromDate;
+            var to = toDate.AddDays(1);
+
             var wareHouse = await _wareHouseService.GetWareHouseById(wareHouseId);
 
-            var delivery = await _deliveryService.GetDeliveryByDateRange(fromDate, toDate);
-
-            var completedDeliveries = delivery
-                .SelectMany(x => x.DeliveryTrackings.Where(x => x.Status == TrackingStatus.Completed)).SelectMany(x => x.DeliveryTrackingItems).ToList();
+            var monthlySalesReportItems = await _unitOfWork.DeliveryItemRepository.GetAll()
+                .Include(i => i.Delivery)
+                .Where(i =>
+                    i.Delivery.WareHouseId.Equals(wareHouseId) &&
+                            i.Delivery.DeliveryStatus != DeliveryStatus.Return &&
+                            i.Delivery.DeliveryDate >= from &&
+                            i.Delivery.DeliveryDate <= to)
+                .Select(i => new MonthlySalesReportItem()
+                {
+                    Code = i.Product.Code,
+                    UnitPrice = i.UnitCost,
+                    Quantity = i.Quantity,
+                    Name = i.Product.Name,
+                    UnitOfMeasure = i.Product.UnitOfMeasure.Code,
+                    Date = i.Delivery.DeliveryDate,
+                    DeliveryNumber = i.Delivery.DeliveryNo
+                }).ToListAsync();
 
             return new MonthlySalesReport()
             {
@@ -347,16 +424,7 @@ namespace TransnationalLanka.ThreePL.Services.Report
                 WareHouseName = wareHouse.Name,
                 FromDate = fromDate,
                 ToDate = toDate,
-                MonthlySalesReportItems = completedDeliveries.Select(item => new MonthlySalesReportItem()
-                {
-                    Code = item.Product.Code,
-                    Date = item.Created, //date not sure??
-                    Description = item.Product.Name,
-                    Quantity = item.Quantity,
-                    UnitPrice = item.UnitCost,
-                    UnitOfMeasure = item.Product.MassUnit.ToString()
-
-                }).ToList()
+                MonthlySalesReportItems = monthlySalesReportItems
             };
 
         }
@@ -419,29 +487,36 @@ namespace TransnationalLanka.ThreePL.Services.Report
 
         }
 
-        public async Task<ItemWiseReOrderLevelReport> GetReOrderLevelReport(long wareHouseId)
+        public async Task<ItemWiseReOrderLevelReport> GetReOrderLevelReport(long? supplierId)
         {
-            //to write the logic
-            var wareHouse = await _wareHouseService.GetWareHouseById(wareHouseId);
+            Dal.Entities.Supplier supplier = null;
 
-            var product = _productService.GetProducts();
+            if (supplierId.HasValue)
+            {
+                supplier = await _supplierService.GetSupplierById(supplierId.Value);
+            }
+
+            var query = _unitOfWork.ProductRepository.GetAll();
+
+            if (supplierId.HasValue)
+            {
+                query = query.Where(p => p.SupplierId == supplierId.Value);
+            }
+
+            query = query.Where(p => p.ReorderLevel >= p.Stocks.Sum(s => s.Quantity));
 
             return new ItemWiseReOrderLevelReport()
             {
-                WareHouseCode = wareHouse.Code,
-                WareHouseAddressLine1 = wareHouse.Address.AddressLine1,
-                WareHouseAddressLine2 = wareHouse.Address.AddressLine2,
-                WareHouseName = wareHouse.Name,
-                ItemWiseReOrderLevelDetails = product.Select(item => new ItemWiseReOrderLevelDetailReport()
+                SupplierCode = supplier?.Code,
+                SupplierName = supplier?.SupplierName,
+                ItemWiseReOrderLevelDetails = query.Select(item => new ItemWiseReOrderLevelDetailReport()
                 {
                     Code = item.Code,
-                    Description = item.Name,
-                    UnitOfMeasure = item.MassUnit.ToString(),
-                    ReOrderLevel = 100,
-                    StockInHand = 95
-
+                    Name = item.Name,
+                    UnitOfMeasure = item.UnitOfMeasure.Code,
+                    ReOrderLevel = item.ReorderLevel,
+                    StockInHand = item.Stocks.Sum(s => s.Quantity)
                 }).ToList()
-
             };
         }
     }

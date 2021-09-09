@@ -22,6 +22,6 @@ namespace TransnationalLanka.ThreePL.Services.Report.Core
         public string UnitOfMeasure { get; set; }
         public decimal UnitPrice { get; set; }
         public decimal Quantity { get; set; }
-        public decimal Value => Quantity * UnitPrice;
+        public decimal Value { get; set; }
     }
 }

@@ -65,6 +65,8 @@ namespace TransnationalLanka.ThreePL.WebApi.Reports {
             this.label8 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("label8");
             this.line1 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLine>("line1");
             this.label19 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("label19");
+            this.label20 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("label20");
+            this.label21 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("label21");
 
             // Data Sources
             this.GrnDataSource = reportInitializer.GetDataSource<DevExpress.DataAccess.ObjectBinding.ObjectDataSource>("GrnDataSource");
@@ -141,5 +143,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Reports {
         private DevExpress.XtraReports.UI.XRControlStyle DetailData3_Odd;
         private DevExpress.XtraReports.UI.XRControlStyle PageInfo;
         private DevExpress.XtraReports.UI.CalculatedField Amount;
+        private DevExpress.XtraReports.UI.XRLabel label20;
+        private DevExpress.XtraReports.UI.XRLabel label21;
     }
 }

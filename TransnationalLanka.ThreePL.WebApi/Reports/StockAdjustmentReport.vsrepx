@@ -23,7 +23,7 @@
       <Controls>
         <Item1 Ref="14" ControlType="XRLabel" Name="label8" Multiline="true" Text="Supplier Code:" SizeF="100,23" LocationFloat="0,174.500046" Padding="2,2,0,0,100" />
         <Item2 Ref="15" ControlType="XRLabel" Name="label9" Multiline="true" Text="Supplier Name:" SizeF="100,23" LocationFloat="0,198.000015" Padding="2,2,0,0,100" />
-        <Item3 Ref="16" ControlType="XRLabel" Name="label7" Multiline="true" Text="label7" SizeF="397.500031,23" LocationFloat="106.000038,198" Padding="2,2,0,0,100">
+        <Item3 Ref="16" ControlType="XRLabel" Name="label7" Multiline="true" Text="label7" SizeF="250.580765,23" LocationFloat="106.000046,198.000015" Padding="2,2,0,0,100">
           <ExpressionBindings>
             <Item1 Ref="17" EventName="BeforePrint" PropertyName="Text" Expression="[SupplierName]" />
           </ExpressionBindings>
@@ -33,26 +33,26 @@
             <Item1 Ref="19" EventName="BeforePrint" PropertyName="Text" Expression="[SupplierCode]" />
           </ExpressionBindings>
         </Item4>
-        <Item5 Ref="20" ControlType="XRLabel" Name="label5" Multiline="true" Text="label5" SizeF="627,23" LocationFloat="0,123.000015" Padding="6,6,0,0,100">
+        <Item5 Ref="20" ControlType="XRLabel" Name="label5" Multiline="true" Text="label5" SizeF="357.08078,23" LocationFloat="0,123.000015" Padding="6,6,0,0,100">
           <ExpressionBindings>
             <Item1 Ref="21" EventName="BeforePrint" PropertyName="Text" Expression="[WareHouseAddressLine2]" />
           </ExpressionBindings>
           <StylePriority Ref="22" UsePadding="false" />
         </Item5>
-        <Item6 Ref="23" ControlType="XRLabel" Name="label4" Multiline="true" Text="label4" SizeF="626.500061,23" LocationFloat="0,100.000015" Padding="6,6,0,0,100">
+        <Item6 Ref="23" ControlType="XRLabel" Name="label4" Multiline="true" Text="label4" SizeF="356.580872,23" LocationFloat="0,100.000031" Padding="6,6,0,0,100">
           <ExpressionBindings>
             <Item1 Ref="24" EventName="BeforePrint" PropertyName="Text" Expression="[WareHouseAddressLine1]" />
           </ExpressionBindings>
           <StylePriority Ref="25" UsePadding="false" />
         </Item6>
-        <Item7 Ref="26" ControlType="XRLabel" Name="label3" Multiline="true" Text="label3" SizeF="626.500061,23" LocationFloat="0,77.00001" Padding="6,6,0,0,100">
+        <Item7 Ref="26" ControlType="XRLabel" Name="label3" Multiline="true" Text="label3" SizeF="356.580872,23" LocationFloat="0,77.0000153" Padding="6,6,0,0,100">
           <ExpressionBindings>
             <Item1 Ref="27" EventName="BeforePrint" PropertyName="Text" Expression="[WareHouseName]" />
           </ExpressionBindings>
           <StylePriority Ref="28" UsePadding="false" />
         </Item7>
-        <Item8 Ref="29" ControlType="XRLabel" Name="label2" Text="Pronto Lanka Private Limited" SizeF="627,24.194334" LocationFloat="0,40.8333321" StyleName="Title" />
-        <Item9 Ref="30" ControlType="XRLabel" Name="label1" Text="Stock Adjustment Report" SizeF="627,24.194334" LocationFloat="0,0" StyleName="Title" />
+        <Item8 Ref="29" ControlType="XRLabel" Name="label2" Text="Pronto Lanka Private Limited" SizeF="356.5808,24.1943321" LocationFloat="0,40.8333473" StyleName="Title" />
+        <Item9 Ref="30" ControlType="XRLabel" Name="label1" Text="Stock Adjustment Report" SizeF="356.5808,24.194334" LocationFloat="0,0" StyleName="Title" />
       </Controls>
     </Item3>
     <Item4 Ref="31" ControlType="DetailBand" Name="Detail" HeightF="0" KeepTogether="true" />
