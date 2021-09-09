@@ -150,7 +150,7 @@
         <Item1 Ref="71" ControlType="XRLabel" Name="label21" Multiline="true" CanGrow="false" Text="GRN Type:" TextAlignment="TopLeft" SizeF="115,22.9999981" LocationFloat="0,73" Padding="6,6,0,0,100">
           <StylePriority Ref="72" UsePadding="false" UseTextAlignment="false" />
         </Item1>
-        <Item2 Ref="73" ControlType="XRLabel" Name="label20" Multiline="true" Text="label20" SizeF="209.999908,23" LocationFloat="115,73" Padding="2,2,0,0,96">
+        <Item2 Ref="73" ControlType="XRLabel" Name="label20" Multiline="true" Text="label20" SizeF="209.999908,23" LocationFloat="115,73" Padding="2,2,0,0,100">
           <ExpressionBindings>
             <Item1 Ref="74" EventName="BeforePrint" PropertyName="Text" Expression="[GrnType]" />
           </ExpressionBindings>
@@ -185,7 +185,7 @@
         <Item9 Ref="90" ControlType="XRLabel" Name="label11" Multiline="true" CanGrow="false" Text="Date:" TextAlignment="TopLeft" SizeF="62.50006,22.9999981" LocationFloat="562.5,0" Padding="2,2,0,0,100">
           <StylePriority Ref="91" UsePadding="false" UseTextAlignment="false" />
         </Item9>
-        <Item10 Ref="92" ControlType="XRLabel" Name="label6" TextFormatString="{0:dd/MM/yyyy}" Multiline="true" Text="label6" TextAlignment="TopLeft" SizeF="133.333435,23" LocationFloat="625,0" Padding="6,6,0,0,100" CanPublish="false">
+        <Item10 Ref="92" ControlType="XRLabel" Name="label6" TextFormatString="{0:MM/dd/yy}" Multiline="true" Text="label6" TextAlignment="TopLeft" SizeF="133.333435,23" LocationFloat="625,0" Padding="6,6,0,0,100" CanPublish="false">
           <ExpressionBindings>
             <Item1 Ref="93" EventName="BeforePrint" PropertyName="Text" Expression="[Date]" />
           </ExpressionBindings>

@@ -86,7 +86,7 @@
                 </Item1>
                 <Item2 Ref="43" ControlType="XRTableCell" Name="tableCell16" Weight="1.5000001230547579" Multiline="true" Text="tableCell16" Dpi="254" Borders="Left, Right, Bottom">
                   <Controls>
-                    <Item1 Ref="44" ControlType="XRPageInfo" Name="pageInfo1" PageInfo="DateTime" TextFormatString="{0:dd/MM/yyyy HH:mm:ss}" SizeF="483.299957,48.68335" LocationFloat="3.05175781E-05,0" Dpi="254" StyleName="PageInfo" Font="Arial, 8.25pt" ForeColor="Black" Padding="5,5,0,0,254" BorderColor="Transparent" Borders="Left, Right, Bottom">
+                    <Item1 Ref="44" ControlType="XRPageInfo" Name="pageInfo1" PageInfo="DateTime" TextFormatString="{0:M/d/yyyy HH:mm:ss}" SizeF="483.299957,48.68335" LocationFloat="3.05175781E-05,0" Dpi="254" StyleName="PageInfo" Font="Arial, 8.25pt" ForeColor="Black" Padding="5,5,0,0,254" BorderColor="Transparent" Borders="Left, Right, Bottom">
                       <StylePriority Ref="45" UseFont="false" UseForeColor="false" UsePadding="false" UseBorderColor="false" UseBorders="false" />
                     </Item1>
                   </Controls>
