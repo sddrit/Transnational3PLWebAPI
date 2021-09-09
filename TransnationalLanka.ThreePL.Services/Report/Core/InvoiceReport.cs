@@ -22,6 +22,8 @@ namespace TransnationalLanka.ThreePL.Services.Report.Core
         public string SupplierName { get; set; }
         public string SupplierAddressLine1 { get; set; }
         public string SupplierAddressLine2 { get; set; }
+        public string SupplierVatNumber { get; set; }
+        public string SupplierSVatNumber { get; set; }
 
         public List<InvoiceReportItem> InvoiceReportItems { get; set; }
 
