@@ -31,12 +31,12 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
         }
 
         [HttpGet]
-        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE, Roles.SUPPLIER_ROLE })]
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE, Roles.SUPPLIER_ROLE, Roles.WAREHOUSE_MANAGER_ROLE })]
         public async Task<LoadResult> Get(DataSourceLoadOptions loadOptions)
         {
             var user = await _accountService.GetUser(User);
             var invoiceQuery = _invoiceService.GetInvoices();
-
+            
             if (User.IsInRole(Roles.SUPPLIER_ROLE))
             {
                 invoiceQuery = invoiceQuery.Where(i => i.SupplierId == user.SupplierId);
@@ -47,7 +47,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE, Roles.SUPPLIER_ROLE })]
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE, Roles.SUPPLIER_ROLE, Roles.WAREHOUSE_MANAGER_ROLE })]
         public async Task<IActionResult> Get(long id)
         {
             var user = await _accountService.GetUser(User);
@@ -67,7 +67,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
         }
 
         [HttpPost("mark-as-paid")]
-        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE, Roles.WAREHOUSE_MANAGER_ROLE })]
         public async Task<IActionResult> MarkAsPaid([FromBody] MarkAsPaidInvoiceBindingModel model)
         {
             await _invoiceService.MarkAsPaid(model.Id);
@@ -75,7 +75,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
         }
 
         [HttpPut("{id}")]
-        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE, Roles.WAREHOUSE_MANAGER_ROLE })]
         public async Task<IActionResult> UpdateManualCharges(long id, List<InvoiceItemBindingModel> model)
         {
             var invoice =

@@ -183,7 +183,8 @@ namespace TransnationalLanka.ThreePL.Services.Report
         {
             var po = await _purchaseOrderService.GetPurchaseOrderById(id);
             var supplier = await _supplierService.GetSupplierById(po.SupplierId);
-            var wareHouse = await _wareHouseService.GetWareHouseById((long)po.WareHouseId);
+
+            var wareHouse = po.WareHouseId.HasValue? await _wareHouseService.GetWareHouseById((long)po.WareHouseId): null;
 
             return new PurchaseOrderReport()
             {
@@ -192,10 +193,10 @@ namespace TransnationalLanka.ThreePL.Services.Report
                 PurchaseOrderNumber = po.PoNumber,
                 SupplierName = supplier.SupplierName,
                 SupplierCode = supplier.Code,
-                WareHouse = wareHouse.Code,
-                WareHouseName = wareHouse.Name,
-                WareHouseAddressLine1 = wareHouse.Address.AddressLine1,
-                WareHouseAddressLine2 = wareHouse.Address.AddressLine2,
+                WareHouse = wareHouse?.Code,
+                WareHouseName = wareHouse?.Name,
+                WareHouseAddressLine1 = wareHouse?.Address.AddressLine1,
+                WareHouseAddressLine2 = wareHouse?.Address.AddressLine2,
                 PurchaseOrderReportItems = po.PurchaseOrderItems.Select(item => new PurchaseOrderReportItem()
                 {
                     ProductId = item.Product.Code,
@@ -208,6 +209,9 @@ namespace TransnationalLanka.ThreePL.Services.Report
 
         public async Task<InventoryMovementReport> GetInventoryMovementReport(long productId, DateTime fromDate, DateTime toDate, long? wareHouseId)
         {
+            var from = fromDate;
+            var to = toDate.AddDays(1);
+
             string wareHouseName = null;
             string wareHouseCode = null;
             string wareHouseAddress1 = null;
@@ -225,7 +229,7 @@ namespace TransnationalLanka.ThreePL.Services.Report
             var product = await _productService.GetProductById(productId);
 
             var query = _unitOfWork.ProductStockAdjustmentRepository.GetAll()
-                .Where(p => p.ProductId == productId && p.Created >= fromDate && p.Created <= toDate)
+                .Where(p => p.ProductId == productId && p.Created >= from && p.Created <= to)
                 .AsQueryable();
 
 

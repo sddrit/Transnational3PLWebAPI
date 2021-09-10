@@ -58,7 +58,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
             return Ok(_mapper.Map<ProductBindingModel>(product));
         }
 
-        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE, Roles.WAREHOUSE_MANAGER_ROLE })]
         [HttpPost("set-status")]
         public async Task<IActionResult> Post([FromBody]SetProductStatus model)
         {
@@ -66,7 +66,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
             return Ok();
         }
 
-        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE, Roles.WAREHOUSE_MANAGER_ROLE })]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]ProductBindingModel model)
         {
@@ -74,7 +74,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
             return Ok(_mapper.Map<ProductBindingModel>(product));
         }
 
-        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE })]
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE, Roles.WAREHOUSE_MANAGER_ROLE })]
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] ProductBindingModel model)
         {
