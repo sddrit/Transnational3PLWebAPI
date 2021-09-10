@@ -76,6 +76,14 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
             });
         }
 
+        [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE, Roles.SUPPLIER_ROLE,
+            Roles.USER_ROLE, Roles.WAREHOUSE_MANAGER_ROLE })]
+        [HttpGet("get-tracking-details/{trackingNumber}")]
+        public async Task<IActionResult> GetTrackingDetails(string trackingNumber)
+        {
+            return Ok(await _deliveryService.GetTrackingDetails(trackingNumber));
+        }
+
         [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE,
             Roles.USER_ROLE, Roles.WAREHOUSE_MANAGER_ROLE })]
         [HttpGet("latest-delivery-unit-price/{productId}")]

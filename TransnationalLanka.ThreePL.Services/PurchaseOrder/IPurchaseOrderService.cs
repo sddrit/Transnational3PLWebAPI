@@ -11,6 +11,7 @@ namespace TransnationalLanka.ThreePL.Services.PurchaseOrder
         Task<Dal.Entities.PurchaseOrder> UpdatePurchaseOrder(Dal.Entities.PurchaseOrder purchaseOrder);
         Task<Dal.Entities.PurchaseOrder> GetPurchaseOrderById(long id);
         Task<Dal.Entities.PurchaseOrder> SetPurchaseOrderStatus(long purchaseOrderId, PurchaseOrderStatus status);
+        Task ThrowErrorIfPurchaseOrderPrinted(long id);
         Task<Dal.Entities.PurchaseOrder> MarkAsPrinted(long id);
         PurchaseOrderStatus GetPurchaseOrderStatus(Dal.Entities.PurchaseOrder purchaseOrder);
     }

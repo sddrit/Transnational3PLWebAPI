@@ -84,6 +84,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
         [HttpPut]
         public async Task<IActionResult> Put([FromBody]PurchaseOrderBindingModel model)
         {
+            await _purchaseOrderService.ThrowErrorIfPurchaseOrderPrinted(model.Id);
             var updatedPurchaseOrder = await _purchaseOrderService.UpdatePurchaseOrder(_mapper.Map<PurchaseOrder>(model));
             return Ok(_mapper.Map<PurchaseOrderBindingModel>(updatedPurchaseOrder));
         }

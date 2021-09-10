@@ -31,6 +31,8 @@
     <EmbeddedResource Include="Reports\WayBill.vsrepx" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Audit.EntityFramework.Identity" Version="18.1.5" />
+    <PackageReference Include="Audit.NET.SqlServer" Version="18.1.5" />
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     <PackageReference Include="DevExpress.AspNetCore.Reporting" Version="20.2.6" />

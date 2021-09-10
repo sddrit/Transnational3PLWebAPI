@@ -52,10 +52,19 @@ namespace TransnationalLanka.ThreePL.Services.WareHouse
 
             await ValidateWareHouse(warehouse);
 
+            if (_unitOfWork.WareHouseRepository.GetAll().Any(w => w.Code.ToLower() == warehouse.Code.ToLower()))
+            {
+                throw new ServiceException(new ErrorMessage[]
+                {
+                    new ErrorMessage()
+                    {
+                        Message = $"{warehouse.Code} is already exits"
+                    }
+                });
+            }
+
             _unitOfWork.WareHouseRepository.Insert(warehouse);
             await _unitOfWork.SaveChanges();
-
-            //Todo send the create new warehouse to tracking application
 
             return warehouse;
         }
@@ -68,12 +77,22 @@ namespace TransnationalLanka.ThreePL.Services.WareHouse
 
             var currentWareHouse = await GetWareHouseById(warehouse.Id);
 
+            if (_unitOfWork.WareHouseRepository.GetAll().Any(w => w.Code.ToLower() == warehouse.Code.ToLower()
+                                                                  && w.Id != warehouse.Id))
+            {
+                throw new ServiceException(new ErrorMessage[]
+                {
+                    new ErrorMessage()
+                    {
+                        Message = $"{warehouse.Code} is already exits"
+                    }
+                });
+            }
+
             var mapper = ServiceMapper.GetMapper();
             mapper.Map(warehouse, currentWareHouse);
 
             await _unitOfWork.SaveChanges();
-
-            //Todo send the update warehouse details to tracking application
 
             return currentWareHouse;
         }

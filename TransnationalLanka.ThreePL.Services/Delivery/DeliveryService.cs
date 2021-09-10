@@ -690,5 +690,13 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
             return delivery;
         }
 
+        public async Task<GetInwardResponse> GetTrackingDetails(string trackingNumber)
+        { 
+            return await _trackerApiService.GetInward(new GetInwardRequest()
+            {
+                TrackingNumber = trackingNumber
+            });
+        }
+
     }
 }

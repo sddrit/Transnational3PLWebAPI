@@ -50,6 +50,19 @@ namespace TransnationalLanka.ThreePL.Services.PurchaseOrder
 
             var currentPurchaseOrder = await GetPurchaseOrderById(purchaseOrder.Id);
 
+            var mapper = ServiceMapper.GetMapper();
+            mapper.Map(purchaseOrder, currentPurchaseOrder);
+
+            currentPurchaseOrder.Updated = DateTimeOffset.UtcNow;
+
+            await _unitOfWork.SaveChanges();
+            return currentPurchaseOrder;
+        }
+
+        public async Task ThrowErrorIfPurchaseOrderPrinted(long id)
+        {
+            var currentPurchaseOrder = await GetPurchaseOrderById(id);
+
             if (currentPurchaseOrder.Printed)
             {
                 throw new ServiceException(new ErrorMessage[]
@@ -60,15 +73,7 @@ namespace TransnationalLanka.ThreePL.Services.PurchaseOrder
                     }
                 });
             }
-
-            var mapper = ServiceMapper.GetMapper();
-            mapper.Map(purchaseOrder, currentPurchaseOrder);
-
-            currentPurchaseOrder.Updated = DateTimeOffset.UtcNow;
-
-            await _unitOfWork.SaveChanges();
-            return currentPurchaseOrder;
-        }
+        } 
 
         public async Task<Dal.Entities.PurchaseOrder> MarkAsPrinted(long id)
         {

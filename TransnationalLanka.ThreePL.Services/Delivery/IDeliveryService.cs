@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using TransnationalLanka.ThreePL.Integration.Tracker.Model;
 using TransnationalLanka.ThreePL.Services.Delivery.Core;
 
 namespace TransnationalLanka.ThreePL.Services.Delivery
@@ -25,5 +26,6 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
         Task<List<DayDeliveryStat>> GetMonthlyDeliveryStat(long? supplierId = null, long[] wareHouses = null);
         Task<List<DeliveryStat>> GetTodayDeliveryStat(long? supplierId = null, long[] wareHouses = null);
         Task<decimal> GetLatestDeliveryUnitPrice(long productId);
+        Task<GetInwardResponse> GetTrackingDetails(string trackingNumber);
     }
 }
