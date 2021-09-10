@@ -127,7 +127,7 @@
             <Item1 Ref="60" EventName="BeforePrint" PropertyName="Text" Expression="[PurchaseOrderNumber]" />
           </ExpressionBindings>
         </Item1>
-        <Item2 Ref="61" ControlType="XRLabel" Name="label9" TextFormatString="{0:dd/MM/yyyy}" Multiline="true" Text="label9" SizeF="123.333374,23" LocationFloat="613.666565,0" Padding="2,2,0,0,100">
+        <Item2 Ref="61" ControlType="XRLabel" Name="label9" TextFormatString="{0:MM/dd/yy}" Multiline="true" Text="label9" SizeF="123.333374,23" LocationFloat="613.666565,0" Padding="2,2,0,0,100">
           <ExpressionBindings>
             <Item1 Ref="62" EventName="BeforePrint" PropertyName="Text" Expression="[Date]" />
           </ExpressionBindings>

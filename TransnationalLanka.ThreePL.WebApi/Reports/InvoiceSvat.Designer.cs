@@ -89,6 +89,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Reports {
 
             // Data Sources
             this.invoiceDataSource = reportInitializer.GetDataSource<DevExpress.DataAccess.ObjectBinding.ObjectDataSource>("invoiceDataSource");
+            this.invoiceDataSource.DataSource = typeof(TransnationalLanka.ThreePL.Services.Report.Core.InvoiceReport);
 
             // Styles
             this.Title = reportInitializer.GetStyle("Title");

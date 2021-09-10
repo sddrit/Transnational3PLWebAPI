@@ -150,82 +150,83 @@
         <Item1 Ref="71" ControlType="XRLabel" Name="label21" Multiline="true" CanGrow="false" Text="GRN Type:" TextAlignment="TopLeft" SizeF="115,22.9999981" LocationFloat="0,73" Padding="6,6,0,0,100">
           <StylePriority Ref="72" UsePadding="false" UseTextAlignment="false" />
         </Item1>
-        <Item2 Ref="73" ControlType="XRLabel" Name="label20" Multiline="true" Text="label20" SizeF="209.999908,23" LocationFloat="115,73" Padding="2,2,0,0,96">
+        <Item2 Ref="73" ControlType="XRLabel" Name="label20" Multiline="true" Text="label20" SizeF="209.999908,23" LocationFloat="115,73" Padding="6,6,0,0,100">
           <ExpressionBindings>
             <Item1 Ref="74" EventName="BeforePrint" PropertyName="Text" Expression="[GrnType]" />
           </ExpressionBindings>
+          <StylePriority Ref="75" UsePadding="false" />
         </Item2>
-        <Item3 Ref="75" ControlType="XRLabel" Name="label10" Multiline="true" Text="WH Code:" TextAlignment="TopLeft" SizeF="115,23" LocationFloat="0,0" Padding="6,6,0,0,100">
-          <StylePriority Ref="76" UsePadding="false" UseTextAlignment="false" />
+        <Item3 Ref="76" ControlType="XRLabel" Name="label10" Multiline="true" Text="WH Code:" TextAlignment="TopLeft" SizeF="115,23" LocationFloat="0,0" Padding="6,6,0,0,100">
+          <StylePriority Ref="77" UsePadding="false" UseTextAlignment="false" />
         </Item3>
-        <Item4 Ref="77" ControlType="XRLabel" Name="label3" Multiline="true" Text="label3" TextAlignment="TopLeft" SizeF="210,23" LocationFloat="115,0" Padding="6,6,0,0,100">
+        <Item4 Ref="78" ControlType="XRLabel" Name="label3" Multiline="true" Text="label3" TextAlignment="TopLeft" SizeF="210,23" LocationFloat="115,0" Padding="6,6,0,0,100">
           <ExpressionBindings>
-            <Item1 Ref="78" EventName="BeforePrint" PropertyName="Text" Expression="[WareHouse]" />
+            <Item1 Ref="79" EventName="BeforePrint" PropertyName="Text" Expression="[WareHouse]" />
           </ExpressionBindings>
-          <StylePriority Ref="79" UsePadding="false" UseTextAlignment="false" />
+          <StylePriority Ref="80" UsePadding="false" UseTextAlignment="false" />
         </Item4>
-        <Item5 Ref="80" ControlType="XRLabel" Name="label7" Multiline="true" Text="label7" TextAlignment="TopLeft" SizeF="133.333374,23" LocationFloat="625,25" Padding="6,6,0,0,100">
+        <Item5 Ref="81" ControlType="XRLabel" Name="label7" Multiline="true" Text="label7" TextAlignment="TopLeft" SizeF="190.299438,23" LocationFloat="568.0338,25" Padding="6,6,0,0,100">
           <ExpressionBindings>
-            <Item1 Ref="81" EventName="BeforePrint" PropertyName="Text" Expression="[PurchaseOrderNumber]" />
+            <Item1 Ref="82" EventName="BeforePrint" PropertyName="Text" Expression="[PurchaseOrderNumber]" />
           </ExpressionBindings>
-          <StylePriority Ref="82" UsePadding="false" UseTextAlignment="false" />
+          <StylePriority Ref="83" UsePadding="false" UseTextAlignment="false" />
         </Item5>
-        <Item6 Ref="83" ControlType="XRLabel" Name="label13" Multiline="true" CanGrow="false" Text="Grn No:" TextAlignment="TopLeft" SizeF="62.50006,23" LocationFloat="562.5,50" Padding="2,2,0,0,100">
-          <StylePriority Ref="84" UsePadding="false" UseTextAlignment="false" />
+        <Item6 Ref="84" ControlType="XRLabel" Name="label13" Multiline="true" CanGrow="false" Text="Grn No:" TextAlignment="TopLeft" SizeF="62.50006,23" LocationFloat="505.533752,50" Padding="2,2,0,0,100">
+          <StylePriority Ref="85" UsePadding="false" UseTextAlignment="false" />
         </Item6>
-        <Item7 Ref="85" ControlType="XRLabel" Name="label12" Multiline="true" CanGrow="false" Text="Po No:" TextAlignment="TopLeft" SizeF="62.50006,23" LocationFloat="562.5,25" Padding="2,2,0,0,100">
-          <StylePriority Ref="86" UseTextAlignment="false" />
+        <Item7 Ref="86" ControlType="XRLabel" Name="label12" Multiline="true" CanGrow="false" Text="Po No:" TextAlignment="TopLeft" SizeF="62.50006,23" LocationFloat="505.533752,25" Padding="2,2,0,0,100">
+          <StylePriority Ref="87" UseTextAlignment="false" />
         </Item7>
-        <Item8 Ref="87" ControlType="XRLabel" Name="label5" Multiline="true" Text="label5" TextAlignment="TopLeft" SizeF="133.333435,22.9999962" LocationFloat="625,50" Padding="6,6,0,0,100" CanPublish="false">
+        <Item8 Ref="88" ControlType="XRLabel" Name="label5" Multiline="true" Text="label5" TextAlignment="TopLeft" SizeF="190.299561,22.9999962" LocationFloat="568.0338,49.9999733" Padding="6,6,0,0,100" CanPublish="false">
           <ExpressionBindings>
-            <Item1 Ref="88" EventName="BeforePrint" PropertyName="Text" Expression="[GrnNo]" />
+            <Item1 Ref="89" EventName="BeforePrint" PropertyName="Text" Expression="[GrnNo]" />
           </ExpressionBindings>
-          <StylePriority Ref="89" UsePadding="false" UseTextAlignment="false" />
+          <StylePriority Ref="90" UsePadding="false" UseTextAlignment="false" />
         </Item8>
-        <Item9 Ref="90" ControlType="XRLabel" Name="label11" Multiline="true" CanGrow="false" Text="Date:" TextAlignment="TopLeft" SizeF="62.50006,22.9999981" LocationFloat="562.5,0" Padding="2,2,0,0,100">
-          <StylePriority Ref="91" UsePadding="false" UseTextAlignment="false" />
+        <Item9 Ref="91" ControlType="XRLabel" Name="label11" Multiline="true" CanGrow="false" Text="Date:" TextAlignment="TopLeft" SizeF="62.50006,22.9999981" LocationFloat="505.533752,0" Padding="2,2,0,0,100">
+          <StylePriority Ref="92" UsePadding="false" UseTextAlignment="false" />
         </Item9>
-        <Item10 Ref="92" ControlType="XRLabel" Name="label6" TextFormatString="{0:dd/MM/yyyy}" Multiline="true" Text="label6" TextAlignment="TopLeft" SizeF="133.333435,23" LocationFloat="625,0" Padding="6,6,0,0,100" CanPublish="false">
+        <Item10 Ref="93" ControlType="XRLabel" Name="label6" TextFormatString="{0:MM/dd/yy}" Multiline="true" Text="label6" TextAlignment="TopLeft" SizeF="190.299561,23" LocationFloat="568.0338,0" Padding="6,6,0,0,100" CanPublish="false">
           <ExpressionBindings>
-            <Item1 Ref="93" EventName="BeforePrint" PropertyName="Text" Expression="[Date]" />
+            <Item1 Ref="94" EventName="BeforePrint" PropertyName="Text" Expression="[Date]" />
           </ExpressionBindings>
-          <StylePriority Ref="94" UsePadding="false" UseTextAlignment="false" />
+          <StylePriority Ref="95" UsePadding="false" UseTextAlignment="false" />
         </Item10>
-        <Item11 Ref="95" ControlType="XRLabel" Name="label15" Multiline="true" CanGrow="false" Text="Supplier Name:" TextAlignment="TopLeft" SizeF="115,22.9999981" LocationFloat="0,50" Padding="6,6,0,0,100">
-          <StylePriority Ref="96" UsePadding="false" UseTextAlignment="false" />
+        <Item11 Ref="96" ControlType="XRLabel" Name="label15" Multiline="true" CanGrow="false" Text="Supplier Name:" TextAlignment="TopLeft" SizeF="115,22.9999981" LocationFloat="0,50" Padding="6,6,0,0,100">
+          <StylePriority Ref="97" UsePadding="false" UseTextAlignment="false" />
         </Item11>
-        <Item12 Ref="97" ControlType="XRLabel" Name="label14" Multiline="true" CanGrow="false" Text="Supplier Code:" TextAlignment="TopLeft" SizeF="115,23" LocationFloat="0,25" Padding="6,6,0,0,100">
-          <StylePriority Ref="98" UsePadding="false" UseTextAlignment="false" />
+        <Item12 Ref="98" ControlType="XRLabel" Name="label14" Multiline="true" CanGrow="false" Text="Supplier Code:" TextAlignment="TopLeft" SizeF="115,23" LocationFloat="0,25" Padding="6,6,0,0,100">
+          <StylePriority Ref="99" UsePadding="false" UseTextAlignment="false" />
         </Item12>
-        <Item13 Ref="99" ControlType="XRLabel" Name="label9" Multiline="true" Text="label9" TextAlignment="TopLeft" SizeF="209.999939,23" LocationFloat="115,50" Padding="6,6,0,0,100">
+        <Item13 Ref="100" ControlType="XRLabel" Name="label9" Multiline="true" Text="label9" TextAlignment="TopLeft" SizeF="209.999939,23" LocationFloat="115,50" Padding="6,6,0,0,100">
           <ExpressionBindings>
-            <Item1 Ref="100" EventName="BeforePrint" PropertyName="Text" Expression="[SupplierName]" />
+            <Item1 Ref="101" EventName="BeforePrint" PropertyName="Text" Expression="[SupplierName]" />
           </ExpressionBindings>
-          <StylePriority Ref="101" UsePadding="false" UseTextAlignment="false" />
+          <StylePriority Ref="102" UsePadding="false" UseTextAlignment="false" />
         </Item13>
-        <Item14 Ref="102" ControlType="XRLabel" Name="label8" Multiline="true" Text="label8" TextAlignment="TopLeft" SizeF="210,23" LocationFloat="115,25" Padding="6,6,0,0,100">
+        <Item14 Ref="103" ControlType="XRLabel" Name="label8" Multiline="true" Text="label8" TextAlignment="TopLeft" SizeF="210,23" LocationFloat="115,25" Padding="6,6,0,0,100">
           <ExpressionBindings>
-            <Item1 Ref="103" EventName="BeforePrint" PropertyName="Text" Expression="[SupplierCode]" />
+            <Item1 Ref="104" EventName="BeforePrint" PropertyName="Text" Expression="[SupplierCode]" />
           </ExpressionBindings>
-          <StylePriority Ref="104" UsePadding="false" UseTextAlignment="false" />
+          <StylePriority Ref="105" UsePadding="false" UseTextAlignment="false" />
         </Item14>
       </Controls>
     </Item6>
-    <Item7 Ref="105" ControlType="PageFooterBand" Name="PageFooter" HeightF="54.1666679">
+    <Item7 Ref="106" ControlType="PageFooterBand" Name="PageFooter" HeightF="54.1666679">
       <Controls>
-        <Item1 Ref="106" ControlType="XRLine" Name="line1" SizeF="202.5284,23.0000019" LocationFloat="100.000046,24.3333187" />
-        <Item2 Ref="107" ControlType="XRLabel" Name="label19" Multiline="true" Text="Prepared by:" SizeF="100,23" LocationFloat="5.086263E-05,24.3333435" Padding="2,2,0,0,100" />
+        <Item1 Ref="107" ControlType="XRLine" Name="line1" SizeF="202.5284,23.0000019" LocationFloat="100.000046,24.3333187" />
+        <Item2 Ref="108" ControlType="XRLabel" Name="label19" Multiline="true" Text="Prepared by:" SizeF="100,23" LocationFloat="5.086263E-05,24.3333435" Padding="2,2,0,0,100" />
       </Controls>
     </Item7>
   </Bands>
   <StyleSheet>
-    <Item1 Ref="108" Name="Title" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Arial, 14.25pt" ForeColor="255,75,75,75" BackColor="Transparent" BorderColor="Black" Sides="None" StringFormat="Near;Near;0;None;Character;Default" BorderWidthSerializable="1" />
-    <Item2 Ref="109" Name="DetailCaption1" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Arial, 8.25pt, style=Bold" ForeColor="White" BackColor="255,75,75,75" BorderColor="White" Sides="Left" StringFormat="Near;Center;0;None;Character;Default" TextAlignment="MiddleLeft" BorderWidthSerializable="2" />
-    <Item3 Ref="110" Name="DetailData1" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Arial, 8.25pt" ForeColor="Black" BorderColor="Transparent" Sides="Left" StringFormat="Near;Center;0;None;Character;Default" TextAlignment="MiddleLeft" BorderWidthSerializable="2" />
-    <Item4 Ref="111" Name="DetailCaption2" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Arial, 8.25pt, style=Bold" ForeColor="White" BackColor="255,111,111,111" BorderColor="White" Sides="Left" StringFormat="Near;Center;0;None;Character;Default" TextAlignment="MiddleLeft" BorderWidthSerializable="2" />
-    <Item5 Ref="112" Name="DetailData2" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Arial, 8.25pt" ForeColor="Black" BorderColor="Transparent" Sides="Left" StringFormat="Near;Center;0;None;Character;Default" TextAlignment="MiddleLeft" BorderWidthSerializable="2" />
-    <Item6 Ref="113" Name="DetailData3_Odd" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Arial, 8.25pt" ForeColor="Black" BackColor="255,231,231,231" BorderColor="Transparent" Sides="None" StringFormat="Near;Center;0;None;Character;Default" TextAlignment="MiddleLeft" BorderWidthSerializable="1" />
-    <Item7 Ref="114" Name="PageInfo" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Arial, 8.25pt, style=Bold" ForeColor="255,75,75,75" StringFormat="Near;Near;0;None;Character;Default" />
+    <Item1 Ref="109" Name="Title" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Arial, 14.25pt" ForeColor="255,75,75,75" BackColor="Transparent" BorderColor="Black" Sides="None" StringFormat="Near;Near;0;None;Character;Default" BorderWidthSerializable="1" />
+    <Item2 Ref="110" Name="DetailCaption1" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Arial, 8.25pt, style=Bold" ForeColor="White" BackColor="255,75,75,75" BorderColor="White" Sides="Left" StringFormat="Near;Center;0;None;Character;Default" TextAlignment="MiddleLeft" BorderWidthSerializable="2" />
+    <Item3 Ref="111" Name="DetailData1" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Arial, 8.25pt" ForeColor="Black" BorderColor="Transparent" Sides="Left" StringFormat="Near;Center;0;None;Character;Default" TextAlignment="MiddleLeft" BorderWidthSerializable="2" />
+    <Item4 Ref="112" Name="DetailCaption2" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Arial, 8.25pt, style=Bold" ForeColor="White" BackColor="255,111,111,111" BorderColor="White" Sides="Left" StringFormat="Near;Center;0;None;Character;Default" TextAlignment="MiddleLeft" BorderWidthSerializable="2" />
+    <Item5 Ref="113" Name="DetailData2" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Arial, 8.25pt" ForeColor="Black" BorderColor="Transparent" Sides="Left" StringFormat="Near;Center;0;None;Character;Default" TextAlignment="MiddleLeft" BorderWidthSerializable="2" />
+    <Item6 Ref="114" Name="DetailData3_Odd" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Arial, 8.25pt" ForeColor="Black" BackColor="255,231,231,231" BorderColor="Transparent" Sides="None" StringFormat="Near;Center;0;None;Character;Default" TextAlignment="MiddleLeft" BorderWidthSerializable="1" />
+    <Item7 Ref="115" Name="PageInfo" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Arial, 8.25pt, style=Bold" ForeColor="255,75,75,75" StringFormat="Near;Near;0;None;Character;Default" />
   </StyleSheet>
   <ComponentStorage>
     <Item1 Ref="0" ObjectType="DevExpress.DataAccess.ObjectBinding.ObjectDataSource,DevExpress.DataAccess.v20.2" Name="GrnDataSource" Base64="PE9iamVjdERhdGFTb3VyY2UgTmFtZT0iR3JuRGF0YVNvdXJjZSIgLz4=" />
