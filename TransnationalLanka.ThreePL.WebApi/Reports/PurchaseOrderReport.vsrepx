@@ -8,7 +8,7 @@
     <Item2 Ref="4" ControlType="BottomMarginBand" Name="BottomMargin" HeightF="6" />
     <Item3 Ref="5" ControlType="ReportHeaderBand" Name="ReportHeader" HeightF="196.402634">
       <Controls>
-        <Item1 Ref="6" ControlType="XRLabel" Name="label22" Multiline="true" Text="label22" SizeF="172.499954,23" LocationFloat="84.1666946,153.985977" Padding="2,2,0,0,96">
+        <Item1 Ref="6" ControlType="XRLabel" Name="label22" Multiline="true" Text="label22" SizeF="172.499954,23" LocationFloat="84.1666946,153.985977" Padding="2,2,0,0,100">
           <ExpressionBindings>
             <Item1 Ref="7" EventName="BeforePrint" PropertyName="Text" Expression="[Telephone]" />
           </ExpressionBindings>
@@ -127,12 +127,12 @@
             <Item1 Ref="62" ControlType="XRLabel" Name="label16" Multiline="true" Text="Total:" TextAlignment="TopRight" SizeF="100,23" LocationFloat="509.468384,0" Font="Arial, 8.25pt, style=Bold" Padding="2,2,0,0,100">
               <StylePriority Ref="63" UseFont="false" UseTextAlignment="false" />
             </Item1>
-            <Item2 Ref="64" ControlType="XRLabel" Name="label17" TextFormatString="{0:#,##0.00;(#,##0.00);'-' }" Multiline="true" Text="label17" TextAlignment="TopRight" SizeF="137.531616,23" LocationFloat="609.4684,0" Font="Arial, 8.25pt, style=Bold" Padding="2,2,0,0,100" Borders="Bottom">
+            <Item2 Ref="64" ControlType="XRLabel" Name="label17" TextFormatString="{0:#,##0.00;(#,##0.00);'-' }" Multiline="true" Text="label17" TextAlignment="TopRight" SizeF="137.531616,23" LocationFloat="609.4684,0" Font="Arial, 8.25pt, style=Bold" Padding="2,2,0,0,100" Borders="Bottom" BorderWidth="3" BorderDashStyle="Double">
               <Summary Ref="65" Running="Group" />
               <ExpressionBindings>
                 <Item1 Ref="66" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([Value])" />
               </ExpressionBindings>
-              <StylePriority Ref="67" UseFont="false" UseBorders="false" UseTextAlignment="false" />
+              <StylePriority Ref="67" UseFont="false" UseBorders="false" UseBorderWidth="false" UseBorderDashStyle="false" UseTextAlignment="false" />
             </Item2>
           </Controls>
         </Item3>
