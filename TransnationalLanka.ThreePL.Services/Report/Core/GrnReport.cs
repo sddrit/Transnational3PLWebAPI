@@ -15,6 +15,9 @@ namespace TransnationalLanka.ThreePL.Services.Report.Core
         public string GrnNo { get; set; }
         public string WareHouseAddressLine1 { get; set; }
         public string WareHouseAddressLine2 { get; set; }
+        public string City { get; set; }
+        public string Telephone { get; set; }
+        public string SupplierInvoiceNo { get; set; }
         public List<GrnReportItem> GrnReportItems { get; set; }
 
     }

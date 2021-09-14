@@ -125,6 +125,7 @@ namespace TransnationalLanka.ThreePL.Services.Report
                 WareHouseName = wareHouse.Name,
                 WareHouseAddressLine1 = wareHouse.Address.AddressLine1,
                 WareHouseAddressLine2 = wareHouse.Address.AddressLine2,
+                City=wareHouse.Address.City.CityName,
                 GrnReportItems = grn.GoodReceivedNoteItems.Select(item => new GrnReportItem()
                 {
                     ExpiredDate = item.ExpiredDate,
@@ -197,10 +198,11 @@ namespace TransnationalLanka.ThreePL.Services.Report
                 WareHouseName = wareHouse?.Name,
                 WareHouseAddressLine1 = wareHouse?.Address.AddressLine1,
                 WareHouseAddressLine2 = wareHouse?.Address.AddressLine2,
+                City = wareHouse?.Address.City.CityName,                
                 PurchaseOrderReportItems = po.PurchaseOrderItems.Select(item => new PurchaseOrderReportItem()
                 {
                     ProductId = item.Product.Code,
-                    ProductName = item.Product.Description,
+                    ProductName = item.Product.Name,
                     Quantity = item.Quantity,
                     UnitCost = item.UnitCost
                 }).ToList()

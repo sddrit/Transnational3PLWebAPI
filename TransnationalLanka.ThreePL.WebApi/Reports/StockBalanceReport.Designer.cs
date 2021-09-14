@@ -22,19 +22,20 @@ namespace TransnationalLanka.ThreePL.WebApi.Reports {
             this.PageHeader = reportInitializer.GetControl<DevExpress.XtraReports.UI.PageHeaderBand>("PageHeader");
             this.GroupFooter1 = reportInitializer.GetControl<DevExpress.XtraReports.UI.GroupFooterBand>("GroupFooter1");
             this.DetailReport = reportInitializer.GetControl<DevExpress.XtraReports.UI.DetailReportBand>("DetailReport");
+            this.PageFooter = reportInitializer.GetControl<DevExpress.XtraReports.UI.PageFooterBand>("PageFooter");
             this.lblWhAdd2 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("lblWhAdd2");
             this.lblWhAdd1 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("lblWhAdd1");
             this.lblWhName = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("lblWhName");
-            this.lblWhCode = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("lblWhCode");
-            this.lblWhCodeTitle = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("lblWhCodeTitle");
-            this.label11 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("label11");
             this.label6 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("label6");
             this.label1 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("label1");
-            this.label2 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("label2");
-            this.lblSupplierCode = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("lblSupplierCode");
-            this.lblSupplierName = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("lblSupplierName");
-            this.lblSupplierNameTitle = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("lblSupplierNameTitle");
+            this.lblWhCode = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("lblWhCode");
             this.lblSupplierCodeTitle = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("lblSupplierCodeTitle");
+            this.label2 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("label2");
+            this.label11 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("label11");
+            this.lblSupplierName = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("lblSupplierName");
+            this.lblSupplierCode = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("lblSupplierCode");
+            this.lblSupplierNameTitle = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("lblSupplierNameTitle");
+            this.lblWhCodeTitle = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("lblWhCodeTitle");
             this.label12 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("label12");
             this.Detail1 = reportInitializer.GetControl<DevExpress.XtraReports.UI.DetailBand>("Detail1");
             this.GroupHeader1 = reportInitializer.GetControl<DevExpress.XtraReports.UI.GroupHeaderBand>("GroupHeader1");
@@ -54,7 +55,6 @@ namespace TransnationalLanka.ThreePL.WebApi.Reports {
             this.tableCell12 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell12");
             this.tableCell10 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell10");
             this.tableCell9 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell9");
-            this.PageFooter = reportInitializer.GetControl<DevExpress.XtraReports.UI.PageFooterBand>("PageFooter");
             this.pageInfo2 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRPageInfo>("pageInfo2");
 
             // Data Sources
@@ -71,19 +71,20 @@ namespace TransnationalLanka.ThreePL.WebApi.Reports {
         private DevExpress.XtraReports.UI.PageHeaderBand PageHeader;
         private DevExpress.XtraReports.UI.GroupFooterBand GroupFooter1;
         private DevExpress.XtraReports.UI.DetailReportBand DetailReport;
+        private DevExpress.XtraReports.UI.PageFooterBand PageFooter;
         private DevExpress.XtraReports.UI.XRLabel lblWhAdd2;
         private DevExpress.XtraReports.UI.XRLabel lblWhAdd1;
         private DevExpress.XtraReports.UI.XRLabel lblWhName;
-        private DevExpress.XtraReports.UI.XRLabel lblWhCode;
-        private DevExpress.XtraReports.UI.XRLabel lblWhCodeTitle;
-        private DevExpress.XtraReports.UI.XRLabel label11;
         private DevExpress.XtraReports.UI.XRLabel label6;
         private DevExpress.XtraReports.UI.XRLabel label1;
-        private DevExpress.XtraReports.UI.XRLabel label2;
-        private DevExpress.XtraReports.UI.XRLabel lblSupplierCode;
-        private DevExpress.XtraReports.UI.XRLabel lblSupplierName;
-        private DevExpress.XtraReports.UI.XRLabel lblSupplierNameTitle;
+        private DevExpress.XtraReports.UI.XRLabel lblWhCode;
         private DevExpress.XtraReports.UI.XRLabel lblSupplierCodeTitle;
+        private DevExpress.XtraReports.UI.XRLabel label2;
+        private DevExpress.XtraReports.UI.XRLabel label11;
+        private DevExpress.XtraReports.UI.XRLabel lblSupplierName;
+        private DevExpress.XtraReports.UI.XRLabel lblSupplierCode;
+        private DevExpress.XtraReports.UI.XRLabel lblSupplierNameTitle;
+        private DevExpress.XtraReports.UI.XRLabel lblWhCodeTitle;
         private DevExpress.XtraReports.UI.XRLabel label12;
         private DevExpress.XtraReports.UI.DetailBand Detail1;
         private DevExpress.XtraReports.UI.GroupHeaderBand GroupHeader1;
@@ -104,8 +105,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Reports {
         private DevExpress.XtraReports.UI.XRTableCell tableCell10;
         private DevExpress.XtraReports.UI.XRTableCell tableCell9;
         private DevExpress.DataAccess.ObjectBinding.ObjectDataSource inventoryBalanceDataSource;
-        private DevExpress.XtraReports.UI.XRControlStyle Style1;
-        private DevExpress.XtraReports.UI.PageFooterBand PageFooter;
         private DevExpress.XtraReports.UI.XRPageInfo pageInfo2;
+        private DevExpress.XtraReports.UI.XRControlStyle Style1;
     }
 }
