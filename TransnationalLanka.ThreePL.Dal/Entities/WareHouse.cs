@@ -6,7 +6,9 @@ namespace TransnationalLanka.ThreePL.Dal.Entities
     public class WareHouse : BaseEntity
     {
         public string Code { get; set; }
-        public string Name { get; set; }        
+        public string Name { get; set; }
+        public string Phone { get; set; }
+        public string Email { get; set; }
         public WareHouseAddress Address { get; set; }
         public bool Active { get; set; }
         public decimal Height { get; set; }

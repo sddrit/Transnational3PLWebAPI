@@ -179,6 +179,7 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
         {
             delivery.DeliveryStatus = DeliveryStatus.Pending;
             delivery.Created = DateTimeOffset.UtcNow;
+            delivery.DeliveryDate = delivery.DeliveryDate.Date;
             _unitOfWork.DeliveryRepository.Insert(delivery);
             await _unitOfWork.SaveChanges();
             return delivery;
@@ -202,6 +203,7 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
             var mapper = ServiceMapper.GetMapper();
             mapper.Map(delivery, currentDelivery);
 
+            currentDelivery.DeliveryDate = delivery.DeliveryDate.Date;
             currentDelivery.Updated = DateTimeOffset.UtcNow;
 
             await _unitOfWork.SaveChanges();

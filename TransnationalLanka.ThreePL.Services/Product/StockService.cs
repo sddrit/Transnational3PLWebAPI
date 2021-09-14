@@ -74,8 +74,8 @@ namespace TransnationalLanka.ThreePL.Services.Product
                     WareHouseId = g.Key.WareHouseId,
                     WareHouseCode = g.Key.Code,
                     WareHouseName = g.Key.Name,
-                    TotalStorage = g.Sum(i => ((i.Quantity * + i.DamageStockQuantity + 
-                                                i.DispatchReturnQuantity + i.SalesReturnQuantity) * (i.Width * i.Height * i.Length)))
+                    TotalStorage = g.Sum(i => (i.Quantity + i.DamageStockQuantity + 
+                                                i.DispatchReturnQuantity + i.SalesReturnQuantity) * (i.Width * i.Height * i.Length))
                 }).ToListAsync();
         }
 
@@ -99,13 +99,36 @@ namespace TransnationalLanka.ThreePL.Services.Product
         {
             var fullNote = $"Transfer dispatch return stock {trackingNumber}, Note - {note}";
             await AdjustStock(StockAdjustmentType.DispatchReturnOut ,warehouseId, productId, unitCost, quantity + damageQuantity, expiredDate, fullNote);
-            await AdjustStock(StockAdjustmentType.In, warehouseId, productId, unitCost, quantity, expiredDate, fullNote);
+            await AdjustStock(StockAdjustmentType.In, warehouseId, productId, unitCost, quantity, expiredDate,
+                    fullNote);
             await AdjustStock(StockAdjustmentType.DamageIn, warehouseId, productId, unitCost, damageQuantity, expiredDate, fullNote);
         }
 
         public async Task TransferSalesReturnStock(long warehouseId, long productId, decimal unitCost, decimal quantity, decimal damageQuantity, DateTime? expiredDate,
             string note, string trackingNumber)
         {
+            if (quantity < 0)
+            {
+                throw new ServiceException(new ErrorMessage[]
+                {
+                    new ErrorMessage()
+                    {
+                        Message = "Quantity should be greater than or equal to zero"
+                    }
+                });
+            }
+
+            if (damageQuantity < 0)
+            {
+                throw new ServiceException(new ErrorMessage[]
+                {
+                    new ErrorMessage()
+                    {
+                        Message = "Damage quantity should be greater than or equal to zero"
+                    }
+                });
+            }
+
             var fullNote = $"Transfer sales return stock {trackingNumber}, Note - {note}";
             await AdjustStock(StockAdjustmentType.SalesReturnOut, warehouseId, productId, unitCost, quantity + damageQuantity, expiredDate, fullNote);
             await AdjustStock(StockAdjustmentType.In, warehouseId, productId, unitCost, quantity, expiredDate, fullNote);
@@ -115,6 +138,12 @@ namespace TransnationalLanka.ThreePL.Services.Product
         public async Task AdjustStock(StockAdjustmentType stockAdjustmentType, long warehouseId, long productId, decimal unitCost, decimal quantity, DateTime? expiredDate, 
             string note)
         {
+
+            if (quantity <= 0)
+            {
+                return;
+            }
+
             var wareHouse = await _wareHouseService.GetWareHouseById(warehouseId);
 
             if (!_wareHouseService.IsActiveWareHouse(wareHouse))

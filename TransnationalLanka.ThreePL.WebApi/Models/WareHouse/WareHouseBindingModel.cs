@@ -21,6 +21,9 @@ namespace TransnationalLanka.ThreePL.WebApi.Models.WareHouse
         [Required]
         public decimal Length { get; set; }
         public decimal StorageCapacity { get; set; }
+        [Required]
+        public string Phone { get; set; }
+        public string Email { get; set; }
 
     }
 

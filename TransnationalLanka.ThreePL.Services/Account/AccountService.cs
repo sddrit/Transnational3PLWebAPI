@@ -250,6 +250,19 @@ namespace TransnationalLanka.ThreePL.Services.Account
         public async Task<User> GetUserByUserName(string username)
         {
             var user = await _userManager.FindByNameAsync(username);
+
+            if (user == null)
+            {
+                throw new ServiceException(new ErrorMessage[]
+                {
+                    new ErrorMessage()
+                    {
+                        Code = string.Empty,
+                        Message = $"{username} is not found"
+                    }
+                });
+            }
+
             return await GetUserById(user.Id);
         }
 
