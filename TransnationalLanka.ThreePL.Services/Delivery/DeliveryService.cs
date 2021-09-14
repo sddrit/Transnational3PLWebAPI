@@ -440,7 +440,8 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
 
             foreach (var deliveryTracking in delivery.DeliveryTrackings)
             {
-                if (trackingNumbers.Contains(deliveryTracking.TrackingNumber))
+                if (trackingNumbers.Select(tn => tn.ToLower())
+                    .Contains(deliveryTracking.TrackingNumber.ToLower()))
                 {
                     deliveryTracking.Status = TrackingStatus.Completed;
                 }
@@ -457,7 +458,7 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
             return delivery;
         }
 
-        public async Task<Dal.Entities.Delivery> MarkAsReturn(long id, string note)
+        public async Task<Dal.Entities.Delivery> MarkAsReturn(long id, string[] trackingNumbers, string note)
         {
             await using var transaction = await _unitOfWork.GetTransaction();
 
@@ -478,17 +479,36 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
 
                 foreach (var deliveryTracking in delivery.DeliveryTrackings)
                 {
-                    foreach (var trackingItems in deliveryTracking.DeliveryTrackingItems)
+                    if (trackingNumbers.Select(tn => tn.ToLower()).Contains(deliveryTracking.TrackingNumber.ToLower()))
                     {
-                        await _stockService.AdjustStock(StockAdjustmentType.DispatchReturnIn, delivery.WareHouseId.Value, trackingItems.ProductId,
-                            trackingItems.UnitCost,
-                            trackingItems.Quantity, null, $"Delivery Return - {delivery.DeliveryNo} #Tracking {deliveryTracking.TrackingNumber}");
-                    }
+                        if (deliveryTracking.Status == TrackingStatus.Returned)
+                        {
+                            throw new ServiceException(new ErrorMessage[]
+                            {
+                                new ErrorMessage()
+                                {
+                                    Message =
+                                        $"Tracking number ({deliveryTracking.TrackingNumber}) could not able to mark as return"
+                                }
+                            });
+                        }
 
-                    deliveryTracking.Status = TrackingStatus.Returned;
+                        foreach (var trackingItems in deliveryTracking.DeliveryTrackingItems)
+                        {
+                            await _stockService.AdjustStock(StockAdjustmentType.DispatchReturnIn,
+                                delivery.WareHouseId.Value, trackingItems.ProductId,
+                                trackingItems.UnitCost,
+                                trackingItems.Quantity, null,
+                                $"Delivery Return - {delivery.DeliveryNo} #Tracking {deliveryTracking.TrackingNumber}");
+                            deliveryTracking.Status = TrackingStatus.Returned;
+                        }
+                    }
                 }
 
-                delivery.DeliveryStatus = DeliveryStatus.Return;
+                delivery.DeliveryStatus =
+                    delivery.DeliveryTrackings.All(t => t.Status == TrackingStatus.Returned) ? DeliveryStatus.Return
+                        : DeliveryStatus.PartiallyReturn;
+
                 await _unitOfWork.SaveChanges();
 
                 await AddDeliveryNote(delivery.Id, $"Mark as return - Reason : {note}");
@@ -559,7 +579,7 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
                     }
                     else if(type == "return")
                     {
-                        await MarkAsReturn(deliveryId, "Return marked by processing delivery sheet");
+                        await MarkAsReturn(deliveryId, new []{ trackingNumber }, "Return marked by processing delivery sheet");
                     }
                     else
                     {
@@ -642,7 +662,8 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
         private bool CanMarkAsReturn(Dal.Entities.Delivery delivery)
         {
             return delivery.DeliveryStatus == DeliveryStatus.Dispatched 
-                   || delivery.DeliveryStatus == DeliveryStatus.Completed;
+                   || delivery.DeliveryStatus == DeliveryStatus.Completed
+                   || delivery.DeliveryStatus == DeliveryStatus.PartiallyReturn;
         }
 
         private bool CanMarkAsCustomerReturn(Dal.Entities.Delivery delivery)

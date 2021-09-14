@@ -31,6 +31,7 @@ namespace TransnationalLanka.ThreePL.Dal
         public DbSet<UnitOfMeasure> UnitOfMeasures { get; set; }
         public DbSet<DeliveryTracking> DeliveryTrackings { get; set; }
         public DbSet<UserWareHouse> UserWareHouses { get; set; }
+        public DbSet<Setting> Settings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

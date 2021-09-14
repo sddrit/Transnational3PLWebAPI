@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TransnationalLanka.ThreePL.Dal;
 
 namespace TransnationalLanka.ThreePL.Dal.Migrations
 {
     [DbContext(typeof(ThreePlDbContext))]
-    partial class ThreePlDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210914175134_add-tax-type-to-supplier")]
+    partial class addtaxtypetosupplier
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -468,9 +470,6 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                     b.Property<decimal>("TaxPercentage")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("TaxType")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("To")
                         .HasColumnType("datetime2");
 
@@ -491,6 +490,9 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("datetimeoffset");
 
@@ -502,12 +504,6 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
 
                     b.Property<long?>("InvoiceId")
                         .HasColumnType("bigint");
-
-                    b.Property<decimal>("Quantity")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("Rate")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
@@ -786,30 +782,6 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
-                });
-
-            modelBuilder.Entity("TransnationalLanka.ThreePL.Dal.Entities.Setting", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset>("Updated")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Settings");
                 });
 
             modelBuilder.Entity("TransnationalLanka.ThreePL.Dal.Entities.StockTransfer", b =>

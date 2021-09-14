@@ -11,8 +11,6 @@ namespace TransnationalLanka.ThreePL.Core.Enums
         [Description("Completed")]
         Completed,
         [Description("Returned")]
-        Returned,
-        [Description("Customer Returned")]
-        CustomerReturned
+        Returned
     }
 }

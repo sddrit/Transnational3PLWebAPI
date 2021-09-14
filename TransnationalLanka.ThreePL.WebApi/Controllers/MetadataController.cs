@@ -41,6 +41,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
             var unitOfMeasures = await _productService.GetUnitOfMeasures();
             var purchaseOrderStatus = _metadataService.GetPurchaseOrderStatus();
             var deliveryTrackingStatus = _metadataService.GetDeliveryTrackingStatus();
+            var taxTypes = _metadataService.GetTaxTypes();
             var roles = (await _accountService.GetRoles()).ToList();
 
             return Ok(new
@@ -55,6 +56,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
                 PurchaseOrderStatus = purchaseOrderStatus,
                 UnitOfMeasures = unitOfMeasures.Select(_mapper.Map<UnitOfMeasureBindingModel>),
                 TrackingStatus = deliveryTrackingStatus,
+                TaxTypes = taxTypes,
                 Roles = roles
             });
         }

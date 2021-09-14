@@ -19,6 +19,7 @@ namespace TransnationalLanka.ThreePL.Services.Metadata
         List<DeliveryTypeMetadata> GetDeliveryTypes();
         List<PurchaseOrderStatusMetadataItem> GetPurchaseOrderStatus();
         List<DeliveryTrackingStatusMetadataItem> GetDeliveryTrackingStatus();
+        List<TaxTypeMetadataItem> GetTaxTypes();
     }
 
     public class MetadataService : IMetadataService
@@ -105,6 +106,15 @@ namespace TransnationalLanka.ThreePL.Services.Metadata
         public List<DeliveryTrackingStatusMetadataItem> GetDeliveryTrackingStatus()
         {
             return Enum.GetValues(typeof(TrackingStatus)).Cast<TrackingStatus>().Select(e => new DeliveryTrackingStatusMetadataItem()
+            {
+                Id = (int)e,
+                Name = e.GetDescription()
+            }).ToList();
+        }
+
+        public List<TaxTypeMetadataItem> GetTaxTypes()
+        {
+            return Enum.GetValues(typeof(TaxType)).Cast<TaxType>().Select(e => new TaxTypeMetadataItem()
             {
                 Id = (int)e,
                 Name = e.GetDescription()

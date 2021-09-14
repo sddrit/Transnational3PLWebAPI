@@ -22,6 +22,7 @@ namespace TransnationalLanka.ThreePL.Dal
         IRepository<DeliveryItem> DeliveryItemRepository { get; }
         IRepository<Invoice> InvoiceRepository { get; }
         IRepository<UnitOfMeasure> UnitOfMeasureRepository { get; }
+        IRepository<Setting> SettingRepository { get; }
         ThreePlDbContext Context { get; }
         Task<IDbContextTransaction> GetTransaction();
         Task SaveChanges();
@@ -46,6 +47,7 @@ namespace TransnationalLanka.ThreePL.Dal
         private IRepository<DeliveryItem> _deliveryItemRepository;
         private IRepository<Invoice> _invoiceRepository;
         private IRepository<UnitOfMeasure> _unitOfMeasureRepository;
+        private IRepository<Setting> _settingRepository;
 
         public UnitOfWork(ThreePlDbContext context)
         {
@@ -192,6 +194,16 @@ namespace TransnationalLanka.ThreePL.Dal
                 if (_unitOfMeasureRepository != null) return _unitOfMeasureRepository;
                 _unitOfMeasureRepository = new Repository<UnitOfMeasure>(_context);
                 return _unitOfMeasureRepository;
+            }
+        }
+
+        public IRepository<Setting> SettingRepository
+        {
+            get
+            {
+                if (_settingRepository != null) return _settingRepository;
+                _settingRepository = new Repository<Setting>(_context);
+                return _settingRepository;
             }
         }
 

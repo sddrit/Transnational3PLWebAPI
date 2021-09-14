@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TransnationalLanka.ThreePL.Dal;
 
 namespace TransnationalLanka.ThreePL.Dal.Migrations
 {
     [DbContext(typeof(ThreePlDbContext))]
-    partial class ThreePlDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210914183153_add-settings")]
+    partial class addsettings
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -468,9 +470,6 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                     b.Property<decimal>("TaxPercentage")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("TaxType")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("To")
                         .HasColumnType("datetime2");
 
@@ -491,6 +490,9 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("datetimeoffset");
 
@@ -502,12 +504,6 @@ namespace TransnationalLanka.ThreePL.Dal.Migrations
 
                     b.Property<long?>("InvoiceId")
                         .HasColumnType("bigint");
-
-                    b.Property<decimal>("Quantity")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("Rate")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");

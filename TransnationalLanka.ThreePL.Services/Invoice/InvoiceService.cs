@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using TransnationalLanka.ThreePL.Core.Constants;
 using TransnationalLanka.ThreePL.Core.Exceptions;
 using TransnationalLanka.ThreePL.Dal;
 using TransnationalLanka.ThreePL.Dal.Entities;
 using TransnationalLanka.ThreePL.Services.Delivery;
 using TransnationalLanka.ThreePL.Services.Product;
+using TransnationalLanka.ThreePL.Services.Setting;
 using TransnationalLanka.ThreePL.Services.Supplier;
 
 namespace TransnationalLanka.ThreePL.Services.Invoice
@@ -16,16 +18,16 @@ namespace TransnationalLanka.ThreePL.Services.Invoice
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ISupplierService _supplierService;
-        private readonly IProductService _productService;
+        private readonly ISettingService _settingService;
         private readonly IStockService _stockService;
         private readonly IDeliveryService _deliveryService;
 
         public InvoiceService(IUnitOfWork unitOfWork, ISupplierService supplierService, 
-            IProductService productService, IStockService stockService, IDeliveryService deliveryService)
+            ISettingService settingService, IStockService stockService, IDeliveryService deliveryService)
         {
             _unitOfWork = unitOfWork;
             _supplierService = supplierService;
-            _productService = productService;
+            _settingService = settingService;
             _stockService = stockService;
             _deliveryService = deliveryService;
         }
@@ -101,7 +103,8 @@ namespace TransnationalLanka.ThreePL.Services.Invoice
                 }
 
                 manualCharge.Description = updatedItem.Description;
-                manualCharge.Amount = updatedItem.Amount;
+                manualCharge.Quantity = updatedItem.Quantity;
+                manualCharge.Rate = updatedItem.Rate;
             }
 
             //Added items
@@ -149,6 +152,8 @@ namespace TransnationalLanka.ThreePL.Services.Invoice
 
         private async Task<Dal.Entities.Invoice> CreateNewInvoice(long supplierId, DateTime from, DateTime to)
         {
+            var taxPercentage = await _settingService.GetValue(Settings.TAX_PERCENTAGE);
+
             var supplier = await _supplierService.GetSupplierById(supplierId);
 
             var invoice = new Dal.Entities.Invoice()
@@ -156,14 +161,17 @@ namespace TransnationalLanka.ThreePL.Services.Invoice
                 SupplierId = supplierId,
                 From = from,
                 To = to,
-                InvoiceItems = new List<InvoiceItem>()
+                TaxType = supplier.TaxType,
+                InvoiceItems = new List<InvoiceItem>(),
+                TaxPercentage = decimal.Parse(taxPercentage)
             };
 
             invoice.InvoiceItems.Add(new InvoiceItem()
             {
-                Amount = (supplier.SupplierCharges.StorageChargePerUnit * supplier.SupplierCharges.AllocatedUnits),
+                Rate = supplier.SupplierCharges.StorageChargePerUnit,
+                Quantity = supplier.SupplierCharges.AllocatedUnits,
                 Type = InvoiceItemChargeType.StorageCharge,
-                Description = "Storage Charges"
+                Description = "Warehouse Rent Charge"
             });
 
             var storageUnitCount = await _stockService.GetTotalStorage(supplierId);
@@ -175,10 +183,10 @@ namespace TransnationalLanka.ThreePL.Services.Invoice
                 invoice.InvoiceItems.Add(new InvoiceItem()
                 {
                     Date = DateTime.Now.Date,
-                    Amount = (storageUnitCount - supplier.SupplierCharges.AllocatedUnits) 
-                             * (supplier.SupplierCharges.AdditionalChargePerUnitPrice / days),
+                    Quantity = storageUnitCount - supplier.SupplierCharges.AllocatedUnits,
+                    Rate = supplier.SupplierCharges.AdditionalChargePerUnitPrice / days,
                     Type = InvoiceItemChargeType.StorageAdditionalCharge,
-                    Description = "Additional Storage Charges"
+                    Description = "Additional Warehouse Rent Charge"
                 });
             }
 
@@ -187,9 +195,10 @@ namespace TransnationalLanka.ThreePL.Services.Invoice
             invoice.InvoiceItems.Add(new InvoiceItem()
             {
                 Date = DateTime.Now.Date,
-                Amount = (deliveryCount * supplier.SupplierCharges.HandlingCharge),
+                Quantity = deliveryCount,
+                Rate = supplier.SupplierCharges.HandlingCharge,
                 Type = InvoiceItemChargeType.PackageCharge,
-                Description = "Delivery Packaging Charges"
+                Description = "Processing Charge (Including packing)"
             });
 
             _unitOfWork.InvoiceRepository.Insert(invoice);
@@ -200,15 +209,17 @@ namespace TransnationalLanka.ThreePL.Services.Invoice
 
         private async Task<Dal.Entities.Invoice> UpdateInvoice(long supplierId, DateTime from, DateTime to)
         {
-            var invoice = await GetInvoice(supplierId, from, to);
+            var taxPercentage = await _settingService.GetValue(Settings.TAX_PERCENTAGE);
 
+            var invoice = await GetInvoice(supplierId, from, to);
             var supplier = await _supplierService.GetSupplierById(supplierId);
 
-            var storageAmount =
-                (supplier.SupplierCharges.StorageChargePerUnit * supplier.SupplierCharges.AllocatedUnits);
+            invoice.TaxType = supplier.TaxType;
+            invoice.TaxPercentage = decimal.Parse(taxPercentage);
 
             var storageAmountItem = invoice.InvoiceItems.First(i => i.Type == InvoiceItemChargeType.StorageCharge);
-            storageAmountItem.Amount = storageAmount;
+            storageAmountItem.Rate = supplier.SupplierCharges.StorageChargePerUnit;
+            storageAmountItem.Quantity = supplier.SupplierCharges.AllocatedUnits;
 
             var storageUnitCount = await _stockService.GetTotalStorage(supplierId);
 
@@ -224,25 +235,25 @@ namespace TransnationalLanka.ThreePL.Services.Invoice
                     invoice.InvoiceItems.Add(new InvoiceItem()
                     {
                         Date = DateTime.Now.Date,
-                        Amount = (storageUnitCount - supplier.SupplierCharges.AllocatedUnits)
-                                 * (supplier.SupplierCharges.AdditionalChargePerUnitPrice / days),
+                        Rate = supplier.SupplierCharges.AdditionalChargePerUnitPrice / days,
+                        Quantity = storageUnitCount - supplier.SupplierCharges.AllocatedUnits,
                         Type = InvoiceItemChargeType.StorageAdditionalCharge,
-                        Description = "Additional Storage Charges"
+                        Description = "Additional Warehouse Rent Charge"
                     });
                 }
                 else if(additionalStorageAmountItem.Date < DateTime.Now.Date)
                 {
-                    var additionalStorageAmountCharge = (storageUnitCount - supplier.SupplierCharges.AllocatedUnits)
-                                 * (supplier.SupplierCharges.AdditionalChargePerUnitPrice / days);
                     additionalStorageAmountItem.Date = DateTime.Now.Date;
-                    additionalStorageAmountItem.Amount += additionalStorageAmountCharge;
+                    additionalStorageAmountItem.Quantity += storageUnitCount - supplier.SupplierCharges.AllocatedUnits;
+                    additionalStorageAmountItem.Rate = supplier.SupplierCharges.AdditionalChargePerUnitPrice / days;
                 }
             }
 
             var deliveryCount = await _deliveryService.GetDeliveryCount(supplierId, from, to);
 
             var deliveryAmountItem = invoice.InvoiceItems.First(i => i.Type == InvoiceItemChargeType.PackageCharge);
-            deliveryAmountItem.Amount = (deliveryCount * supplier.SupplierCharges.HandlingCharge);
+            deliveryAmountItem.Quantity = deliveryCount;
+            deliveryAmountItem.Rate = supplier.SupplierCharges.HandlingCharge;
 
             await _unitOfWork.SaveChanges();
 

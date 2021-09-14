@@ -1,17 +1,21 @@
 ﻿using System.Threading.Tasks;
+using TransnationalLanka.ThreePL.Core.Constants;
 using TransnationalLanka.ThreePL.Dal.Entities;
 using TransnationalLanka.ThreePL.Services.Account;
 using TransnationalLanka.ThreePL.Services.Account.Core;
+using TransnationalLanka.ThreePL.Services.Setting;
 
 namespace TransnationalLanka.ThreePL.Services.Application
 {
     public class ApplicationService : IApplicationService
     {
         private readonly IAccountService _accountService;
+        private readonly ISettingService _settingService;
 
-        public ApplicationService(IAccountService accountService)
+        public ApplicationService(IAccountService accountService, ISettingService settingService)
         {
             _accountService = accountService;
+            _settingService = settingService;
         }
 
         public async Task Initial()
@@ -27,6 +31,9 @@ namespace TransnationalLanka.ThreePL.Services.Application
             {
                 await _accountService.CreateUser(new User() {UserName = "admin", Email = "slakjaya@gmail.com"}, "1234Qwer@", Roles.ADMIN_ROLE);
             }
+
+            //Create tax percentage settings
+            await _settingService.CreateOrUpdateValue(Settings.TAX_PERCENTAGE, "0.08");
         }
     }
 }

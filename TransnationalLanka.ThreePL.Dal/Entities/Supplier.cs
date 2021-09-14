@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TransnationalLanka.ThreePL.Core.Enums;
 
 namespace TransnationalLanka.ThreePL.Dal.Entities
 {
@@ -8,6 +9,7 @@ namespace TransnationalLanka.ThreePL.Dal.Entities
         public string TrackerCode { get; set; }
         public string SupplierName { get; set; }
         public string BusinessRegistrationId { get; set; }
+        public TaxType TaxType { get; set; }
         public string VatNumber { get; set; }
         public bool Active { get; set; }
         public SupplierAddress Address { get; set; }

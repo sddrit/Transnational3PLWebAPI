@@ -161,7 +161,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
         [HttpPost("mark-as-return")]
         public async Task<IActionResult> Post([FromBody] MarkAsReturnBindingModel model)
         {
-            await _deliveryService.MarkAsReturn(model.DeliveryId, model.Note);
+            await _deliveryService.MarkAsReturn(model.DeliveryId, model.TrackingNumbers, model.Note);
             return Ok();
         }
 

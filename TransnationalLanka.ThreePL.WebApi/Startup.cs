@@ -31,6 +31,7 @@ using TransnationalLanka.ThreePL.Services.Metadata;
 using TransnationalLanka.ThreePL.Services.Product;
 using TransnationalLanka.ThreePL.Services.PurchaseOrder;
 using TransnationalLanka.ThreePL.Services.Report;
+using TransnationalLanka.ThreePL.Services.Setting;
 using TransnationalLanka.ThreePL.Services.Stock;
 using TransnationalLanka.ThreePL.Services.Supplier;
 using TransnationalLanka.ThreePL.Services.Util;
@@ -115,6 +116,7 @@ namespace TransnationalLanka.ThreePL.WebApi
             services.AddScoped<IReportService, ReportService>();
             services.AddScoped<IInvoiceService, InvoiceService>();
             services.AddScoped<IReportProvider, ThreePlReportProvider>();
+            services.AddScoped<ISettingService, SettingService>();
 
             // Add Hangfire services.
             services.AddHangfire(configuration => configuration

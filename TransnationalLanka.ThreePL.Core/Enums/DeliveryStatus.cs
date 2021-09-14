@@ -14,6 +14,8 @@ namespace TransnationalLanka.ThreePL.Core.Enums
         PartiallyCompleted,
         [Description("Completed")]
         Completed,
+        [Description("Partially Return")]
+        PartiallyReturn,
         [Description("Return")]
         Return
     }

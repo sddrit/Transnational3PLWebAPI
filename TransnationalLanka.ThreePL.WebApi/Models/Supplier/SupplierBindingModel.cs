@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using TransnationalLanka.ThreePL.Core.Enums;
 using TransnationalLanka.ThreePL.WebApi.Models.Common;
 
 namespace TransnationalLanka.ThreePL.WebApi.Models.Supplier
@@ -43,6 +44,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Models.Supplier
         [Required]
         public string SupplierName { get; set; }
         public string BusinessRegistrationId { get; set; }
+        public TaxType TaxType { get; set; }
         public string VatNumber { get; set; }
         [Required]
         public bool Active { get; set; }
