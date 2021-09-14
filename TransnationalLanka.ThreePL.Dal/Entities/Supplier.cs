@@ -11,6 +11,7 @@ namespace TransnationalLanka.ThreePL.Dal.Entities
         public string BusinessRegistrationId { get; set; }
         public TaxType TaxType { get; set; }
         public string VatNumber { get; set; }
+        public string SVatNumber { get; set; }
         public bool Active { get; set; }
         public SupplierAddress Address { get; set; }
         public Contact Contact { get; set; }
