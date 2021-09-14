@@ -36,6 +36,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Reports {
             this.lblSupplierCode = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("lblSupplierCode");
             this.lblSupplierNameTitle = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("lblSupplierNameTitle");
             this.lblWhCodeTitle = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("lblWhCodeTitle");
+            this.label3 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("label3");
             this.label12 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("label12");
             this.Detail1 = reportInitializer.GetControl<DevExpress.XtraReports.UI.DetailBand>("Detail1");
             this.GroupHeader1 = reportInitializer.GetControl<DevExpress.XtraReports.UI.GroupHeaderBand>("GroupHeader1");
@@ -55,6 +56,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Reports {
             this.tableCell12 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell12");
             this.tableCell10 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell10");
             this.tableCell9 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell9");
+            this.pageInfo1 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRPageInfo>("pageInfo1");
             this.pageInfo2 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRPageInfo>("pageInfo2");
 
             // Data Sources
@@ -85,6 +87,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Reports {
         private DevExpress.XtraReports.UI.XRLabel lblSupplierCode;
         private DevExpress.XtraReports.UI.XRLabel lblSupplierNameTitle;
         private DevExpress.XtraReports.UI.XRLabel lblWhCodeTitle;
+        private DevExpress.XtraReports.UI.XRLabel label3;
         private DevExpress.XtraReports.UI.XRLabel label12;
         private DevExpress.XtraReports.UI.DetailBand Detail1;
         private DevExpress.XtraReports.UI.GroupHeaderBand GroupHeader1;
@@ -105,6 +108,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Reports {
         private DevExpress.XtraReports.UI.XRTableCell tableCell10;
         private DevExpress.XtraReports.UI.XRTableCell tableCell9;
         private DevExpress.DataAccess.ObjectBinding.ObjectDataSource inventoryBalanceDataSource;
+        private DevExpress.XtraReports.UI.XRPageInfo pageInfo1;
         private DevExpress.XtraReports.UI.XRPageInfo pageInfo2;
         private DevExpress.XtraReports.UI.XRControlStyle Style1;
     }

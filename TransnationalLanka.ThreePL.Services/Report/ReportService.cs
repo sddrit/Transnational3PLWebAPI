@@ -121,11 +121,13 @@ namespace TransnationalLanka.ThreePL.Services.Report
                 PurchaseOrderNumber = purchaseOrder?.PoNumber,
                 SupplierName = supplier.SupplierName,
                 SupplierCode = supplier.Code,
+                SupplierInvoiceNo=grn?.SupplierInvoiceNumber,
                 WareHouse = wareHouse.Code,
                 WareHouseName = wareHouse.Name,
                 WareHouseAddressLine1 = wareHouse.Address.AddressLine1,
                 WareHouseAddressLine2 = wareHouse.Address.AddressLine2,
                 City=wareHouse.Address.City.CityName,
+                Telephone = wareHouse?.Phone,                
                 GrnReportItems = grn.GoodReceivedNoteItems.Select(item => new GrnReportItem()
                 {
                     ExpiredDate = item.ExpiredDate,
@@ -198,7 +200,8 @@ namespace TransnationalLanka.ThreePL.Services.Report
                 WareHouseName = wareHouse?.Name,
                 WareHouseAddressLine1 = wareHouse?.Address.AddressLine1,
                 WareHouseAddressLine2 = wareHouse?.Address.AddressLine2,
-                City = wareHouse?.Address.City.CityName,                
+                City = wareHouse?.Address.City.CityName,     
+                Telephone= wareHouse?.Phone,
                 PurchaseOrderReportItems = po.PurchaseOrderItems.Select(item => new PurchaseOrderReportItem()
                 {
                     ProductId = item.Product.Code,
@@ -281,7 +284,8 @@ namespace TransnationalLanka.ThreePL.Services.Report
                 SupplierName = supplier.SupplierName,
                 SupplierAddressLine1 = supplier.Address.AddressLine1,
                 SupplierAddressLine2 = supplier.Address.AddressLine2,
-                SupplierVatNumber=supplier.VatNumber,                
+                SupplierVatNumber=supplier.VatNumber,     
+                SupplierSVatNumber=supplier.SVatNumber,
                 InvoiceReportItems = invoice.InvoiceItems.Select(item => new InvoiceReportItem()
                 {
                     Description = item.Description,
