@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using TransnationalLanka.ThreePL.Core.Enums;
+using TransnationalLanka.ThreePL.Dal.Entities;
 
 namespace TransnationalLanka.ThreePL.Services.Report.Core
 {
@@ -20,7 +21,7 @@ namespace TransnationalLanka.ThreePL.Services.Report.Core
         public string SupplierName { get; set; }
         public string SupplierAddressLine1 { get; set; }
         public string SupplierAddressLine2 { get; set; }
-        public string VatNumber { get; set; }
+        public string VatNumber { get; set; }       
         public List<InvoiceReportItem> InvoiceReportItems { get; set; }
 
     }
@@ -31,5 +32,6 @@ namespace TransnationalLanka.ThreePL.Services.Report.Core
         public decimal Rate { get; set; }
         public decimal Quantity { get; set; }
         public decimal Amount { get; set; }
+        public InvoiceItemChargeType ChargeType { get; set; }
     }
 }
