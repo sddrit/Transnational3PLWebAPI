@@ -663,6 +663,7 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
         {
             return delivery.DeliveryStatus == DeliveryStatus.Dispatched 
                    || delivery.DeliveryStatus == DeliveryStatus.Completed
+                   || delivery.DeliveryStatus == DeliveryStatus.PartiallyCompleted
                    || delivery.DeliveryStatus == DeliveryStatus.PartiallyReturn;
         }
 

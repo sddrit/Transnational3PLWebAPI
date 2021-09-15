@@ -15,10 +15,10 @@
     </Item2>
     <Item3 Ref="8" ControlType="ReportHeaderBand" Name="ReportHeader" HeightF="214.833328">
       <Controls>
-        <Item1 Ref="9" ControlType="XRLabel" Name="label16" Multiline="true" Text="Product Name:" TextAlignment="TopLeft" SizeF="105.583405,23" LocationFloat="528.003662,148.499954" Font="Arial, 9.25pt, style=Bold" Padding="6,6,0,0,100">
+        <Item1 Ref="9" ControlType="XRLabel" Name="label16" Multiline="true" Text="Product Name:" TextAlignment="TopLeft" SizeF="105.583405,23" LocationFloat="462.030426,148.5" Font="Arial, 9.25pt, style=Bold" Padding="6,6,0,0,100">
           <StylePriority Ref="10" UseFont="false" UsePadding="false" UseTextAlignment="false" />
         </Item1>
-        <Item2 Ref="11" ControlType="XRLabel" Name="label15" Multiline="true" Text="Code:" TextAlignment="TopLeft" SizeF="105.583466,23" LocationFloat="528.003662,125.499939" Font="Arial, 9.25pt, style=Bold" Padding="6,6,0,0,100">
+        <Item2 Ref="11" ControlType="XRLabel" Name="label15" Multiline="true" Text="Code:" TextAlignment="TopLeft" SizeF="105.583466,23" LocationFloat="462.030426,125.499977" Font="Arial, 9.25pt, style=Bold" Padding="6,6,0,0,100">
           <StylePriority Ref="12" UseFont="false" UsePadding="false" UseTextAlignment="false" />
         </Item2>
         <Item3 Ref="13" ControlType="XRLabel" Name="label14" Multiline="true" Text="To:" TextAlignment="TopLeft" SizeF="101.666664,23" LocationFloat="0,148.499954" Font="Arial, 9.25pt, style=Bold" Padding="6,6,0,0,100">
@@ -39,13 +39,13 @@
           </ExpressionBindings>
           <StylePriority Ref="22" UseFont="false" />
         </Item6>
-        <Item7 Ref="23" ControlType="XRLabel" Name="label3" Multiline="true" Text="label3" SizeF="134.13623,23" LocationFloat="633.5871,148.499954" Font="Arial, 9.25pt" Padding="2,2,0,0,100">
+        <Item7 Ref="23" ControlType="XRLabel" Name="label3" Multiline="true" Text="label3" SizeF="215.386169,23" LocationFloat="567.613831,148.499969" Font="Arial, 9.25pt" Padding="2,2,0,0,100">
           <ExpressionBindings>
             <Item1 Ref="24" EventName="BeforePrint" PropertyName="Text" Expression="[ProductName]" />
           </ExpressionBindings>
           <StylePriority Ref="25" UseFont="false" />
         </Item7>
-        <Item8 Ref="26" ControlType="XRLabel" Name="label2" Multiline="true" Text="label2" SizeF="134.136169,23" LocationFloat="633.587158,125.499939" Font="Arial, 9.25pt" Padding="2,2,0,0,100">
+        <Item8 Ref="26" ControlType="XRLabel" Name="label2" Multiline="true" Text="label2" SizeF="215.386108,22.9999924" LocationFloat="567.6139,125.499947" Font="Arial, 9.25pt" Padding="2,2,0,0,100">
           <ExpressionBindings>
             <Item1 Ref="27" EventName="BeforePrint" PropertyName="Text" Expression="[ProductCode]" />
           </ExpressionBindings>
@@ -165,33 +165,26 @@
         </Item2>
         <Item3 Ref="84" ControlType="GroupFooterBand" Name="GroupFooter1" HeightF="26.2084141">
           <Controls>
-            <Item1 Ref="85" ControlType="XRLabel" Name="label18" TextFormatString="{0:#,##0;(#,##0);'-' }" Multiline="true" Text="label18" TextAlignment="TopRight" SizeF="71.09711,23" LocationFloat="513.298035,0" Font="Arial, 9.25pt, style=Bold" Padding="2,2,0,0,100" Borders="Bottom" BorderWidth="3" BorderDashStyle="Double">
+            <Item1 Ref="85" ControlType="XRLabel" Name="label12" TextFormatString="{0:#,##0.00;(#,##0.00);'-' }" Multiline="true" Text="label12" TextAlignment="TopRight" SizeF="109.9339,23" LocationFloat="688.0661,0" Font="Arial, 9.25pt, style=Bold" Padding="2,2,0,0,100" Borders="Bottom" BorderWidth="3" BorderDashStyle="Double">
               <Summary Ref="86" Running="Group" />
               <ExpressionBindings>
-                <Item1 Ref="87" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([Quantity])" />
+                <Item1 Ref="87" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([Value])" />
               </ExpressionBindings>
               <StylePriority Ref="88" UseFont="false" UseBorders="false" UseBorderWidth="false" UseBorderDashStyle="false" UseTextAlignment="false" />
             </Item1>
-            <Item2 Ref="89" ControlType="XRLabel" Name="label12" TextFormatString="{0:#,##0.00;(#,##0.00);'-' }" Multiline="true" Text="label12" TextAlignment="TopRight" SizeF="109.9339,23" LocationFloat="688.0661,0" Font="Arial, 9.25pt, style=Bold" Padding="2,2,0,0,100" Borders="Bottom" BorderWidth="3" BorderDashStyle="Double">
-              <Summary Ref="90" Running="Group" />
-              <ExpressionBindings>
-                <Item1 Ref="91" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([Value])" />
-              </ExpressionBindings>
-              <StylePriority Ref="92" UseFont="false" UseBorders="false" UseBorderWidth="false" UseBorderDashStyle="false" UseTextAlignment="false" />
-            </Item2>
           </Controls>
         </Item3>
       </Bands>
     </Item5>
   </Bands>
   <StyleSheet>
-    <Item1 Ref="93" Name="Title" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Arial, 14.25pt" ForeColor="255,75,75,75" BackColor="Transparent" BorderColor="Black" Sides="None" StringFormat="Near;Near;0;None;Character;Default" BorderWidthSerializable="1" />
-    <Item2 Ref="94" Name="DetailCaption1" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Arial, 8.25pt, style=Bold" ForeColor="White" BackColor="255,75,75,75" BorderColor="White" Sides="Left" StringFormat="Near;Center;0;None;Character;Default" TextAlignment="MiddleLeft" BorderWidthSerializable="2" />
-    <Item3 Ref="95" Name="DetailData1" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Arial, 8.25pt" ForeColor="Black" BorderColor="Transparent" Sides="Left" StringFormat="Near;Center;0;None;Character;Default" TextAlignment="MiddleLeft" BorderWidthSerializable="2" />
-    <Item4 Ref="96" Name="DetailCaption2" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Arial, 8.25pt, style=Bold" ForeColor="White" BackColor="255,111,111,111" BorderColor="White" Sides="Left" StringFormat="Near;Center;0;None;Character;Default" TextAlignment="MiddleLeft" BorderWidthSerializable="2" />
-    <Item5 Ref="97" Name="DetailData2" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Arial, 8.25pt" ForeColor="Black" BorderColor="Transparent" Sides="Left" StringFormat="Near;Center;0;None;Character;Default" TextAlignment="MiddleLeft" BorderWidthSerializable="2" />
-    <Item6 Ref="98" Name="DetailData3_Odd" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Arial, 8.25pt" ForeColor="Black" BackColor="255,231,231,231" BorderColor="Transparent" Sides="None" StringFormat="Near;Center;0;None;Character;Default" TextAlignment="MiddleLeft" BorderWidthSerializable="1" />
-    <Item7 Ref="99" Name="PageInfo" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Arial, 8.25pt, style=Bold" ForeColor="255,75,75,75" StringFormat="Near;Near;0;None;Character;Default" />
+    <Item1 Ref="89" Name="Title" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Arial, 14.25pt" ForeColor="255,75,75,75" BackColor="Transparent" BorderColor="Black" Sides="None" StringFormat="Near;Near;0;None;Character;Default" BorderWidthSerializable="1" />
+    <Item2 Ref="90" Name="DetailCaption1" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Arial, 8.25pt, style=Bold" ForeColor="White" BackColor="255,75,75,75" BorderColor="White" Sides="Left" StringFormat="Near;Center;0;None;Character;Default" TextAlignment="MiddleLeft" BorderWidthSerializable="2" />
+    <Item3 Ref="91" Name="DetailData1" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Arial, 8.25pt" ForeColor="Black" BorderColor="Transparent" Sides="Left" StringFormat="Near;Center;0;None;Character;Default" TextAlignment="MiddleLeft" BorderWidthSerializable="2" />
+    <Item4 Ref="92" Name="DetailCaption2" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Arial, 8.25pt, style=Bold" ForeColor="White" BackColor="255,111,111,111" BorderColor="White" Sides="Left" StringFormat="Near;Center;0;None;Character;Default" TextAlignment="MiddleLeft" BorderWidthSerializable="2" />
+    <Item5 Ref="93" Name="DetailData2" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Arial, 8.25pt" ForeColor="Black" BorderColor="Transparent" Sides="Left" StringFormat="Near;Center;0;None;Character;Default" TextAlignment="MiddleLeft" BorderWidthSerializable="2" />
+    <Item6 Ref="94" Name="DetailData3_Odd" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Arial, 8.25pt" ForeColor="Black" BackColor="255,231,231,231" BorderColor="Transparent" Sides="None" StringFormat="Near;Center;0;None;Character;Default" TextAlignment="MiddleLeft" BorderWidthSerializable="1" />
+    <Item7 Ref="95" Name="PageInfo" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Arial, 8.25pt, style=Bold" ForeColor="255,75,75,75" StringFormat="Near;Near;0;None;Character;Default" />
   </StyleSheet>
   <ComponentStorage>
     <Item1 Ref="0" ObjectType="DevExpress.DataAccess.ObjectBinding.ObjectDataSource,DevExpress.DataAccess.v20.2" Name="stockMovementDataSource" Base64="PE9iamVjdERhdGFTb3VyY2UgTmFtZT0ic3RvY2tNb3ZlbWVudERhdGFTb3VyY2UiIC8+" />
