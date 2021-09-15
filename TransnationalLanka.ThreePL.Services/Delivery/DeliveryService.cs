@@ -119,7 +119,7 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
                    DeliveryStats = g.GroupBy(i => i.DeliveryStatus)
                        .Select(i => new DeliveryStat()
                        {
-                           Count = i.Count(),
+                           Count = i.Sum(s => s.Count),
                            Status = i.Key
                        }).ToList()
                 }).ToList();
