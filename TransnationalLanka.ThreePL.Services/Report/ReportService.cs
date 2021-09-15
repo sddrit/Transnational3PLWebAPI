@@ -285,6 +285,7 @@ namespace TransnationalLanka.ThreePL.Services.Report
                 SupplierName = supplier.SupplierName,
                 SupplierAddressLine1 = supplier.Address.AddressLine1,
                 SupplierAddressLine2 = supplier.Address.AddressLine2,
+                SupplierCity=supplier.Address.City.CityName,
                 VatNumber = supplier.VatNumber,                         
                 InvoiceReportItems = invoice.InvoiceItems.Select(item => new InvoiceReportItem()
                 {
