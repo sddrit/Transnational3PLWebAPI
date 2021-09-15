@@ -63,7 +63,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
                 return Ok(new
                 {
                     DayStat = await _deliveryService.GetTodayDeliveryStat(user.SupplierId.Value),
-                    MonthlyStat = await _deliveryService.GetMonthlyDeliveryStat(user.SupplierId.Value)
+                    WeeklyStat = await _deliveryService.GetWeeklyDeliveryStat(user.SupplierId.Value)
                 });
             }
 
@@ -72,7 +72,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Controllers
             return Ok(new
             {
                 DayStat = await _deliveryService.GetTodayDeliveryStat(wareHouses: wareHousesIds),
-                MonthlyStat = await _deliveryService.GetMonthlyDeliveryStat(wareHouses: wareHousesIds)
+                WeeklyStat = await _deliveryService.GetWeeklyDeliveryStat(wareHouses: wareHousesIds)
             });
         }
 

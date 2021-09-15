@@ -87,7 +87,7 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
             return result;
         }
 
-        public async Task<List<DayDeliveryStat>> GetMonthlyDeliveryStat(long? supplierId = null, long[] wareHouses = null)
+        public async Task<List<DayDeliveryStat>> GetWeeklyDeliveryStat(long? supplierId = null, long[] wareHouses = null)
         {
             var query = _unitOfWork.DeliveryRepository.GetAll();
 
@@ -102,11 +102,11 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
                     d.WareHouseId == null || (d.WareHouseId.HasValue && wareHouses.Contains(d.WareHouseId.Value)));
             }
 
-            DateTime now = DateTime.Now;
-            var from = new DateTime(now.Year, now.Month, 1);
-            var to = from.AddMonths(1).AddDays(-1);
+            DateTime baseDate = DateTime.Today;
+            var thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek);
+            var thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
 
-            query = query.Where(d => d.DeliveryDate >= from && d.DeliveryDate <= to);
+            query = query.Where(d => d.DeliveryDate >= thisWeekStart && d.DeliveryDate <= thisWeekEnd);
 
             var groupedDeliveryStatDaily = await query.GroupBy(d => new {d.DeliveryDate, d.DeliveryStatus})
                 .Select(g => new {g.Key.DeliveryStatus, g.Key.DeliveryDate, Count = g.Count()})
@@ -129,7 +129,7 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
 
             var deliveryStatus = Enum.GetValues<DeliveryStatus>();
 
-            for (DateTime currentDate = from; currentDate <= to; currentDate = currentDate.AddDays(1))
+            for (DateTime currentDate = thisWeekStart; currentDate <= thisWeekEnd; currentDate = currentDate.AddDays(1))
             {
                 if (result.All(i => i.Date != currentDate))
                 {
@@ -161,7 +161,7 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
                 }
             }
 
-            return result;
+            return result.OrderBy(i => i.Date).ToList();
         }
 
         public IQueryable<Dal.Entities.Delivery> GetDeliveries()
