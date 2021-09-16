@@ -443,13 +443,24 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
                 if (trackingNumbers.Select(tn => tn.ToLower())
                     .Contains(deliveryTracking.TrackingNumber.ToLower()))
                 {
+                    
+                    if (deliveryTracking.Status != TrackingStatus.Dispatched)
+                    {
+                        throw new ServiceException(new ErrorMessage[]
+                        {
+                            new ErrorMessage()
+                            {
+                                Message =
+                                    $"Tracking number ({deliveryTracking.TrackingNumber}) could not able to mark as complete"
+                            }
+                        });
+                    }
+
                     deliveryTracking.Status = TrackingStatus.Completed;
                 }
             }
 
-            delivery.DeliveryStatus = 
-                delivery.DeliveryTrackings.All(t => t.Status == TrackingStatus.Completed) ? DeliveryStatus.Completed 
-                    : DeliveryStatus.PartiallyCompleted;
+            SetDeliveryStatus(delivery);
 
             await _unitOfWork.SaveChanges();
 
@@ -505,9 +516,7 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
                     }
                 }
 
-                delivery.DeliveryStatus =
-                    delivery.DeliveryTrackings.All(t => t.Status == TrackingStatus.Returned) ? DeliveryStatus.Return
-                        : DeliveryStatus.PartiallyReturn;
+                SetDeliveryStatus(delivery);
 
                 await _unitOfWork.SaveChanges();
 
@@ -621,6 +630,33 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
             return result;
         }
 
+        private void SetDeliveryStatus(Dal.Entities.Delivery delivery)
+        {
+
+            if (delivery.DeliveryTrackings.All(t => t.Status == TrackingStatus.Returned))
+            {
+                delivery.DeliveryStatus = DeliveryStatus.Return;
+                return;
+            }
+
+            if (delivery.DeliveryTrackings.Any(t => t.Status == TrackingStatus.Returned))
+            {
+                delivery.DeliveryStatus = DeliveryStatus.PartiallyReturn;
+                return;
+            }
+
+            if (delivery.DeliveryTrackings.All(t => t.Status == TrackingStatus.Completed))
+            {
+                delivery.DeliveryStatus = DeliveryStatus.Completed;
+                return;
+            }
+
+            if (delivery.DeliveryTrackings.Any(t => t.Status == TrackingStatus.Completed))
+            {
+                delivery.DeliveryStatus = DeliveryStatus.PartiallyCompleted;
+            }
+        }
+
         private async Task<long> GetDeliveryByTrackingNumber(string trackingNumber)
         {
             var deliveryId = await _unitOfWork.DeliveryRepository.GetAll()
@@ -656,7 +692,8 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
         private bool CanMarkAsComplete(Dal.Entities.Delivery delivery)
         {
             return delivery.DeliveryStatus == DeliveryStatus.Dispatched 
-                   || delivery.DeliveryStatus == DeliveryStatus.PartiallyCompleted;
+                   || delivery.DeliveryStatus == DeliveryStatus.PartiallyCompleted 
+                   || delivery.DeliveryTrackings.Any(dt => dt.Status == TrackingStatus.Dispatched);
         }
 
         private bool CanMarkAsReturn(Dal.Entities.Delivery delivery)
