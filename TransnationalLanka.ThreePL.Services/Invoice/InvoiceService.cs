@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Audit.Core;
 using Microsoft.EntityFrameworkCore;
 using TransnationalLanka.ThreePL.Core.Constants;
 using TransnationalLanka.ThreePL.Core.Exceptions;
@@ -50,19 +51,27 @@ namespace TransnationalLanka.ThreePL.Services.Invoice
 
         public async Task GenerateInvoices()
         {
+            await AuditScope.LogAsync("Invoice:Generate", new { Message = "Start Generating Invoice" });
+
             var supplierIds = await _unitOfWork.SupplierRepository.GetAll()
                 .Select(s => s.Id)
                 .ToListAsync();
+
 
             foreach (var supplierId in supplierIds)
             {
                 try
                 {
+                    await AuditScope.LogAsync("Invoice:Generate", 
+                        new { Message = $"Generating invoice for Supplier ID : {supplierId}" });
                     await GenerateInvoice(supplierId);
+                    await AuditScope.LogAsync("Invoice:Generate", 
+                        new { Message = $"Successfully generated invoice for Supplier ID : {supplierId}" });
                 }
-                catch
+                catch (Exception exception)
                 {
-                    //Todo add logger
+                    await AuditScope.LogAsync("Invoice:Generate", 
+                        new { Message = $"Unable to generate invoice for Supplier ID : {supplierId}", exception });
                 }
             }
         }

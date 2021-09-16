@@ -1,30 +1,33 @@
 ﻿using System;
 using System.Security.Claims;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using TransnationalLanka.ThreePL.Core.Environment;
-using TransnationalLanka.ThreePL.Services.Account;
+using TransnationalLanka.ThreePL.Services.Account.Request;
 
 namespace TransnationalLanka.ThreePL.WebApi.Util.Enviroment
 {
     public class WebEnvirnoment : IEnvironment
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IAccountService _accountService;
-        public WebEnvirnoment(IHttpContextAccessor httpContextAccessor, IAccountService accountService)
+        private readonly IMediator _mediator;
+
+        public WebEnvirnoment(IHttpContextAccessor httpContextAccessor, IMediator mediator)
         {
             _httpContextAccessor = httpContextAccessor;
-            _accountService = accountService;
+            _mediator = mediator;
         }
+
         public CurrentEnvironment GetCurrentEnvironment()
         {
-            if (_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) == null)
+            if (_httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier) == null)
             {
                 return new CurrentEnvironment()
                 {
                     Service = "Web API",
                     MachineName = Environment.MachineName,
                     UserId = null,
-                    UserName = "Admin"
+                    UserName = Environment.MachineName
                 };
             }
 
@@ -34,7 +37,7 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.Enviroment
 
             if (!string.IsNullOrEmpty(userId))
             {
-                var user = _accountService.GetUserById(long.Parse(userId)).Result;
+                var user = _mediator.Send(new GetUserByIdRequestCommand() { Id = long.Parse(userId) }).Result;
                 username = user.UserName;
             }
 

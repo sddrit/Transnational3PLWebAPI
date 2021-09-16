@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Storage;
+using TransnationalLanka.ThreePL.Core.Environment;
 using TransnationalLanka.ThreePL.Dal.Core;
 using TransnationalLanka.ThreePL.Dal.Entities;
 
@@ -31,6 +32,7 @@ namespace TransnationalLanka.ThreePL.Dal
     public class UnitOfWork : IUnitOfWork
     {
         private readonly ThreePlDbContext _context;
+        private readonly IEnvironment _environment;
 
         private IRepository<City> _cityRepository;
         private IRepository<Address> _addressRepository;
@@ -49,8 +51,9 @@ namespace TransnationalLanka.ThreePL.Dal
         private IRepository<UnitOfMeasure> _unitOfMeasureRepository;
         private IRepository<Setting> _settingRepository;
 
-        public UnitOfWork(ThreePlDbContext context)
+        public UnitOfWork(ThreePlDbContext context, IEnvironment environment)
         {
+            _environment = environment;
             _context = context;
         }
 
@@ -216,7 +219,8 @@ namespace TransnationalLanka.ThreePL.Dal
 
         public async Task SaveChanges()
         {
-            await _context.SaveChangesAsync();
+            var currentEnvironment = _environment.GetCurrentEnvironment();
+            await _context.SaveChangesAsync(currentEnvironment.UserId, currentEnvironment.UserName, currentEnvironment.MachineName);
         }
 
     }

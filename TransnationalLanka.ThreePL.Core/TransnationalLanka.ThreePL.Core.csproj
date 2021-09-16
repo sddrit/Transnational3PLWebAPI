@@ -4,8 +4,4 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="DevExpress.Xpo" Version="19.2.3" />
-  </ItemGroup>
-
 </Project>

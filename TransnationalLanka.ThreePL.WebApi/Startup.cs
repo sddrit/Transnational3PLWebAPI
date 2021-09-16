@@ -1,15 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using Audit.Core;
+using Audit.WebApi;
 using DevExpress.AspNetCore;
 using DevExpress.XtraReports.Services;
 using Hangfire;
 using Hangfire.SqlServer;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -19,7 +23,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using TransnationalLanka.ThreePL.Core.Environment;
 using TransnationalLanka.ThreePL.Dal;
-using TransnationalLanka.ThreePL.Dal.Core;
 using TransnationalLanka.ThreePL.Dal.Entities;
 using TransnationalLanka.ThreePL.Integration.Tracker;
 using TransnationalLanka.ThreePL.Services.Account;
@@ -58,6 +61,8 @@ namespace TransnationalLanka.ThreePL.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMediatR(typeof(ApplicationService).GetTypeInfo().Assembly);
+
             var authorizationConfiguration = Configuration.GetSection("Token");
             services.Configure<TokenConfiguration>(Configuration.GetSection("Token"));
 
@@ -117,6 +122,7 @@ namespace TransnationalLanka.ThreePL.WebApi
             services.AddScoped<IInvoiceService, InvoiceService>();
             services.AddScoped<IReportProvider, ThreePlReportProvider>();
             services.AddScoped<ISettingService, SettingService>();
+            services.AddScoped<ILogService, LogService>();
 
             // Add Hangfire services.
             services.AddHangfire(configuration => configuration
@@ -220,6 +226,19 @@ namespace TransnationalLanka.ThreePL.WebApi
                     .AllowAnyMethod()
             );
 
+            Audit.Core.Configuration.Setup()
+                .JsonAdapter<JsonNewtonsoftAdapter>()
+                .UseSqlServer(config => config
+                    .ConnectionString(Configuration.GetConnectionString("DbConnection"))
+                    .Schema("dbo")
+                    .TableName("Events")
+                    .IdColumnName("Id")
+                    .JsonColumnName("JsonData")
+                    .CustomColumn("Updated", ev => DateTimeOffset.UtcNow)
+                    .CustomColumn("Created", ev => DateTimeOffset.UtcNow)
+                    .CustomColumn("EventType", ev => ev.EventType)
+                    .CustomColumn("User", ev => ev.Environment.UserName));
+
             app.UseDevExpressControls();
 
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));
@@ -234,6 +253,19 @@ namespace TransnationalLanka.ThreePL.WebApi
             app.UseHangfireDashboard();
 
             RecurringJob.AddOrUpdate("invoice-generate-job",(IInvoiceService invoiceService) => invoiceService.GenerateInvoices(), Cron.Daily);
+
+            app.UseAuditMiddleware(_ => _
+                .FilterByRequest(request => request.Path.Value != null && !request.Path.Value.EndsWith("favicon.ico"))
+                .WithEventType("{verb}:{url}")
+                .IncludeHeaders()
+                .IncludeResponseHeaders()
+                .IncludeRequestBody(true)
+                .IncludeResponseBody());
+
+            app.Use(async (context, next) => {
+                context.Request.EnableBuffering();
+                await next();
+            });
 
             app.UseEndpoints(endpoints =>
             {
