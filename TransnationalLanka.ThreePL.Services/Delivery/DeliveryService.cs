@@ -262,11 +262,11 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
             var response = await _trackerApiService.GetSetTrackingNoRange(new GetSetTrackingNumberDetailsRequest()
             {
                 CustomerCode = supplier.TrackerCode,
-                ConsignorName = supplier.SupplierName,
+                ConsignorName = supplier.TrackerCode,
                 TPLWSBatchID = delivery.DeliveryNo,
                 Type = delivery.Type == DeliveryType.Cod ? "1" : "2",
                 TrackingNoCount = requiredTrackingNumberCount.ToString(),
-                ConsigneeName = supplier.TrackerCode,
+                ConsigneeName = delivery.DeliveryCustomer.FullName,
                 ConsigneeAddress = delivery.DeliveryCustomer.Address,
                 ConsigneePhone = string.IsNullOrEmpty(delivery.DeliveryCustomer.Phone) ? "" : delivery.DeliveryCustomer.Phone,
                 ConsigneeCity = delivery.DeliveryCustomer.City.CityName,

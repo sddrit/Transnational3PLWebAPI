@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using TransnationalLanka.ThreePL.Core.Constants;
+using TransnationalLanka.ThreePL.Dal;
 using TransnationalLanka.ThreePL.Dal.Entities;
 using TransnationalLanka.ThreePL.Services.Account;
 using TransnationalLanka.ThreePL.Services.Account.Core;
@@ -11,15 +13,19 @@ namespace TransnationalLanka.ThreePL.Services.Application
     {
         private readonly IAccountService _accountService;
         private readonly ISettingService _settingService;
+        private readonly ThreePlDbContext _context;
 
-        public ApplicationService(IAccountService accountService, ISettingService settingService)
+        public ApplicationService(ThreePlDbContext context, IAccountService accountService, ISettingService settingService)
         {
+            _context = context;
             _accountService = accountService;
             _settingService = settingService;
         }
 
         public async Task Initial()
         {
+            await _context.Database.MigrateAsync();
+
             //Creating the roles
             await _accountService.CreateRole(Roles.ADMIN_ROLE);
             await _accountService.CreateRole(Roles.SUPPLIER_ROLE);
