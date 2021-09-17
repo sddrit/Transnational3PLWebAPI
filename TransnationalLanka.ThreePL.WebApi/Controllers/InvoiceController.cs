@@ -10,11 +10,13 @@ using TransnationalLanka.ThreePL.WebApi.Models.Invoice;
 using TransnationalLanka.ThreePL.WebApi.Util.Authorization;
 using System.Collections.Generic;
 using System.Linq;
+using Audit.WebApi;
 using TransnationalLanka.ThreePL.Dal.Entities;
 using TransnationalLanka.ThreePL.Services.Account;
 
 namespace TransnationalLanka.ThreePL.WebApi.Controllers
 {
+    [AuditApi(IncludeRequestBody = true)]
     [Route("api/[controller]")]
     [ApiController]
     public class InvoiceController : ControllerBase

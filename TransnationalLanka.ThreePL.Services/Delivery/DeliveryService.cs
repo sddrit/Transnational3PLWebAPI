@@ -266,7 +266,7 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
                 TPLWSBatchID = delivery.DeliveryNo,
                 Type = delivery.Type == DeliveryType.Cod ? "1" : "2",
                 TrackingNoCount = requiredTrackingNumberCount.ToString(),
-                ConsigneeName = delivery.DeliveryCustomer.FullName,
+                ConsigneeName = supplier.TrackerCode,
                 ConsigneeAddress = delivery.DeliveryCustomer.Address,
                 ConsigneePhone = string.IsNullOrEmpty(delivery.DeliveryCustomer.Phone) ? "" : delivery.DeliveryCustomer.Phone,
                 ConsigneeCity = delivery.DeliveryCustomer.City.CityName,
@@ -573,10 +573,15 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
                 if (row.Cells.All(d => d.CellType == CellType.Blank)) continue;
 
                 var trackingNumberCell = row.GetCell(0);
-                var trackingNumber = trackingNumberCell.StringCellValue;
+                var trackingNumber = trackingNumberCell.ToString();
 
                 var typeCell = row.GetCell(1);
                 var type = typeCell.StringCellValue.Trim().ToLower();
+
+                if (string.IsNullOrEmpty(trackingNumber))
+                {
+                    continue;
+                }
 
                 try
                 {

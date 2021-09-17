@@ -220,12 +220,6 @@ namespace TransnationalLanka.ThreePL.WebApi
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TransnationalLanka.ThreePL.WebApi v1"));
             }
 
-            app.UseCors(builder =>
-                builder.WithOrigins(Configuration["Origins"].Split(","))
-                    .AllowAnyHeader()
-                    .AllowAnyMethod()
-            );
-
             Audit.Core.Configuration.Setup()
                 .JsonAdapter<JsonNewtonsoftAdapter>()
                 .UseSqlServer(config => config
@@ -238,6 +232,25 @@ namespace TransnationalLanka.ThreePL.WebApi
                     .CustomColumn("Created", ev => DateTimeOffset.UtcNow)
                     .CustomColumn("EventType", ev => ev.EventType)
                     .CustomColumn("User", ev => ev.Environment.UserName));
+
+            app.UseAuditMiddleware(_ => _
+                .WithEventType("{verb}:{url}")
+                .IncludeHeaders()
+                .IncludeResponseHeaders()
+                .IncludeResponseBody());
+
+            app.Use(async (context, next) =>
+            {
+                context.Request.EnableBuffering();
+                await next();
+            });
+
+
+            app.UseCors(builder =>
+                builder.WithOrigins(Configuration["Origins"].Split(","))
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+            );
 
             app.UseDevExpressControls();
 
@@ -254,29 +267,15 @@ namespace TransnationalLanka.ThreePL.WebApi
 
             RecurringJob.AddOrUpdate("invoice-generate-job",(IInvoiceService invoiceService) => invoiceService.GenerateInvoices(), Cron.Daily);
 
-            app.UseAuditMiddleware(_ => _
-                .FilterByRequest(request => request.Path.Value != null && !request.Path.Value.EndsWith("favicon.ico"))
-                .WithEventType("{verb}:{url}")
-                .IncludeHeaders()
-                .IncludeResponseHeaders()
-                .IncludeRequestBody(true)
-                .IncludeResponseBody());
+            //Initial the application
+            var applicationService = app.ApplicationServices.GetService<IApplicationService>();
+            applicationService?.Initial().Wait();
 
-            app.Use(async (context, next) => {
-                context.Request.EnableBuffering();
-                await next();
-            });
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
-
-            //Initial the application
-            var applicationService = app.ApplicationServices.GetService<IApplicationService>();
-            applicationService?.Initial().Wait();
-
-           
         }
     }
 }

@@ -4,6 +4,7 @@ using DevExtreme.AspNet.Data.ResponseModel;
 using DevExtreme.AspNet.Mvc;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Audit.WebApi;
 using TransnationalLanka.ThreePL.Services.Account;
 using TransnationalLanka.ThreePL.Services.Account.Core;
 using TransnationalLanka.ThreePL.Services.Product;
@@ -13,6 +14,7 @@ using TransnationalLanka.ThreePL.WebApi.Util.Linq;
 
 namespace TransnationalLanka.ThreePL.WebApi.Controllers
 {
+    [AuditApi(IncludeRequestBody = true)]
     [Route("api/[controller]")]
     [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE, Roles.SUPPLIER_ROLE,
         Roles.USER_ROLE, Roles.WAREHOUSE_MANAGER_ROLE })]

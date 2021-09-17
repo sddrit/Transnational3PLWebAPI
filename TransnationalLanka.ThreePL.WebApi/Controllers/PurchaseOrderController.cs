@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Audit.WebApi;
 using AutoMapper;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Data.ResponseModel;
@@ -17,6 +18,7 @@ using TransnationalLanka.ThreePL.WebApi.Util.Linq;
 
 namespace TransnationalLanka.ThreePL.WebApi.Controllers
 {
+    [AuditApi(IncludeRequestBody = true)]
     [ThreePlAuthorize(new[] { Roles.ADMIN_ROLE, Roles.USER_ROLE, Roles.WAREHOUSE_MANAGER_ROLE })]
     [Route("api/[controller]")]
     [ApiController]
