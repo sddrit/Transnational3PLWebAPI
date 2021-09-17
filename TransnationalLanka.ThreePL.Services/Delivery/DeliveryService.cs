@@ -219,6 +219,7 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
                 .ThenInclude(s => s.Address.City)
                 .Include(d => d.DeliveryCustomer.City)
                 .Include(d => d.WareHouse)
+                .ThenInclude(w => w.Address.City)
                 .Include(d => d.DeliveryItems)
                 .ThenInclude(i => i.Product)
                 .Include(d => d.DeliveryHistories)
@@ -756,9 +757,9 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
             return delivery;
         }
 
-        public async Task<GetInwardResponse> GetTrackingDetails(string trackingNumber)
+        public async Task<GetDeliveryStatusResponse> GetTrackingDetails(string trackingNumber)
         { 
-            return await _trackerApiService.GetInward(new GetInwardRequest()
+            return await _trackerApiService.GetDeliveryStatus(new GetDeliveryStatusRequest()
             {
                 TrackingNumber = trackingNumber
             });

@@ -26,6 +26,6 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
         Task<List<DayDeliveryStat>> GetWeeklyDeliveryStat(long? supplierId = null, long[] wareHouses = null);
         Task<List<DeliveryStat>> GetTodayDeliveryStat(long? supplierId = null, long[] wareHouses = null);
         Task<decimal> GetLatestDeliveryUnitPrice(long productId);
-        Task<GetInwardResponse> GetTrackingDetails(string trackingNumber);
+        Task<GetDeliveryStatusResponse> GetTrackingDetails(string trackingNumber);
     }
 }

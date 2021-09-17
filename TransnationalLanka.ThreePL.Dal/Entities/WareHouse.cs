@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
 namespace TransnationalLanka.ThreePL.Dal.Entities
@@ -31,5 +32,10 @@ namespace TransnationalLanka.ThreePL.Dal.Entities
         public virtual City City { get; set; }
         public string PostalCode { get; set; }
 
+        public override string ToString()
+        {
+            var addressLines = new[] { AddressLine1, AddressLine2, City?.CityName };
+            return string.Join(", ", addressLines.Where(l => !string.IsNullOrEmpty(l)).ToArray());
+        }
     }
 }

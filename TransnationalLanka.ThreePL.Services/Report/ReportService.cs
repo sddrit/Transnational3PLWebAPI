@@ -145,11 +145,12 @@ namespace TransnationalLanka.ThreePL.Services.Report
             var delivery = await _deliveryService.GetDeliveryById(id);
 
             List<WayBill> WayBills = new List<WayBill>();
+
             if (delivery.WareHouse == null)
             {
                 return new List<WayBill>();
-
             }
+
             foreach (var item in delivery.DeliveryTrackings)
             {
                 WayBill waybill = new WayBill()
@@ -157,14 +158,15 @@ namespace TransnationalLanka.ThreePL.Services.Report
                     DeliveryName = delivery.DeliveryCustomer.FullName,
                     DeliveryAddress = delivery.DeliveryCustomer.Address,
                     DeliveryNumber = delivery.DeliveryNo,
-                    DeliveryPrice = item.DeliveryTrackingItems.Sum(x => x.Value),
+                    DeliveryPrice = delivery.Type == DeliveryType.Cod? item.DeliveryTrackingItems.Sum(x => x.Value) : 0,
                     SupplierCode = delivery.Supplier.Code,
                     SupplierName = delivery.Supplier.SupplierName,
-                    WareHouseAddress = delivery.WareHouse.Address.AddressLine1 + delivery.WareHouse.Address.AddressLine2,
+                    WareHouseAddress = delivery.WareHouse.Address.ToString(),
                     WareHouseCode = delivery.WareHouse.Code,
                     WareHouseName = delivery.WareHouse.Name,
                     TrackingNo = item.TrackingNumber,
-                    WayBillItems = item.DeliveryTrackingItems.Select(i => new WayBillItem()
+                    WayBillItems = item.DeliveryTrackingItems.Where(i => i.Quantity > 0)
+                        .Select(i => new WayBillItem()
                     {
                         ItemCode = i.Product.Code,
                         ItemDescription = i.Product.Name,

@@ -79,12 +79,12 @@ namespace TransnationalLanka.ThreePL.Dal.Entities
                     addressLines.Add(AddressLine2);
                 }
 
-                if (string.IsNullOrEmpty(City.CityName))
+                if (!string.IsNullOrEmpty(City.CityName))
                 {
                     addressLines.Add(City.CityName);
                 }
 
-                if (string.IsNullOrEmpty(PostalCode))
+                if (!string.IsNullOrEmpty(PostalCode))
                 {
                     addressLines.Add(PostalCode);
                 }
