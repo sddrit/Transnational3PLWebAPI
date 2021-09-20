@@ -51,12 +51,15 @@ namespace TransnationalLanka.ThreePL.WebApi
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             Configuration = configuration;
+            WebHostEnvironment = webHostEnvironment;
         }
 
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment WebHostEnvironment { get; }
+
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -117,7 +120,7 @@ namespace TransnationalLanka.ThreePL.WebApi
             services.AddScoped<IGrnService, GrnService>();
             services.AddScoped<IStockTransferService, StockTransferService>();
             services.AddScoped<IDeliveryService, DeliveryService>();
-            services.AddScoped(_ => new TrackerApiService(true));
+            services.AddScoped(_ => new TrackerApiService(!WebHostEnvironment.IsProduction()));
             services.AddScoped<IReportService, ReportService>();
             services.AddScoped<IInvoiceService, InvoiceService>();
             services.AddScoped<IReportProvider, ThreePlReportProvider>();
@@ -213,6 +216,7 @@ namespace TransnationalLanka.ThreePL.WebApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -270,7 +274,6 @@ namespace TransnationalLanka.ThreePL.WebApi
             //Initial the application
             var applicationService = app.ApplicationServices.GetService<IApplicationService>();
             applicationService?.Initial().Wait();
-
 
             app.UseEndpoints(endpoints =>
             {

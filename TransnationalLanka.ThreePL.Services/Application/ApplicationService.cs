@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TransnationalLanka.ThreePL.Core.Constants;
+using TransnationalLanka.ThreePL.Core.Exceptions;
 using TransnationalLanka.ThreePL.Dal;
 using TransnationalLanka.ThreePL.Dal.Entities;
 using TransnationalLanka.ThreePL.Services.Account;
@@ -33,9 +34,13 @@ namespace TransnationalLanka.ThreePL.Services.Application
             await _accountService.CreateRole(Roles.WAREHOUSE_MANAGER_ROLE);
 
             //Creating the admin
-            if (await _accountService.GetUserByUserName("admin") == null)
+            try
             {
-                await _accountService.CreateUser(new User() {UserName = "admin", Email = "slakjaya@gmail.com"}, "1234Qwer@", Roles.ADMIN_ROLE);
+                await _accountService.GetUserByUserName("admin");
+            }
+            catch (ServiceException)
+            {
+                await _accountService.CreateUser(new User() { UserName = "admin", Email = "slakjaya@gmail.com" }, "1234Qwer@", Roles.ADMIN_ROLE);
             }
 
             //Create tax percentage settings

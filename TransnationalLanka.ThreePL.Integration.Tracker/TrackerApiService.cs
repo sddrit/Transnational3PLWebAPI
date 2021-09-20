@@ -12,7 +12,7 @@ namespace TransnationalLanka.ThreePL.Integration.Tracker
     public class TrackerApiService
     {
         private const string DevHost = "http://192.168.52.101:1257/";
-        private const string LiveHost = "http://192.168.52.101:1257/";
+        private const string LiveHost = "http://api.3pl-pronto.transnational-lk.local:83/";
 
         private readonly string _host;
 
