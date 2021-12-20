@@ -260,7 +260,7 @@ namespace TransnationalLanka.ThreePL.WebApi
 
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 
