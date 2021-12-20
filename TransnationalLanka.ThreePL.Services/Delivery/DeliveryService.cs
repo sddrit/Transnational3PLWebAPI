@@ -260,34 +260,27 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
 
             var trackingNumbers = new List<string>();
 
-            var response = await _trackerApiService.GetSetTrackingNoRange(new GetSetTrackingNumberDetailsRequest()
+            for (int i = 0; i < requiredTrackingNumberCount; i++)
             {
-                CustomerCode = supplier.TrackerCode,
-                ConsignorName = supplier.TrackerCode,
-                TPLWSBatchID = delivery.DeliveryNo,
-                Type = delivery.Type == DeliveryType.Cod ? "1" : "2",
-                TrackingNoCount = requiredTrackingNumberCount.ToString(),
-                ConsigneeName = delivery.DeliveryCustomer.FullName,
-                ConsigneeAddress = delivery.DeliveryCustomer.Address,
-                ConsigneePhone = string.IsNullOrEmpty(delivery.DeliveryCustomer.Phone) ? "" : delivery.DeliveryCustomer.Phone,
-                ConsigneeCity = delivery.DeliveryCustomer.City.CityName,
-                InsertedDate = DateTime.Now,
-                CODAmount = delivery.Type == DeliveryType.Cod? delivery.SubTotal.ToString("0.00") : "0.00",
-            });
-
-            if (response.IsSuccess == "1")
-            {
-                trackingNumbers.AddRange(response.Result.TrackingNumber.Split(','));
-            }
-            else
-            {
-                throw new ServiceException(new ErrorMessage[]
+                var trackingNumberResponse = await _trackerApiService.GetTrackingNoRange(new GetTrackingNoRangeRequest()
                 {
-                    new()
-                    {
-                        Message = response.Message
-                    }
+                    CustomerCode = supplier.TrackerCode,
+                    Type = delivery.Type == DeliveryType.Cod ? "1" : "2"
                 });
+
+
+                if (trackingNumberResponse.IsSuccess != "1")
+                {
+                    throw new ServiceException(new ErrorMessage[]
+                    {
+                        new ErrorMessage()
+                        {
+                            Message = "Unable to get the tracking number"
+                        }
+                    });
+                }
+
+                trackingNumbers.Add(trackingNumberResponse.Result.TrackingNumber);
             }
 
             delivery.DeliveryTrackings = new List<DeliveryTracking>();
@@ -366,6 +359,8 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
             {
                 var delivery = await GetDeliveryById(id);
 
+                var supplier = await _supplierService.GetSupplierById(delivery.SupplierId);
+
                 if (!CanMarkAsDispatch(delivery))
                 {
                     throw new ServiceException(new ErrorMessage[]
@@ -405,6 +400,31 @@ namespace TransnationalLanka.ThreePL.Services.Delivery
                 foreach (var deliveryTracking in delivery.DeliveryTrackings)
                 {
                     deliveryTracking.Status = TrackingStatus.Dispatched;
+
+                    var response = await _trackerApiService.UpdateTrackingNoDetails(new UpdateTrackingNoDetailRequest()
+                    {
+                        TrackingNo = deliveryTracking.TrackingNumber,
+                        ConsignorName = supplier.TrackerCode,
+                        ConsigneeName = delivery.DeliveryCustomer.FullName,
+                        ConsigneeAddress = delivery.DeliveryCustomer.Address,
+                        ConsigneePhone = string.IsNullOrEmpty(delivery.DeliveryCustomer.Phone) ? "" : delivery.DeliveryCustomer.Phone,
+                        ConsigneeCity = delivery.DeliveryCustomer.City.CityName,
+                        InsertedDate = DateTime.Now,
+                        TplWsBatchId = delivery.DeliveryNo,
+                        CodAmount = delivery.Type == DeliveryType.Cod ?
+                            deliveryTracking.DeliveryTrackingItems.Sum(i => i.Quantity * i.UnitCost).ToString("0.00") : "0.00",
+                    });
+
+                    if (response.IsSuccess != "1")
+                    {
+                        throw new ServiceException(new ErrorMessage[]
+                        {
+                            new()
+                            {
+                                Message = $"Unable to update the tracking number {deliveryTracking.TrackingNumber}"
+                            }
+                        });
+                    }
                 }
 
                 delivery.DeliveryStatus = DeliveryStatus.Dispatched;
