@@ -26,6 +26,7 @@ using TransnationalLanka.ThreePL.Dal;
 using TransnationalLanka.ThreePL.Dal.Entities;
 using TransnationalLanka.ThreePL.Integration.Tracker;
 using TransnationalLanka.ThreePL.Services.Account;
+using TransnationalLanka.ThreePL.Services.Api;
 using TransnationalLanka.ThreePL.Services.Application;
 using TransnationalLanka.ThreePL.Services.Delivery;
 using TransnationalLanka.ThreePL.Services.Grn;
@@ -125,6 +126,7 @@ namespace TransnationalLanka.ThreePL.WebApi
             services.AddScoped<IInvoiceService, InvoiceService>();
             services.AddScoped<IReportProvider, ThreePlReportProvider>();
             services.AddScoped<ISettingService, SettingService>();
+            services.AddScoped<IApiAccountService, ApiAccountService>();
             services.AddScoped<ILogService, LogService>();
 
             // Add Hangfire services.

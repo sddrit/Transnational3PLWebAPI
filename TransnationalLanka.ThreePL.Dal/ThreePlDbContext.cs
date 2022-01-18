@@ -36,6 +36,7 @@ namespace TransnationalLanka.ThreePL.Dal
         public DbSet<Setting> Settings { get; set; }
         public DbSet<Audit> AuditLogs { get; set; }
         public DbSet<Event> Events { get; set; }
+        public DbSet<Account> Accounts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

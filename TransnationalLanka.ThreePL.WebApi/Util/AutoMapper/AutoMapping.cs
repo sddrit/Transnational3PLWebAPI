@@ -2,6 +2,7 @@
 using AutoMapper;
 using TransnationalLanka.ThreePL.Dal.Entities;
 using TransnationalLanka.ThreePL.WebApi.Models.Account;
+using TransnationalLanka.ThreePL.WebApi.Models.Api;
 using TransnationalLanka.ThreePL.WebApi.Models.Common;
 using TransnationalLanka.ThreePL.WebApi.Models.Delivery;
 using TransnationalLanka.ThreePL.WebApi.Models.Grn;
@@ -113,6 +114,10 @@ namespace TransnationalLanka.ThreePL.WebApi.Util.AutoMapper
             CreateMap<InvoiceItem, InvoiceItemBindingModel>()
                 .ReverseMap();
             CreateMap<Invoice, InvoiceBindingModel>()
+                .ReverseMap();
+
+            //Api Model Mapping
+            CreateMap<ApiAccount, Account>()
                 .ReverseMap();
         }
     }
