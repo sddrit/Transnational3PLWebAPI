@@ -16,6 +16,7 @@ namespace TransnationalLanka.ThreePL.Services.Account
         Task CreateRole(string roleName);
         Task<User> GetUserByUserName(string username);
         Task<User> GetUserById(long id);
+        Task<User> GetUserByIdSupplierId(long supplierId);
         Task<IList<string>> GetRoles(User user);
         Task ResetPassword(long id, string newPassword);
         IQueryable<User> GetUsers();

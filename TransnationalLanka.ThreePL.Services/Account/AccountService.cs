@@ -273,6 +273,12 @@ namespace TransnationalLanka.ThreePL.Services.Account
                 .FirstOrDefaultAsync(u => u.Id == id);
         }
 
+        public async Task<User> GetUserByIdSupplierId(long supplierId)
+        {
+            return await _userManager.Users
+                .FirstOrDefaultAsync(u => u.SupplierId == supplierId);
+        }
+
         public async Task<User> GetUser(ClaimsPrincipal user)
         {
             var userId = long.Parse(user.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty);
