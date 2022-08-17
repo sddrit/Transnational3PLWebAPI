@@ -164,58 +164,58 @@
     </Item5>
     <Item6 Ref="79" ControlType="PageHeaderBand" Name="PageHeader" HeightF="114.083389">
       <Controls>
-        <Item1 Ref="80" ControlType="XRLabel" Name="label23" Multiline="true" Text="label23" SizeF="209.999939,23" LocationFloat="148.125,58.0000038" Padding="6,6,0,0,100">
+        <Item1 Ref="80" ControlType="XRLabel" Name="label5" Multiline="true" Text="label5" SizeF="190.299438,23" LocationFloat="568.0338,47.9999847" Padding="6,6,0,0,100">
           <ExpressionBindings>
-            <Item1 Ref="81" EventName="BeforePrint" PropertyName="Text" Expression="[SupplierInvoiceNo]" />
+            <Item1 Ref="81" EventName="BeforePrint" PropertyName="Text" Expression="[GrnNo]" />
           </ExpressionBindings>
           <StylePriority Ref="82" UsePadding="false" />
         </Item1>
-        <Item2 Ref="83" ControlType="XRLabel" Name="label22" Multiline="true" CanGrow="false" Text="Supplier Invoice No:" TextAlignment="TopLeft" SizeF="148.124954,22.9999962" LocationFloat="5.086263E-05,58.0000038" Padding="6,6,0,0,100">
-          <StylePriority Ref="84" UsePadding="false" UseTextAlignment="false" />
+        <Item2 Ref="83" ControlType="XRLabel" Name="label6" TextFormatString="{0:dd/MM/yyyy}" Multiline="true" Text="label6" SizeF="190.299438,23" LocationFloat="568.0338,0" Padding="6,6,0,0,100">
+          <ExpressionBindings>
+            <Item1 Ref="84" EventName="BeforePrint" PropertyName="Text" Expression="[Date]" />
+          </ExpressionBindings>
+          <StylePriority Ref="85" UsePadding="false" />
         </Item2>
-        <Item3 Ref="85" ControlType="XRLabel" Name="label21" Multiline="true" CanGrow="false" Text="GRN Type:" TextAlignment="TopLeft" SizeF="148.124954,22.9999981" LocationFloat="5.086263E-05,81" Padding="6,6,0,0,100">
-          <StylePriority Ref="86" UsePadding="false" UseTextAlignment="false" />
+        <Item3 Ref="86" ControlType="XRLabel" Name="label23" Multiline="true" Text="label23" SizeF="209.999939,23" LocationFloat="148.125,58.0000038" Padding="6,6,0,0,100">
+          <ExpressionBindings>
+            <Item1 Ref="87" EventName="BeforePrint" PropertyName="Text" Expression="[SupplierInvoiceNo]" />
+          </ExpressionBindings>
+          <StylePriority Ref="88" UsePadding="false" />
         </Item3>
-        <Item4 Ref="87" ControlType="XRLabel" Name="label20" Multiline="true" Text="label20" SizeF="209.999908,23" LocationFloat="148.125,81" Padding="6,6,0,0,100">
-          <ExpressionBindings>
-            <Item1 Ref="88" EventName="BeforePrint" PropertyName="Text" Expression="[GrnType]" />
-          </ExpressionBindings>
-          <StylePriority Ref="89" UsePadding="false" />
+        <Item4 Ref="89" ControlType="XRLabel" Name="label22" Multiline="true" CanGrow="false" Text="Supplier Invoice No:" TextAlignment="TopLeft" SizeF="148.124954,22.9999962" LocationFloat="5.086263E-05,58.0000038" Padding="6,6,0,0,100">
+          <StylePriority Ref="90" UsePadding="false" UseTextAlignment="false" />
         </Item4>
-        <Item5 Ref="90" ControlType="XRLabel" Name="label10" Multiline="true" Text="WH Code:" TextAlignment="TopLeft" SizeF="78.33334,23" LocationFloat="489.70047,73.00001" Padding="2,2,0,0,100">
-          <StylePriority Ref="91" UsePadding="false" UseTextAlignment="false" />
+        <Item5 Ref="91" ControlType="XRLabel" Name="label21" Multiline="true" CanGrow="false" Text="GRN Type:" TextAlignment="TopLeft" SizeF="148.124954,22.9999981" LocationFloat="5.086263E-05,81" Padding="6,6,0,0,100">
+          <StylePriority Ref="92" UsePadding="false" UseTextAlignment="false" />
         </Item5>
-        <Item6 Ref="92" ControlType="XRLabel" Name="label3" Multiline="true" Text="label3" TextAlignment="TopLeft" SizeF="190.299561,22.9999962" LocationFloat="568.0338,73.00001" Padding="6,6,0,0,100">
+        <Item6 Ref="93" ControlType="XRLabel" Name="label20" Multiline="true" Text="label20" SizeF="209.999908,23" LocationFloat="148.125,81" Padding="6,6,0,0,100">
           <ExpressionBindings>
-            <Item1 Ref="93" EventName="BeforePrint" PropertyName="Text" Expression="[WareHouse]" />
+            <Item1 Ref="94" EventName="BeforePrint" PropertyName="Text" Expression="[GrnType]" />
           </ExpressionBindings>
-          <StylePriority Ref="94" UsePadding="false" UseTextAlignment="false" />
+          <StylePriority Ref="95" UsePadding="false" />
         </Item6>
-        <Item7 Ref="95" ControlType="XRLabel" Name="label7" Multiline="true" Text="label7" TextAlignment="TopLeft" SizeF="190.299438,23" LocationFloat="568.0338,25" Padding="6,6,0,0,100">
-          <ExpressionBindings>
-            <Item1 Ref="96" EventName="BeforePrint" PropertyName="Text" Expression="[PurchaseOrderNumber]" />
-          </ExpressionBindings>
+        <Item7 Ref="96" ControlType="XRLabel" Name="label10" Multiline="true" Text="WH Code:" TextAlignment="TopLeft" SizeF="78.33334,23" LocationFloat="489.70047,73.00001" Padding="2,2,0,0,100">
           <StylePriority Ref="97" UsePadding="false" UseTextAlignment="false" />
         </Item7>
-        <Item8 Ref="98" ControlType="XRLabel" Name="label13" Multiline="true" CanGrow="false" Text="Grn No:" TextAlignment="TopLeft" SizeF="78.33334,23" LocationFloat="489.70047,50" Padding="2,2,0,0,100">
-          <StylePriority Ref="99" UsePadding="false" UseTextAlignment="false" />
+        <Item8 Ref="98" ControlType="XRLabel" Name="label3" Multiline="true" Text="label3" TextAlignment="TopLeft" SizeF="190.299561,22.9999962" LocationFloat="568.0338,73.00001" Padding="6,6,0,0,100">
+          <ExpressionBindings>
+            <Item1 Ref="99" EventName="BeforePrint" PropertyName="Text" Expression="[WareHouse]" />
+          </ExpressionBindings>
+          <StylePriority Ref="100" UsePadding="false" UseTextAlignment="false" />
         </Item8>
-        <Item9 Ref="100" ControlType="XRLabel" Name="label12" Multiline="true" CanGrow="false" Text="Po No:" TextAlignment="TopLeft" SizeF="78.33334,23" LocationFloat="489.70047,25" Padding="2,2,0,0,100">
-          <StylePriority Ref="101" UseTextAlignment="false" />
+        <Item9 Ref="101" ControlType="XRLabel" Name="label7" Multiline="true" Text="label7" TextAlignment="TopLeft" SizeF="190.299438,23" LocationFloat="568.0338,25" Padding="6,6,0,0,100">
+          <ExpressionBindings>
+            <Item1 Ref="102" EventName="BeforePrint" PropertyName="Text" Expression="[PurchaseOrderNumber]" />
+          </ExpressionBindings>
+          <StylePriority Ref="103" UsePadding="false" UseTextAlignment="false" />
         </Item9>
-        <Item10 Ref="102" ControlType="XRLabel" Name="label5" Multiline="true" Text="label5" TextAlignment="TopLeft" SizeF="190.299561,22.9999962" LocationFloat="568.0338,49.9999733" Padding="6,6,0,0,100" CanPublish="false">
-          <ExpressionBindings>
-            <Item1 Ref="103" EventName="BeforePrint" PropertyName="Text" Expression="[GrnNo]" />
-          </ExpressionBindings>
-          <StylePriority Ref="104" UsePadding="false" UseTextAlignment="false" />
+        <Item10 Ref="104" ControlType="XRLabel" Name="label13" Multiline="true" CanGrow="false" Text="Grn No:" TextAlignment="TopLeft" SizeF="78.33334,23" LocationFloat="489.70047,50" Padding="2,2,0,0,100">
+          <StylePriority Ref="105" UsePadding="false" UseTextAlignment="false" />
         </Item10>
-        <Item11 Ref="105" ControlType="XRLabel" Name="label11" Multiline="true" CanGrow="false" Text="Date:" TextAlignment="TopLeft" SizeF="78.33334,22.9999981" LocationFloat="489.70047,0" Padding="2,2,0,0,100">
-          <StylePriority Ref="106" UsePadding="false" UseTextAlignment="false" />
+        <Item11 Ref="106" ControlType="XRLabel" Name="label12" Multiline="true" CanGrow="false" Text="Po No:" TextAlignment="TopLeft" SizeF="78.33334,23" LocationFloat="489.70047,25" Padding="2,2,0,0,100">
+          <StylePriority Ref="107" UseTextAlignment="false" />
         </Item11>
-        <Item12 Ref="107" ControlType="XRLabel" Name="label6" TextFormatString="{0:dd/MM/yyyy}" Multiline="true" Text="label6" TextAlignment="TopLeft" SizeF="190.299561,23" LocationFloat="568.0338,0" Padding="6,6,0,0,100" CanPublish="false">
-          <ExpressionBindings>
-            <Item1 Ref="108" EventName="BeforePrint" PropertyName="Text" Expression="[Date]" />
-          </ExpressionBindings>
+        <Item12 Ref="108" ControlType="XRLabel" Name="label11" Multiline="true" CanGrow="false" Text="Date:" TextAlignment="TopLeft" SizeF="78.33334,22.9999981" LocationFloat="489.70047,0" Padding="2,2,0,0,100">
           <StylePriority Ref="109" UsePadding="false" UseTextAlignment="false" />
         </Item12>
         <Item13 Ref="110" ControlType="XRLabel" Name="label15" Multiline="true" CanGrow="false" Text="Supplier Name:" TextAlignment="TopLeft" SizeF="148.124954,22.9999981" LocationFloat="5.086263E-05,35" Padding="6,6,0,0,100">

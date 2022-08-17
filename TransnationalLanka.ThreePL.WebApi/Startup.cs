@@ -217,7 +217,7 @@ namespace TransnationalLanka.ThreePL.WebApi
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
 
-            if (env.IsDevelopment())
+            if (env.IsDevelopment()|| env.IsEnvironment("Uat"))
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
